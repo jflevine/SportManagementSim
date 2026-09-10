@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPM 343 Knowledge Check 1 — LEVEL UP</title>
+<style>
+:root{
+  --ink:#111a32;--muted:#5d6578;--bg:#edf1f7;--card:#fffdfa;--line:#d6dce7;
+  --navy:#101a36;--blue:#3858d6;--cyan:#46c5d8;--gold:#d9a638;--violet:#7359d9;
+  --shadow:0 20px 55px rgba(16,26,54,.13);--r:24px;
+}
+*{box-sizing:border-box}
+html,body,body *,button,input,label,p,h1,h2,h3,span,div,strong,em{font-family:"Times New Roman",Times,serif!important}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 85% 0,#dce7ff 0,transparent 25%),linear-gradient(180deg,#e9edf5,#f5f2eb 42%,#eef2f7)}
+.shell{max-width:1180px;margin:auto;padding:26px 20px 54px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}.badge{width:48px;height:48px;border-radius:14px;background:linear-gradient(145deg,var(--navy),var(--blue));display:grid;place-items:center;color:#fff;font-weight:700}
+.brand strong{display:block;font-size:1.03rem}.brand span{display:block;color:var(--muted);font-size:.86rem}
+.pill{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:999px;color:var(--navy);font-size:.76rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#101a36 0,#172550 56%,#263b79 100%);color:#fff;border-radius:32px;padding:38px;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:420px;height:420px;border:1px solid rgba(70,197,216,.28);border-radius:50%;right:-90px;top:-160px;box-shadow:0 0 0 36px rgba(70,197,216,.05),0 0 0 78px rgba(217,166,56,.04)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(310px,.75fr);gap:28px;align-items:center;position:relative;z-index:1}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:#8fe2ec;font-size:.79rem;font-weight:700;margin-bottom:11px}
+h1{font-size:clamp(2.7rem,5.8vw,5.5rem);line-height:.9;margin:0 0 12px}.sub{font-size:1.5rem;color:#f2cf79;font-weight:700;margin-bottom:14px}
+.hero p{color:#e4e9f5;font-size:1.08rem;line-height:1.58;max-width:720px;margin:0}
+.hero-art{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:12px}
+.hero-art svg{width:100%;height:auto;display:block}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:22px}.rule{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.055);border-radius:15px;padding:14px;font-size:.92rem;line-height:1.4}.rule strong{display:block;color:#fff;margin-bottom:3px}
+.identity{margin-top:20px;padding:19px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:18px}
+.identity h3{margin:0 0 11px;font-size:1.07rem}.igrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field span{display:block;color:#dbe4f2;font-size:.82rem;margin-bottom:5px}.field input{width:100%;padding:12px;border:1px solid rgba(255,255,255,.25);border-radius:11px;font-size:1rem}.field.full{grid-column:1/-1}
+.honor{display:flex;gap:9px;margin-top:12px;color:#e5eaf4;font-size:.89rem;line-height:1.42}.honor input{margin-top:3px}.validation{min-height:1.1em;color:#ffd998;font-size:.84rem;margin-top:7px}
+button{border:0;border-radius:13px;padding:12px 18px;font-size:1rem;font-weight:700;cursor:pointer}button.primary{background:linear-gradient(135deg,#f0c45a,#d8a02c);color:#151515}button.secondary{background:#fff;color:var(--navy);border:1px solid var(--line)}button:disabled{opacity:.45;cursor:not-allowed}.cta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}.note{color:#ccd7e8;font-size:.85rem}
+.app{display:none;margin-top:20px}.progress{position:sticky;top:8px;z-index:5;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}.prow{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;margin-bottom:8px}.track{height:8px;background:#e9edf3;border-radius:999px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan),var(--gold));transition:.3s}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(265px,.7fr);gap:20px;margin-top:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.scenario{padding:28px}.stage{color:#997016;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem;font-weight:700}.scenario h2{font-size:2.05rem;line-height:1.1;margin:8px 0 14px;color:var(--navy)}
+.visual{border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#eef4fb,#faf6ea);overflow:hidden;margin:0 0 19px}.visual svg{display:block;width:100%;height:auto}
+.copy{font-size:1.04rem;line-height:1.65;color:#2b3548}.fact{margin:18px 0;background:#f1f4fa;border-left:4px solid var(--blue);padding:14px 16px;border-radius:10px;line-height:1.5}
+.question{border-top:1px solid var(--line);padding-top:20px;margin-top:22px}.question h3{font-size:1.14rem;line-height:1.42;margin:0 0 13px}
+.option{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);border-radius:15px;background:#fff;padding:13px 14px;margin:9px 0;cursor:pointer}.option:hover{border-color:#8997b1}.option.selected{border:2px solid var(--blue);background:#f3f6ff;padding:12px 13px}.letter{width:29px;height:29px;flex:0 0 29px;border-radius:9px;background:#edf1f8;color:var(--navy);display:grid;place-items:center;font-weight:700}.otext{line-height:1.45}
+.actions{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px}.locked{font-size:.85rem;color:var(--muted)}.consequence{display:none;margin-top:17px;border-top:1px solid var(--line);padding-top:17px}.consequence strong{display:block;color:var(--navy);margin-bottom:5px}.consequence p{margin:0;color:#4a5363;line-height:1.5}
+.side{padding:20px;height:max-content;position:sticky;top:85px}.side h3{text-transform:uppercase;letter-spacing:.08em;font-size:.91rem;color:var(--navy);margin:0 0 13px}.student{background:#f1f4fa;border-radius:12px;padding:11px;margin-bottom:13px;line-height:1.35;font-size:.89rem}
+.metric{margin:15px 0}.mhead{display:flex;justify-content:space-between;font-size:.87rem;margin-bottom:6px}.mtrack{height:9px;background:#e7ebf2;border-radius:999px;overflow:hidden}.mfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:.3s}.mval{font-weight:700}.side .mini{font-size:.8rem;color:var(--muted);line-height:1.48;border-top:1px solid var(--line);padding-top:13px;margin-top:14px}
+.finish{display:none;margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:38px;text-align:center}.score{font-size:5rem;line-height:1;color:var(--navy);font-weight:700;margin:7px 0}.out{color:var(--muted)}.breakdown{max-width:720px;margin:22px auto;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.bi{text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px}.bi strong{display:block;color:var(--navy);margin-bottom:3px}.bi span{font-size:.87rem;color:var(--muted)}.receipt{max-width:690px;margin:22px auto;padding:17px;text-align:left;border:1px dashed #a7b0c1;background:#f2f5fa;border-radius:16px}.receipt code{font-size:1.03rem;font-weight:700;color:var(--navy);word-break:break-all}.success{max-width:720px;margin:14px auto;background:#eef7f1;border:1px solid #c8ddcd;color:#28563a;border-radius:13px;padding:13px;line-height:1.45;font-size:.9rem}.warn{max-width:720px;margin:12px auto;background:#fff6e5;border:1px solid #e6d0a2;color:#694d15;border-radius:13px;padding:13px;line-height:1.45;font-size:.9rem}
+@media(max-width:850px){.hero{padding:28px 22px}.hero-grid,.layout{grid-template-columns:1fr}.rules,.breakdown{grid-template-columns:1fr}.igrid{grid-template-columns:1fr}.field.full{grid-column:auto}.side{position:static}.pill{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="top"><div class="brand"><div class="badge">343</div><div><strong>SPM 343 · Esports & Digital Gaming Management</strong><span>Knowledge Check 1 · History, Segments & Opportunities</span></div></div><div class="pill">Graded In-Class Knowledge Check</div></div>
+
+<section class="hero" id="intro">
+<div class="hero-grid">
+<div>
+<div class="eyebrow">Knowledge Check 1</div>
+<h1>LEVEL UP</h1>
+<div class="sub">The $5 Million Esports Bet</div>
+<p>You are a junior strategy manager at <strong>Arcadia Interactive</strong>, a fictional gaming company with a $5 million fund and one mandate: identify where the next sustainable esports opportunity can be built. The board will test whether you understand how esports evolved, where the ecosystem actually lives, and which pathways create opportunity beyond the professional stage.</p>
+</div>
+<div class="hero-art">
+<svg viewBox="0 0 520 330" aria-hidden="true">
+<rect x="20" y="22" width="480" height="286" rx="22" fill="#111c3b" stroke="#6bd4df" stroke-width="2"/>
+<path d="M75 245 C145 185 185 240 245 165 S355 145 445 72" fill="none" stroke="#d9a638" stroke-width="7"/>
+<polygon points="445,72 423,75 438,92" fill="#d9a638"/>
+<g fill="#fff" opacity=".95"><circle cx="84" cy="244" r="8"/><circle cx="169" cy="210" r="8"/><circle cx="247" cy="164" r="8"/><circle cx="344" cy="132" r="8"/><circle cx="444" cy="74" r="8"/></g>
+<g font-size="15" fill="#b9c8e8" text-anchor="middle"><text x="83" y="275">GRASSROOTS</text><text x="169" y="195">SCHOLASTIC</text><text x="248" y="196">COLLEGIATE</text><text x="344" y="115">PRO</text><text x="443" y="54">NEXT?</text></g>
+<text x="260" y="300" fill="#7ce5ee" text-anchor="middle" font-size="17" font-weight="700">HISTORY → ECOSYSTEM → OPPORTUNITY</text>
+</svg>
+</div>
+</div>
+<div class="rules">
+<div class="rule"><strong>9 decisions · 9 points</strong>Core knowledge plus brief application from Weeks 1–2.</div>
+<div class="rule"><strong>Individual work</strong>No notes, outside resources, collaboration, or generative AI.</div>
+<div class="rule"><strong>Automatic secure submission</strong>Your official answers and score are saved when you finish.</div>
+</div>
+<div class="identity">
+<h3>Student identification</h3>
+<div class="igrid">
+<label class="field"><span>First name</span><input id="firstName" maxlength="60"></label>
+<label class="field"><span>Last name</span><input id="lastName" maxlength="60"></label>
+<label class="field full"><span>La Salle email</span><input id="email" type="email" placeholder="student@lasalle.edu" maxlength="120"></label>
+</div>
+<label class="honor"><input type="checkbox" id="honor"><span>I confirm that I am completing this graded Knowledge Check individually and will not use notes, outside resources, collaboration, or generative AI.</span></label>
+<div class="validation" id="validation"></div>
+<div class="cta"><button class="primary" id="startBtn" disabled>Enter the Strategy Room</button><span class="note">One official submission is permitted per La Salle email.</span></div>
+</div>
+</section>
+
+<div class="app" id="app">
+<div class="progress"><div class="prow"><strong id="pLabel">Decision 1 of 9</strong><span id="pStage">History as Advantage</span></div><div class="track"><div class="bar" id="pBar"></div></div></div>
+<div class="layout">
+<main class="card scenario">
+<div class="stage" id="stageLabel"></div><h2 id="title"></h2><div class="visual" id="visual"></div><div class="copy" id="copy"></div><div class="fact" id="fact"></div>
+<div class="question"><h3 id="q"></h3><div id="options"></div><div class="actions"><span class="locked" id="locked">Select one response.</span><button class="primary" id="commit" disabled>Lock Decision</button></div></div>
+<div class="consequence" id="consequence"><strong>Board update</strong><p id="consequenceText"></p><div style="text-align:right;margin-top:14px"><button class="secondary" id="next">Continue</button></div></div>
+</main>
+<aside class="card side">
+<h3>Opportunity Dashboard</h3><div class="student" id="student"></div>
+<div class="metric"><div class="mhead"><span>Ecosystem Fit</span><span class="mval" id="fitVal">68</span></div><div class="mtrack"><div class="mfill" id="fitBar" style="width:68%"></div></div></div>
+<div class="metric"><div class="mhead"><span>Access & Participation</span><span class="mval" id="accessVal">68</span></div><div class="mtrack"><div class="mfill" id="accessBar" style="width:68%"></div></div></div>
+<div class="metric"><div class="mhead"><span>Growth Opportunity</span><span class="mval" id="growthVal">66</span></div><div class="mtrack"><div class="mfill" id="growthBar" style="width:66%"></div></div></div>
+<div class="metric"><div class="mhead"><span>Sustainability</span><span class="mval" id="sustainVal">64</span></div><div class="mtrack"><div class="mfill" id="sustainBar" style="width:64%"></div></div></div>
+<div class="mini">The dashboard dramatizes tradeoffs in your strategy path. It is not your grade. Your official score is calculated securely after all nine decisions are submitted.</div>
+</aside>
+</div>
+</div>
+
+<section class="finish" id="finish">
+<div class="eyebrow" style="color:#8a6618">Knowledge Check Complete</div>
+<h2 style="font-size:2.2rem;color:var(--navy);margin:0">Strategy file submitted.</h2>
+<div id="finishName" style="color:var(--muted);margin-top:7px;font-size:1.08rem"></div>
+<div class="score" id="score">0</div><div class="out">out of 9</div>
+<div class="breakdown">
+<div class="bi"><strong>History & Evolution</strong><span id="historyBand">—</span></div>
+<div class="bi"><strong>Ecosystem Segments</strong><span id="segmentsBand">—</span></div>
+<div class="bi"><strong>Pathways & Opportunity</strong><span id="opportunityBand">—</span></div>
+</div>
+<div class="receipt"><div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:7px">Completion receipt</div><code id="receipt"></code></div>
+<button class="secondary" id="copyReceipt">Copy Receipt</button>
+<div class="success"><strong>Official submission saved.</strong> Your identity, all nine responses, score, category results, timing, and strategy metrics are stored securely for your instructor. No file upload is required.</div>
+<div class="warn"><strong>Keep this screen open until instructed otherwise.</strong> The receipt confirms that the server accepted your submission.</div>
+</section>
+</div>
+
+<script>
+(function(){
+var ENDPOINT="https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/submit-spm343-kc1";
+var student={first:"",last:"",email:""};var index=0,selected=null,committed=false,startedAt=null;var responses=[];
+var metrics={fit:68,access:68,growth:66,sustain:64};
+var deltas=[
+[{fit:-7,sustain:-2},{fit:7,sustain:3},{fit:-5},{fit:-6}],
+[{fit:-5},{fit:-6},{fit:6,access:7,growth:4},{fit:-4}],
+[{fit:-4},{fit:-5,sustain:-6},{fit:6,sustain:8},{growth:-6}],
+[{access:-6,growth:-5},{access:7,growth:6,fit:4},{growth:-3},{fit:-6}],
+[{access:-5,fit:-4},{access:-4,sustain:-2},{access:8,fit:5},{access:-6}],
+[{growth:-2},{access:5,growth:7},{fit:-4},{growth:-4}],
+[{fit:-6},{fit:7,growth:3},{fit:-3},{fit:-7}],
+[{sustain:-5},{access:-4},{access:4,growth:5,sustain:4},{fit:-5}],
+[{sustain:-8,access:-4},{growth:-8},{fit:7,access:6,growth:8,sustain:8},{sustain:-7,fit:-4}]
+];
+
+var qs=[
+{stage:"History as Advantage",title:"The board thinks esports began with Twitch.",copy:"Arcadia’s executives want a quick market briefing before committing capital. One director dismisses pre-2010 competitive gaming as irrelevant history.",fact:"Your Week 1 framework treated esports as an ecosystem that repeatedly evolves through technological, cultural, economic, and managerial disruption.",q:"Which response best reflects the strategic value of esports history?",opts:[
+"History mainly matters for memorizing tournament dates and famous game titles.",
+"History reveals recurring patterns of disruption, adaptation, ecosystem fit, and resource competition that can improve current decisions.",
+"History proves that organizations should copy whichever business model succeeded most recently.",
+"History shows that technological change matters, but managerial choices generally do not."
+],after:"The board moves from a timeline question to a strategy question: what conditions actually allowed esports ecosystems to develop?"},
+
+{stage:"Infrastructure Creates Ecosystems",title:"A regional market looks surprisingly strong.",copy:"Arcadia is studying why one region developed a deep competitive-gaming culture earlier than many others. The team sees professional competition, regular broadcasts, player communities, and institutional structure.",fact:"The Week 1 history lecture used South Korea as a case showing how infrastructure, access, community spaces, popular titles, and institutions can reinforce one another.",q:"Which combination best explains the South Korean esports ecosystem described in class?",opts:[
+"A single successful tournament plus a temporary spike in television advertising.",
+"High console prices, limited internet access, and a ban on organized gaming clubs.",
+"Telecom and internet investment, PC bangs, StarCraft popularity, regular broadcasts, and institutions such as KeSPA.",
+"Traditional-sport franchises purchasing every major game publisher."
+],after:"The next board memo asks a harder question: can money overcome poor ecosystem fit?"},
+
+{stage:"A $50 Million Warning",title:"A flashy predecessor enters the boardroom.",copy:"An executive proposes building the new venture to look exactly like a traditional televised professional sport: expensive production, geographic franchises, elite contracted players, and tight control over where those players may compete.",fact:"Week 1 examined Championship Gaming Series as a cautionary example involving major capital, legacy-sport assumptions, player restrictions, high costs, community skepticism, and the Great Recession.",q:"What is the strongest lesson from the CGS case for Arcadia?",opts:[
+"Any esports property with major outside investment is destined to fail.",
+"The Great Recession was the only meaningful reason CGS struggled.",
+"A well-funded concept can still fail when its model does not fit the ecosystem, community, cost structure, or changing environment.",
+"Professional esports should never use television or arena production."
+],after:"The board agrees that 'esports' cannot be treated as one professional market. It asks you to map the ecosystem."},
+
+{stage:"Map the Market",title:"The opportunity map is much bigger than the pro stage.",copy:"Arcadia’s first market slide shows only professional teams and tournaments. You are asked whether that is an adequate picture of the esports opportunity.",fact:"Week 2 emphasized that the esports industry is not all about professional gaming and separated the ecosystem into multiple participation levels and adjacent opportunities.",q:"Which map best reflects the industry segments emphasized in class?",opts:[
+"Professional leagues only; everything else is ordinary gaming and outside the ecosystem.",
+"Youth/grassroots, scholastic, collegiate, amateur competitive/recreational, and professional esports, alongside opportunities such as streaming, viewing, and gaming.",
+"Professional teams, traditional television networks, and stadium owners only.",
+"Game developers only, because publishers eliminate the need to analyze other segments."
+],after:"Arcadia now asks where participation should begin—and whether every segment should pursue the same objective."},
+
+{stage:"Start Young, Build Right",title:"A youth program wants to become 'elite' immediately.",copy:"One proposal would launch a youth esports academy built around tryouts, specialization, rankings, and a 'win at all costs' identity.",fact:"Your Week 2 slides distinguished early participation from later high-performance environments and emphasized developmental priorities at the youngest levels.",q:"Which approach best fits the youth-esports principles taught in class?",opts:[
+"Prioritize winning, early specialization, and roster cuts because youth esports should mirror professional esports.",
+"Use only mature competitive titles so participants learn the realities of the industry.",
+"Prioritize enjoyment, socialization, friendship, respect, communication, and appropriate game selection while monitoring risks such as toxicity.",
+"Eliminate competition entirely because competition and development cannot coexist."
+],after:"The youth plan exposes a larger opportunity: esports can connect competition with education and future skills."},
+
+{stage:"The Scholastic Opportunity",title:"A school district asks why esports belongs on campus.",copy:"Arcadia is invited to support a high-school program. The superintendent wants a business case that goes beyond 'students like video games.'",fact:"Week 2 connected scholastic esports to relatively low barriers, reduced travel, broad student appeal, STEM and curricular links, teamwork, communication, broadcasting, business, design, and career exploration.",q:"Which argument most closely matches the opportunity framework from class?",opts:[
+"The strongest justification is that every esports program will generate direct ticket revenue for the school.",
+"Scholastic esports can combine accessible participation with educational, social, skill-building, and career pathways that extend beyond being a player.",
+"High-school esports matters mainly because the NCAA governs a national development pipeline.",
+"The primary purpose should be identifying professional players before college."
+],after:"The next expansion target is college—but the board assumes collegiate esports has one standard organizational model."},
+
+{stage:"College Is Not One System",title:"The board asks: 'Which department owns college esports?'",copy:"Arcadia wants one template for university partnerships. An executive assumes every collegiate program sits inside athletics and operates under the same governing system.",fact:"Week 2 emphasized that collegiate esports has no universal institutional home and that its governance differs substantially from traditional NCAA sports.",q:"Which statement best reflects the collegiate landscape presented in class?",opts:[
+"Collegiate esports is uniformly housed in athletics and governed by the NCAA.",
+"Programs may sit in athletics, student life, academics, recreation, or other units, and the NCAA does not currently serve as the universal governing body.",
+"Every collegiate esports program is a student-run club with no institutional support.",
+"Collegiate esports has one national governing organization that controls all titles and competitions."
+],after:"The fragmented college structure leads to the board’s next concern: how does a player actually move through the ecosystem?"},
+
+{stage:"The Missing Ladder",title:"A talented player asks, 'What comes next?'",copy:"A high-school competitor wants to know the standard path from local play to college to semi-professional competition to a professional roster. Arcadia’s staff cannot point to one consistent ladder.",fact:"Your Week 2 slides identified this as a structural weakness of the esports ecosystem when compared with more linear traditional-sport development systems.",q:"What is the 'esports pipeline problem'?",opts:[
+"Esports has too many universally standardized development routes from youth to professional play.",
+"Professional teams are prohibited from recruiting anyone who played scholastic esports.",
+"The ecosystem lacks a clear, formalized, consistent pathway that reliably moves players from amateur levels toward professional competition.",
+"Players can only become professionals by attending a university with a varsity program."
+],after:"The final board meeting takes place after Esports Winter. Arcadia must decide what kind of growth deserves the $5 million."},
+
+{stage:"Place the Bet",title:"The industry survived winter. Where does sustainable opportunity come from?",copy:"The board sees mobile growth, creator-driven business activity, grassroots development, publisher ecosystem changes, direct fan monetization, and organizations searching for more sustainable models.",fact:"Week 1 ended not with 'esports is dead,' but with a reboot: an industry adapting after overinvestment, layoffs, acquisitions, and pressure on traditional models.",q:"Which recommendation best integrates the Weeks 1–2 framework?",opts:[
+"Put the full $5 million into copying the most expensive pre-COVID professional-franchise model because scale alone creates sustainability.",
+"Avoid youth, scholastic, collegiate, mobile, and creator opportunities because only professional competition counts as esports business.",
+"Build a diversified strategy around ecosystem fit: strengthen participation pathways, connect scholastic and collegiate opportunities, watch mobile and creator growth, and prioritize sustainable value creation over hype.",
+"Wait for one permanent dominant esports model to emerge before learning anything from current ecosystem changes."
+],after:"Your strategy file is complete. The server will now score the nine decisions and save your official result."}
+];
+
+var $=function(id){return document.getElementById(id)};
+function clamp(n){return Math.max(0,Math.min(100,n))}
+function visual(i){
+var label=["HISTORY","INFRASTRUCTURE","ECOSYSTEM FIT","SEGMENTS","YOUTH","SCHOLASTIC","COLLEGIATE","PATHWAY","REBOOT"][i];
+var captions=[
+"PAST PATTERNS → BETTER DECISIONS","ACCESS + COMMUNITY + STRUCTURE","CAPITAL ≠ AUTOMATIC FIT","THE ECOSYSTEM IS BIGGER THAN PRO","FUN · CONNECTION · DEVELOPMENT","PLAY → LEARN → BUILD SKILLS","NO SINGLE HOME · NO SINGLE GOVERNOR","AMATEUR ? ? ? PROFESSIONAL","SUSTAINABILITY OVER HYPE"
+];
+var body="";
+if(i===0){body='<path d="M90 85H670" stroke="#3858d6" stroke-width="4"/><g fill="#d9a638"><circle cx="115" cy="85" r="10"/><circle cx="250" cy="85" r="10"/><circle cx="390" cy="85" r="10"/><circle cx="530" cy="85" r="10"/><circle cx="650" cy="85" r="10"/></g>'}
+else if(i===1){body='<g fill="#fff" stroke="#3858d6" stroke-width="2"><rect x="90" y="53" width="135" height="42" rx="10"/><rect x="312" y="53" width="135" height="42" rx="10"/><rect x="535" y="53" width="135" height="42" rx="10"/></g><g fill="#101a36" text-anchor="middle" font-size="14" font-weight="700"><text x="157" y="79">INTERNET</text><text x="379" y="79">PC BANGS</text><text x="602" y="79">INSTITUTIONS</text></g><g stroke="#d9a638" stroke-width="4"><line x1="225" y1="74" x2="300" y2="74"/><line x1="447" y1="74" x2="523" y2="74"/></g>'}
+else if(i===2){body='<rect x="105" y="48" width="190" height="55" rx="14" fill="#101a36"/><text x="200" y="80" fill="#fff" text-anchor="middle" font-size="19" font-weight="700">$50M CAPITAL</text><path d="M320 76H445" stroke="#d9a638" stroke-width="6"/><polygon points="445,76 426,64 426,88" fill="#d9a638"/><rect x="475" y="48" width="180" height="55" rx="14" fill="#fff" stroke="#3858d6" stroke-width="2"/><text x="565" y="72" fill="#101a36" text-anchor="middle" font-size="16" font-weight="700">ECOSYSTEM</text><text x="565" y="90" fill="#5d6578" text-anchor="middle" font-size="14">FIT?</text>'}
+else if(i===3){body='<g fill="#101a36" font-size="13" font-weight="700" text-anchor="middle"><text x="105" y="76">YOUTH</text><text x="245" y="76">SCHOOL</text><text x="385" y="76">COLLEGE</text><text x="525" y="76">AMATEUR</text><text x="655" y="76">PRO</text></g><path d="M85 92H675" stroke="#46c5d8" stroke-width="7" stroke-linecap="round"/><g fill="#d9a638"><circle cx="105" cy="92" r="9"/><circle cx="245" cy="92" r="9"/><circle cx="385" cy="92" r="9"/><circle cx="525" cy="92" r="9"/><circle cx="655" cy="92" r="9"/></g>'}
+else if(i===4){body='<circle cx="200" cy="75" r="33" fill="#46c5d8"/><circle cx="380" cy="75" r="33" fill="#d9a638"/><circle cx="560" cy="75" r="33" fill="#7359d9"/><g fill="#101a36" text-anchor="middle" font-size="14" font-weight="700"><text x="200" y="80">FUN</text><text x="380" y="80">FRIENDS</text><text x="560" y="80" fill="#fff">SKILLS</text></g>'}
+else if(i===5){body='<g fill="#fff" stroke="#3858d6" stroke-width="2"><rect x="85" y="51" width="150" height="50" rx="12"/><rect x="305" y="51" width="150" height="50" rx="12"/><rect x="525" y="51" width="150" height="50" rx="12"/></g><g fill="#101a36" text-anchor="middle" font-size="14" font-weight="700"><text x="160" y="80">COMPETE</text><text x="380" y="80">LEARN</text><text x="600" y="80">CAREERS</text></g><g stroke="#d9a638" stroke-width="4"><line x1="235" y1="76" x2="295" y2="76"/><line x1="455" y1="76" x2="515" y2="76"/></g>'}
+else if(i===6){body='<g fill="#fff" stroke="#101a36" stroke-width="2"><rect x="50" y="49" width="145" height="48" rx="12"/><rect x="220" y="49" width="145" height="48" rx="12"/><rect x="390" y="49" width="145" height="48" rx="12"/><rect x="560" y="49" width="145" height="48" rx="12"/></g><g fill="#101a36" text-anchor="middle" font-size="13" font-weight="700"><text x="122" y="77">ATHLETICS</text><text x="292" y="77">STUDENT LIFE</text><text x="462" y="77">ACADEMICS</text><text x="632" y="77">RECREATION</text></g>'}
+else if(i===7){body='<text x="85" y="80" fill="#101a36" font-size="15" font-weight="700">AMATEUR</text><path d="M175 76H585" stroke="#3858d6" stroke-width="5" stroke-dasharray="14 12"/><g fill="#d9a638" font-size="22" font-weight="700"><text x="280" y="84">?</text><text x="380" y="84">?</text><text x="480" y="84">?</text></g><text x="600" y="80" fill="#101a36" font-size="15" font-weight="700">PRO</text>'}
+else{body='<path d="M100 102 C205 97 245 52 350 70 S535 101 660 38" fill="none" stroke="#3858d6" stroke-width="7"/><polygon points="660,38 638,40 653,58" fill="#3858d6"/><g fill="#d9a638"><circle cx="195" cy="88" r="9"/><circle cx="350" cy="70" r="9"/><circle cx="520" cy="83" r="9"/></g>'}
+return '<svg viewBox="0 0 760 145" aria-hidden="true"><rect width="760" height="145" fill="#eef3f9"/><text x="32" y="29" fill="#8b681a" font-size="13" font-weight="700">'+label+'</text>'+body+'<text x="380" y="132" text-anchor="middle" fill="#5d6578" font-size="14">'+captions[i]+'</text></svg>';
+}
+function validate(){var f=$("firstName").value.trim(),l=$("lastName").value.trim(),e=$("email").value.trim().toLowerCase(),h=$("honor").checked;var m="";if(!f||!l||!e)m="Enter your first name, last name, and La Salle email.";else if(!/^[^\s@]+@lasalle\.edu$/i.test(e))m="Use your La Salle email ending in @lasalle.edu.";else if(!h)m="Confirm the individual-work statement before beginning.";$("validation").textContent=m;$("startBtn").disabled=!!m;return !m}
+["firstName","lastName","email"].forEach(function(id){$(id).addEventListener("input",validate)});$("honor").addEventListener("change",validate);
+function metric(k,v){$(k+"Val").textContent=v;$(k+"Bar").style.width=v+"%"}
+function apply(d){Object.keys(d||{}).forEach(function(k){metrics[k]=clamp(metrics[k]+d[k]);metric(k,metrics[k])})}
+function render(){var item=qs[index];selected=null;committed=false;$("pLabel").textContent="Decision "+(index+1)+" of 9";$("pStage").textContent=item.stage;$("pBar").style.width=(index/9*100)+"%";$("stageLabel").textContent="Stage "+(index+1)+" · "+item.stage;$("title").textContent=item.title;$("visual").innerHTML=visual(index);$("copy").innerHTML=item.copy;$("fact").innerHTML=item.fact;$("q").textContent=item.q;$("options").innerHTML="";
+item.opts.forEach(function(t,i){var el=document.createElement("label");el.className="option";el.innerHTML='<input type="radio" name="answer" value="'+i+'"><div class="letter">'+String.fromCharCode(65+i)+'</div><div class="otext">'+t+'</div>';el.addEventListener("click",function(){if(committed)return;selected=i;document.querySelectorAll(".option").forEach(function(x){x.classList.remove("selected")});el.classList.add("selected");$("commit").disabled=false;$("locked").textContent="Ready to lock this response."});$("options").appendChild(el)});
+$("commit").disabled=true;$("commit").style.display="";$("locked").textContent="Select one response.";$("consequence").style.display="none";$("next").disabled=false;$("next").textContent=index===8?"Submit Knowledge Check":"Continue";window.scrollTo({top:0,behavior:"smooth"})}
+$("startBtn").addEventListener("click",function(){if(!validate())return;student.first=$("firstName").value.trim();student.last=$("lastName").value.trim();student.email=$("email").value.trim().toLowerCase();startedAt=Date.now();$("student").innerHTML="<strong>"+student.first+" "+student.last+"</strong><br>"+student.email;$("intro").style.display="none";$("app").style.display="block";render()});
+$("commit").addEventListener("click",function(){if(selected===null||committed)return;committed=true;responses.push(selected);apply(deltas[index][selected]);$("consequenceText").textContent=qs[index].after;$("consequence").style.display="block";$("commit").style.display="none";$("locked").textContent="Decision locked.";document.querySelectorAll('.option input').forEach(function(x){x.disabled=true})});
+function band(s,m){var p=m?s/m:0;return p>=.85?"Strong application · "+s+"/"+m:p>=.65?"Developing application · "+s+"/"+m:"Review recommended · "+s+"/"+m}
+async function finish(){var b=$("next");b.disabled=true;b.textContent="Submitting securely…";try{var res=await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({firstName:student.first,lastName:student.last,email:student.email,startedAt:new Date(startedAt).toISOString(),answers:responses})});var data={};try{data=await res.json()}catch(e){}if(!res.ok){var er=new Error(data.error||"Submission failed");er.code=data.code;throw er}$("app").style.display="none";$("finishName").textContent=student.first+" "+student.last+" · "+student.email;$("score").textContent=data.score;$("historyBand").textContent=band(data.historyEvolutionScore,data.historyEvolutionMax);$("segmentsBand").textContent=band(data.ecosystemSegmentsScore,data.ecosystemSegmentsMax);$("opportunityBand").textContent=band(data.pathwaysOpportunityScore,data.pathwaysOpportunityMax);$("receipt").textContent=data.receipt;$("finish").style.display="block";window.scrollTo({top:0,behavior:"smooth"})}catch(e){b.disabled=false;b.textContent="Submit Knowledge Check";alert(e.code==="ALREADY_SUBMITTED"?"A submission already exists for this La Salle email. Notify your instructor if you believe this is an error.":"Your official submission was NOT saved. Keep this page open and try again; if the problem continues, notify your instructor.")}}
+$("next").addEventListener("click",function(){if(!committed)return;if(index<8){index++;render()}else finish()});
+$("copyReceipt").addEventListener("click",async function(){var t="SPM 343 Knowledge Check 1 — "+student.first+" "+student.last+" — Score: "+$("score").textContent+"/9 — Receipt: "+$("receipt").textContent;try{await navigator.clipboard.writeText(t);$("copyReceipt").textContent="Copied"}catch(e){$("copyReceipt").textContent="Copy manually from receipt above"}});
+})();
+</script>
+</body>
+</html>
