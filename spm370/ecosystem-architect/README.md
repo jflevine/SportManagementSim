@@ -19,9 +19,7 @@ The prototype is designed to help students:
 - distinguish issues management can address from issues that should be escalated to counsel; and
 - explain how legal architecture changes the resilience of a business model.
 
-## Version 1 scope
-
-The first prototype includes:
+## Playtest v2 flow
 
 1. Publisher / ecosystem-designer role
 2. Competition-level selection
@@ -30,21 +28,37 @@ The first prototype includes:
 5. Live revenue-stability and publisher-dependency feedback
 6. Five-slot contract-card builder
 7. Six-axis legal-risk board
-8. Ten crisis cards, with three randomized per playthrough
-9. Five live ecosystem metrics:
+8. Animated season launch
+9. Ten-crisis library, with three randomized per playthrough
+10. Five live ecosystem metrics:
    - Financial Sustainability
    - Competitive Access
    - Publisher Control
    - Legal Resilience
    - Fan Legitimacy
-10. Final Ecosystem DNA / Board Report
-11. Three reflection prompts
-12. Local browser saving, reset/replay, copy report, and print/PDF support
-13. Responsive mobile layout
+11. Final Ecosystem DNA / Board Report
+12. Three reflection prompts
+13. 30-second classroom debrief screen
+14. Local browser saving, reset/replay, copy report, and print/PDF support
+15. Responsive mobile layout
+
+## Playtest v2 presentation / feedback upgrades
+
+The second pass adds the classroom-facing polish needed for a more game-like experience:
+
+- animated launch countdown between build and crisis phases;
+- full-screen Breaking News crisis alerts;
+- animated metric deltas showing the consequence of each decision;
+- a live publisher-dependency meter;
+- a stakeholder network that lights up the publisher, league, organizer, team, player, sponsor, and platform relationships implicated by contracts and crises;
+- clearer post-decision explanations of why a choice changed the model;
+- an explicit **Escalation Lens** identifying when management can act and when counsel or institutional review is appropriate;
+- stronger Ecosystem DNA presentation with an archetype and resilience ring; and
+- a large-format **30-Second Classroom Debrief** view so groups can compare models quickly in discussion.
 
 ## Crisis library
 
-The initial crisis bank includes:
+The crisis bank includes:
 
 - Publisher Shock / competitive-format redesign
 - Sponsor Collision
@@ -57,32 +71,37 @@ The initial crisis bank includes:
 - Investor Exit Pressure
 - Integrity Breakdown
 
+Each crisis identifies the stakeholders affected, changes the live dashboard, explains the legal/business consequence, and provides an escalation cue.
+
 ## Pedagogical design principle
 
-The application intentionally avoids a single "correct" ecosystem. Each architecture produces tradeoffs among access, control, revenue stability, legal resilience, and legitimacy. Scores are teaching prompts rather than legal conclusions.
+The application intentionally avoids a single "correct" ecosystem. Each architecture produces tradeoffs among access, control, revenue stability, legal resilience, and legitimacy. Scores are diagnostic teaching prompts rather than legal conclusions.
+
+The main classroom question is not "Who got the highest score?" It is: **What tradeoff did your group intentionally accept, and what would you renegotiate before Year 2?**
 
 ## Technical design
 
-Version 1 is intentionally dependency-free: one HTML file with inline CSS, JavaScript, and SVG. This makes it easy to host through the existing `SportManagementSim` GitHub Pages workflow and reduces technical friction for students.
+The prototype remains intentionally dependency-free: one HTML file with inline CSS, JavaScript, and SVG. This makes it easy to host through the existing `SportManagementSim` GitHub Pages workflow and reduces technical friction for students.
 
-Student state is stored in `localStorage`; no login or database is required for Version 1.
+Student state is stored in `localStorage`; no login or database is required for the playtest.
 
-## Future versions
+## Next development phase
 
-Potential Version 2 additions:
+After classroom playtesting, the strongest candidates for the next release are:
 
-- instructor dashboard;
-- class codes and Supabase persistence;
+- Supabase class codes and saved student/group sessions;
+- instructor dashboard and class analytics;
 - Professor Chaos Mode with instructor-triggered class-wide events;
-- comparative class analytics;
 - Team Owner, Tournament Organizer, Collegiate Program, and Creator roles;
 - historical challenge scenarios based on OWL, VCT, Riot, and Valve structures;
-- classroom leaderboard focused on resilience and tradeoff quality rather than a single score;
-- exportable submission receipts; and
-- instructor-configurable crisis decks.
+- instructor-configurable crisis decks;
+- comparative group results / leaderboard focused on resilience and tradeoff quality rather than a single score; and
+- exportable submission receipts.
 
 ## Status
 
 **Prototype branch:** `spm370-ecosystem-architect-v1`
 
-The next step is visual and classroom playtesting before merging into `main`.
+**Current build:** Playtest v2 (gameplay, presentation, stakeholder-network, and pedagogical-feedback pass)
+
+The next step is browser/device playtesting and scoring-balance review before merging into `main`.
