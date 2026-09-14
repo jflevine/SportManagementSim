@@ -85,6 +85,15 @@ The prototype remains intentionally dependency-free: one HTML file with inline C
 
 Student state is stored in `localStorage`; no login or database is required for the playtest.
 
+## Validation completed in this pass
+
+- JavaScript syntax check completed successfully with Node.
+- Duplicate DOM ID check completed successfully.
+- Resume-state handling was corrected so a saved crisis decision can continue to the next crisis.
+- The application preserves the Chapter 3 distinction between diagnostic teaching scores and legal conclusions.
+
+A full browser/device playtest is still recommended before merging to `main`.
+
 ## Next development phase
 
 After classroom playtesting, the strongest candidates for the next release are:
