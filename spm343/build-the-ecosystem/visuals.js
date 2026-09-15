@@ -11,12 +11,200 @@
   const zones=Object.entries(D.zones||{});
   const zoneByName=new Map(zones.map(([id,z])=>[z.name,{id,...z}]));
   const palette=['#69dce3','#7ad9a2','#9a70df','#7087e6','#f1c75c','#6487d3','#e46d83','#3f938c','#d29a38'];
+  const zoneLabels={grassroots:'ARCADE',scholastic:'LAB',creator:'STUDIO',college:'ARENA',sponsor:'BRAND HQ',publisher:'PUBLISHER',pro:'TEAM HQ',event:'EVENT HALL',boardroom:'BOARDROOM'};
 
   function hexToRgb(hex){
     const h=String(hex||'').replace('#','');
     if(!/^[0-9a-f]{6}$/i.test(h))return {r:105,g:220,b:227};
     return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};
   }
+
+  function installCanvasSkin(){
+    const proto=window.CanvasRenderingContext2D&&CanvasRenderingContext2D.prototype;
+    if(!proto||proto.__ecosystemVisualSkin)return;
+    proto.__ecosystemVisualSkin=true;
+
+    const native={
+      fillRect:proto.fillRect,
+      fill:proto.fill,
+      stroke:proto.stroke,
+      arc:proto.arc,
+      fillText:proto.fillText
+    };
+    const isWorld=ctx=>ctx&&ctx.canvas&&ctx.canvas.id==='world';
+    const innerZones=zones.map(([id,z])=>({id,z,x:z.x+14,y:z.y+17,w:z.w-28,h:z.h-42}));
+
+    function buildingLots(){
+      const lots=[];
+      for(let row=0;row<6;row++){
+        for(let col=0;col<10;col++){
+          const seed=(row+3)*37+(col+5)*61;
+          const x=34+col*158+(seed%21);
+          const y=42+row*152+((seed*7)%25);
+          const w=34+(seed%38);
+          const h=20+((seed*11)%31);
+          lots.push({x,y,w,h,a:.025+((seed%7)*.006)});
+        }
+      }
+      return lots;
+    }
+    const lots=buildingLots();
+
+    function drawWorldTexture(ctx){
+      ctx.save();
+      ctx.globalAlpha=1;
+      lots.forEach((b,i)=>{
+        ctx.fillStyle=i%4===0?'rgba(101,171,211,.055)':'rgba(143,179,209,.03)';
+        native.fillRect.call(ctx,b.x,b.y,b.w,b.h);
+        ctx.strokeStyle=i%4===0?'rgba(105,220,227,.055)':'rgba(149,184,216,.035)';
+        ctx.lineWidth=1;
+        ctx.strokeRect(b.x,b.y,b.w,b.h);
+      });
+      ctx.fillStyle='rgba(105,220,227,.07)';
+      for(let x=70;x<1540;x+=128){native.fillRect.call(ctx,x,508,3,3);}
+      for(let y=60;y<940;y+=118){native.fillRect.call(ctx,788,y,3,3);}
+      ctx.restore();
+    }
+
+    function drawZoneSkin(ctx,id,z){
+      const rgb=hexToRgb(z.color);
+      const x=z.x+24,y=z.y+30,w=z.w-48,h=z.h-74;
+      const pulse=reduced?1:(.9+.1*Math.sin(performance.now()*.0018+(z.x+z.y)*.01));
+      ctx.save();
+
+      const grad=ctx.createLinearGradient(x,y,x+w,y+h);
+      grad.addColorStop(0,`rgba(${rgb.r},${rgb.g},${rgb.b},.26)`);
+      grad.addColorStop(.52,'rgba(10,24,43,.92)');
+      grad.addColorStop(1,`rgba(${rgb.r},${rgb.g},${rgb.b},.14)`);
+      ctx.fillStyle=grad;
+      native.fillRect.call(ctx,x,y,w,h);
+
+      ctx.strokeStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},.52)`;
+      ctx.lineWidth=2;
+      ctx.strokeRect(x+.5,y+.5,w-1,h-1);
+
+      ctx.beginPath();
+      ctx.moveTo(x+18,y+28);
+      ctx.lineTo(x+w*.54,y+9);
+      ctx.lineTo(x+w-16,y+28);
+      ctx.lineTo(x+w*.52,y+46);
+      ctx.closePath();
+      ctx.fillStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},.22)`;
+      native.fill.call(ctx);
+      ctx.strokeStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},.34)`;
+      ctx.lineWidth=1;
+      native.stroke.call(ctx);
+
+      ctx.fillStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},${.68*pulse})`;
+      native.fillRect.call(ctx,x+9,y+12,3,h-24);
+      native.fillRect.call(ctx,x+w-12,y+12,3,h-24);
+
+      const cols=Math.max(3,Math.floor(w/42));
+      const rows=Math.max(2,Math.floor((h-68)/27));
+      const gapX=(w-54)/cols;
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          const wx=x+28+c*gapX;
+          const wy=y+57+r*25;
+          const active=((r*cols+c+id.length)%4)!==0;
+          ctx.fillStyle=active?`rgba(${rgb.r+Math.min(255-rgb.r,35)},${rgb.g+Math.min(255-rgb.g,35)},${rgb.b+Math.min(255-rgb.b,35)},.30)`:'rgba(91,116,142,.10)';
+          native.fillRect.call(ctx,wx,wy,Math.max(9,gapX-14),7);
+        }
+      }
+
+      ctx.fillStyle='rgba(3,10,19,.70)';
+      native.fillRect.call(ctx,x+w*.26,y+h-28,w*.48,18);
+      ctx.strokeStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},.40)`;
+      ctx.strokeRect(x+w*.26+.5,y+h-27.5,w*.48-1,17);
+      ctx.font="700 10px 'Times New Roman'";
+      ctx.textAlign='center';
+      ctx.fillStyle='rgba(235,246,255,.88)';
+      native.fillText.call(ctx,zoneLabels[id]||'DISTRICT',x+w/2,y+h-16);
+
+      ctx.beginPath();
+      ctx.arc(x+20,y+h-18,3.2,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},.95)`;
+      native.fill.call(ctx);
+      ctx.shadowColor=`rgba(${rgb.r},${rgb.g},${rgb.b},.75)`;
+      ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(x+20,y+h-18,2.1,0,Math.PI*2);native.fill.call(ctx);
+      ctx.shadowBlur=0;
+
+      ctx.restore();
+    }
+
+    function decorateAvatar(ctx,arcInfo){
+      const {x,y,r}=arcInfo;
+      if(r!==17&&r!==18)return;
+      const player=r===18;
+      ctx.save();
+      ctx.globalAlpha=1;
+      ctx.shadowBlur=0;
+
+      ctx.beginPath();
+      ctx.ellipse(x,y+18,player?22:20,player?8:7,0,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,0,0,.26)';
+      native.fill.call(ctx);
+
+      ctx.beginPath();
+      native.arc.call(ctx,x,y,player?25:23,0,Math.PI*2);
+      ctx.strokeStyle=player?'rgba(255,255,255,.34)':'rgba(151,211,229,.24)';
+      ctx.lineWidth=1.2;
+      native.stroke.call(ctx);
+
+      if(player){
+        ctx.beginPath();
+        native.arc.call(ctx,x,y,30,Math.PI*1.08,Math.PI*1.92);
+        ctx.strokeStyle='rgba(241,199,92,.72)';
+        ctx.lineWidth=2;
+        native.stroke.call(ctx);
+        ctx.fillStyle='rgba(241,199,92,.8)';
+        native.fillRect.call(ctx,x-2,y+27,4,5);
+      }else{
+        ctx.fillStyle='rgba(105,220,227,.45)';
+        native.fillRect.call(ctx,x-5,y+24,10,2);
+      }
+      ctx.restore();
+    }
+
+    proto.fillRect=function(x,y,w,h){
+      const result=native.fillRect.apply(this,arguments);
+      if(!isWorld(this))return result;
+      if(x===0&&y===0&&w>=1500&&h>=900){drawWorldTexture(this);return result;}
+      const zone=innerZones.find(q=>Math.abs(q.x-x)<.1&&Math.abs(q.y-y)<.1&&Math.abs(q.w-w)<.1&&Math.abs(q.h-h)<.1);
+      if(zone)drawZoneSkin(this,zone.id,zone.z);
+      return result;
+    };
+
+    proto.arc=function(x,y,r,start,end,ccw){
+      if(isWorld(this))this.__ecosystemLastArc={x,y,r};
+      return native.arc.apply(this,arguments);
+    };
+
+    proto.fill=function(){
+      const info=isWorld(this)?this.__ecosystemLastArc:null;
+      const result=native.fill.apply(this,arguments);
+      if(info)decorateAvatar(this,info);
+      if(isWorld(this))this.__ecosystemLastArc=null;
+      return result;
+    };
+
+    proto.fillText=function(text,x,y,maxWidth){
+      if(!isWorld(this))return native.fillText.apply(this,arguments);
+      this.save();
+      const oldShadow=this.shadowColor;
+      const oldBlur=this.shadowBlur;
+      this.shadowColor='rgba(0,0,0,.55)';
+      this.shadowBlur=5;
+      const result=arguments.length>3?native.fillText.call(this,text,x,y,maxWidth):native.fillText.call(this,text,x,y);
+      this.shadowColor=oldShadow;
+      this.shadowBlur=oldBlur;
+      this.restore();
+      return result;
+    };
+  }
+
+  installCanvasSkin();
 
   function buildRibbon(){
     if(!ribbon||!zones.length)return;
@@ -95,7 +283,7 @@
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
     resize();
-    new ResizeObserver(resize).observe(worldWrap);
+    if(window.ResizeObserver)new ResizeObserver(resize).observe(worldWrap);else window.addEventListener('resize',resize);
 
     function activeColor(){
       const z=zoneName&&zoneByName.get(zoneName.textContent.trim());
@@ -155,6 +343,7 @@
     .district-ribbon span{position:relative}
     .district-ribbon span:after{content:"";position:absolute;inset:-4px;border:1px solid transparent;border-radius:50%}
     .district-ribbon span.active:after{border-color:rgba(255,255,255,.22)}
+    .city-tower:hover{transform:none!important}
     .game-screen:not(.hidden) .sidebar{animation:hudIn .45s ease both}
     .game-screen:not(.hidden) .world-topbar{animation:hudDrop .38s ease both}
     @keyframes hudIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
