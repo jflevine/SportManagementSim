@@ -1,7 +1,223 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ESPORTS: BUILD THE ECOSYSTEM</title><link rel="stylesheet" href="styles.css"></head><body>
-<section id="titleScreen" class="screen title-screen"><div class="title-wrap"><div class="course-tag">SPM 343 · Esports & Digital Gaming Management · Experimental Learning RPG</div><div class="title-grid"><div><h1 class="game-title">ESPORTS<span>BUILD THE ECOSYSTEM</span></h1><p class="title-copy">Start with a tiny local gaming operation. Walk the city, meet the people who make esports work, accept quests, make business decisions, build skills and relationships, unlock new sectors, survive Esports Winter, and discover what kind of manager you become.</p><div class="feature-row"><div class="feature"><strong>Explore</strong>Move through a living top-down esports business world.</div><div class="feature"><strong>Build</strong>Earn XP, skills, relationships, inventory, and access.</div><div class="feature"><strong>Decide</strong>Your choices alter later conversations and opportunities.</div><div class="feature"><strong>Learn by doing</strong>Quests connect directly to SPM 343 concepts.</div></div></div><div class="title-art"><svg viewBox="0 0 520 390" aria-hidden="true"><rect width="520" height="390" rx="24" fill="#0a1730"/><path d="M45 323H475M45 267H475M45 211H475M45 155H475M45 99H475" stroke="#1f355a"/><path d="M104 50V345M182 50V345M260 50V345M338 50V345M416 50V345" stroke="#1f355a"/><g><rect x="61" y="245" width="105" height="74" rx="12" fill="#278d88"/><rect x="204" y="254" width="100" height="65" rx="12" fill="#4f83d4"/><rect x="352" y="246" width="106" height="73" rx="12" fill="#9a60c6"/><rect x="63" y="92" width="116" height="78" rx="12" fill="#347a72"/><rect x="210" y="85" width="115" height="85" rx="12" fill="#b64e63"/><rect x="357" y="90" width="103" height="80" rx="12" fill="#5570b5"/><rect x="208" y="187" width="120" height="50" rx="16" fill="#d3a03b"/></g><g fill="#fff" font-size="13" text-anchor="middle" font-weight="700"><text x="113" y="285">GRASSROOTS</text><text x="254" y="290">SCHOOL</text><text x="405" y="284">CREATORS</text><text x="121" y="133">EVENTS</text><text x="267" y="129">PRO</text><text x="408" y="130">PUBLISHER</text><text x="268" y="217">YOU</text></g><circle cx="260" cy="217" r="7" fill="#fff"/><path d="M113 245L233 223M304 223L405 246M268 187V170M208 212L150 170" stroke="#f3c75d" stroke-width="3" stroke-dasharray="7 6"/><text x="260" y="364" fill="#83dae4" font-size="15" text-anchor="middle" font-weight="700">EVERY SECTOR CONNECTS</text></svg></div></div>
-<div class="start-panel"><h2>Create your manager</h2><div class="muted">No real name or student email is required. This is an ungraded game save.</div><div class="creator-grid"><div class="field"><label>Character name</label><input id="playerName" maxlength="40" placeholder="e.g., Jax, Nova, Coach L"></div><div class="field"><label>Avatar color</label><div id="avatarChoices" class="avatars"></div></div></div><div id="archetypes" class="archetypes"></div><div class="actions"><button id="newGameBtn" class="btn btn-primary" disabled>Start New Career</button><button id="resumeBtn" class="btn btn-secondary hidden">Resume Saved Career</button></div><div id="startStatus" class="status"></div><div class="recover"><div class="muted">Playing on another device?</div><div class="recover-row"><input id="recoveryInput" placeholder="Paste recovery key"><button id="recoverBtn" class="btn btn-secondary">Recover</button></div></div></div></div></section>
-<section id="gameScreen" class="screen game-screen hidden"><div class="game-grid"><div class="world-wrap"><div class="world-topbar"><div class="top-left"><div class="hud-pill"><strong id="zoneName">Grassroots Arcade</strong></div><div class="hud-pill">Quest: <span id="activeQuestLabel">Find Maya</span></div></div><div class="top-right"><button id="questBtn" class="hud-pill">Quest Log</button><button id="journalBtn" class="hud-pill">Journal</button><button id="menuBtn" class="hud-pill">Menu</button></div></div><canvas id="world" class="world-canvas" width="1000" height="650"></canvas><div id="interactPrompt" class="interact hidden">Press <kbd>E</kbd> to talk</div><div class="mobile-controls"><div class="dpad"><button class="up" data-key="ArrowUp">▲</button><button class="left" data-key="ArrowLeft">◀</button><button class="down" data-key="ArrowDown">▼</button><button class="right" data-key="ArrowRight">▶</button></div><button id="talkMobile" class="talk-mobile">TALK</button></div></div><aside class="sidebar"><div class="player-card"><div id="portrait" class="portrait">P1</div><div><h3 id="playerLabel">Player</h3><div id="archetypeLabel" class="small">Strategist</div><div class="small">Level <span id="levelLabel">1</span> · <span id="xpLabel">0</span> XP</div><div class="xpbar"><div id="xpFill" class="xpfill" style="width:0%"></div></div></div></div><div class="section"><div class="section-title"><h4>Active Quests</h4></div><div id="questMini"></div></div><div class="section"><div class="section-title"><h4>Skills</h4></div><div id="skills"></div></div><div class="section"><div class="section-title"><h4>Relationships</h4></div><div id="relationships"></div></div><div class="section"><div class="section-title"><h4>Inventory</h4></div><div id="inventory" class="inventory-list"></div></div><div class="section"><div class="section-title"><h4>News Feed</h4></div><div id="newsFeed"></div></div></aside></div></section>
-<div id="pauseMenu" class="pause-menu hidden"><h3>Career Menu</h3><div class="small">Cloud save: <span id="cloudStatus">checking…</span></div><button id="saveNowBtn" class="btn btn-secondary">Save Now</button><button id="copyRecoveryBtn" class="btn btn-secondary">Copy Recovery Key</button><div id="recoveryBox" class="recovery-box hidden"></div><button id="returnTitleBtn" class="btn btn-secondary">Return to Title</button><button id="resetBtn" class="btn btn-danger">Start Over on This Device</button></div>
-<div id="modalBackdrop" class="modal-backdrop hidden"><div id="modal" class="modal"><div class="modal-head"><div id="modalEyebrow" class="eyebrow"></div><h2 id="modalTitle"></h2></div><div id="modalBody" class="modal-body"></div></div></div><div id="toast" class="toast"></div>
-<script src="data.js"></script><script src="audio.js"></script><script src="game.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#06101e">
+  <title>ESPORTS: BUILD THE ECOSYSTEM</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section id="titleScreen" class="screen title-screen">
+  <div class="title-noise" aria-hidden="true"></div>
+  <div class="title-wrap">
+    <div class="course-row">
+      <div class="course-tag">SPM 343 · Esports &amp; Digital Gaming Management · Experiential Learning RPG</div>
+      <div class="build-status"><i></i> LIVE CAREER SIMULATION</div>
+    </div>
+
+    <div class="title-grid">
+      <div class="hero-copy">
+        <div class="hero-kicker">ECOSYSTEM CITY // MANAGEMENT CAREER MODE</div>
+        <h1 class="game-title">ESPORTS<span>BUILD THE ECOSYSTEM</span></h1>
+        <p class="title-copy">Start with a tiny local gaming operation. Walk the city, meet the people who make esports work, accept quests, make business decisions, build skills and relationships, unlock new sectors, survive Esports Winter, and discover what kind of manager you become.</p>
+        <div class="mission-strip" aria-label="Game structure">
+          <div><strong>9</strong><span>districts</span></div>
+          <div><strong>9</strong><span>quests</span></div>
+          <div><strong>6</strong><span>management skills</span></div>
+          <div><strong>1</strong><span>Winter shock</span></div>
+        </div>
+        <div class="feature-row">
+          <div class="feature"><span class="feature-icon">01</span><strong>Explore</strong>Move through a living top-down esports business world.</div>
+          <div class="feature"><span class="feature-icon">02</span><strong>Build</strong>Earn XP, skills, relationships, inventory, and access.</div>
+          <div class="feature"><span class="feature-icon">03</span><strong>Decide</strong>Your choices alter later conversations and opportunities.</div>
+          <div class="feature"><span class="feature-icon">04</span><strong>Learn by doing</strong>Quests connect directly to SPM 343 concepts.</div>
+        </div>
+      </div>
+
+      <div class="title-art" aria-label="Stylized map of Ecosystem City">
+        <div class="art-header"><span>ECOSYSTEM CITY</span><span class="art-signal"><i></i> NETWORK ONLINE</span></div>
+        <svg id="ecosystemCityArt" viewBox="0 0 620 470" role="img" aria-label="Connected esports ecosystem districts">
+          <defs>
+            <linearGradient id="cityBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#071326"/>
+              <stop offset="0.55" stop-color="#0b1f3b"/>
+              <stop offset="1" stop-color="#17204a"/>
+            </linearGradient>
+            <linearGradient id="roadGlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#53d6df" stop-opacity="0"/>
+              <stop offset="0.45" stop-color="#53d6df" stop-opacity="0.65"/>
+              <stop offset="1" stop-color="#f0c55c" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="7" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="tinyGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <pattern id="cityGrid" width="38" height="38" patternUnits="userSpaceOnUse">
+              <path d="M38 0H0V38" fill="none" stroke="#2a4770" stroke-width="1" stroke-opacity=".28"/>
+            </pattern>
+          </defs>
+
+          <rect width="620" height="470" rx="26" fill="url(#cityBg)"/>
+          <rect width="620" height="470" rx="26" fill="url(#cityGrid)"/>
+          <ellipse cx="310" cy="252" rx="260" ry="155" fill="#1d3a66" opacity=".17"/>
+          <path d="M38 349 C155 298 223 315 310 258 C386 209 454 199 582 132" stroke="url(#roadGlow)" stroke-width="22" opacity=".25" fill="none"/>
+          <path d="M310 54V416M64 236H560" stroke="#203e64" stroke-width="18" opacity=".55"/>
+          <path d="M310 54V416M64 236H560" stroke="#4a7195" stroke-width="2" stroke-dasharray="8 13" opacity=".6"/>
+
+          <g class="link-network" fill="none" stroke="#f1c659" stroke-width="2.4" stroke-dasharray="7 7" opacity=".92">
+            <path class="link-line" d="M303 242L151 343"/>
+            <path class="link-line" d="M313 242L236 358"/>
+            <path class="link-line" d="M326 244L402 351"/>
+            <path class="link-line" d="M336 235L499 327"/>
+            <path class="link-line" d="M309 224L170 151"/>
+            <path class="link-line" d="M321 220L286 128"/>
+            <path class="link-line" d="M334 222L411 141"/>
+            <path class="link-line" d="M342 231L510 167"/>
+          </g>
+
+          <g class="city-tower" transform="translate(117 91)">
+            <path d="M0 45L48 19L96 45L48 72Z" fill="#3f938c"/>
+            <path d="M0 45V104L48 132V72Z" fill="#215e60"/>
+            <path d="M96 45V104L48 132V72Z" fill="#2d7875"/>
+            <g fill="#8ee7e1" opacity=".76"><rect x="17" y="61" width="13" height="4"/><rect x="17" y="76" width="13" height="4"/><rect x="17" y="91" width="13" height="4"/></g>
+            <text x="48" y="152">EVENTS</text>
+          </g>
+
+          <g class="city-tower" transform="translate(239 62)">
+            <path d="M0 54L48 24L96 54L48 84Z" fill="#ca5b72"/>
+            <path d="M0 54V132L48 160V84Z" fill="#743448"/>
+            <path d="M96 54V132L48 160V84Z" fill="#9f435b"/>
+            <g fill="#ffd0d8" opacity=".78"><rect x="18" y="76" width="12" height="5"/><rect x="18" y="94" width="12" height="5"/><rect x="18" y="112" width="12" height="5"/></g>
+            <text x="48" y="181">PRO</text>
+          </g>
+
+          <g class="city-tower" transform="translate(371 88)">
+            <path d="M0 44L48 18L96 44L48 71Z" fill="#6487d3"/>
+            <path d="M0 44V106L48 134V71Z" fill="#314f8c"/>
+            <path d="M96 44V106L48 134V71Z" fill="#4968ab"/>
+            <g fill="#b8ceff" opacity=".78"><rect x="18" y="61" width="12" height="4"/><rect x="18" y="77" width="12" height="4"/><rect x="18" y="93" width="12" height="4"/></g>
+            <text x="48" y="154">PUBLISHER</text>
+          </g>
+
+          <g class="city-tower" transform="translate(96 296)">
+            <path d="M0 37L48 14L96 37L48 61Z" fill="#2aa79d"/>
+            <path d="M0 37V89L48 115V61Z" fill="#176c6b"/>
+            <path d="M96 37V89L48 115V61Z" fill="#248984"/>
+            <text x="48" y="136">GRASSROOTS</text>
+          </g>
+
+          <g class="city-tower" transform="translate(216 323)">
+            <path d="M0 29L43 9L86 29L43 50Z" fill="#5b92e0"/>
+            <path d="M0 29V75L43 98V50Z" fill="#2e5b9d"/>
+            <path d="M86 29V75L43 98V50Z" fill="#4477bf"/>
+            <text x="43" y="119">SCHOOL</text>
+          </g>
+
+          <g class="city-tower" transform="translate(371 316)">
+            <path d="M0 31L46 10L92 31L46 53Z" fill="#a86cd4"/>
+            <path d="M0 31V79L46 104V53Z" fill="#653d8e"/>
+            <path d="M92 31V79L46 104V53Z" fill="#8652b0"/>
+            <text x="46" y="125">CREATORS</text>
+          </g>
+
+          <g class="city-tower" transform="translate(468 284)">
+            <path d="M0 35L43 13L86 35L43 58Z" fill="#7087e6"/>
+            <path d="M0 35V86L43 111V58Z" fill="#3d4f9b"/>
+            <path d="M86 35V86L43 111V58Z" fill="#586cc4"/>
+            <text x="43" y="132">CAMPUS</text>
+          </g>
+
+          <g class="city-tower" transform="translate(476 124)">
+            <path d="M0 35L39 15L78 35L39 56Z" fill="#d6a841"/>
+            <path d="M0 35V82L39 104V56Z" fill="#7d5c1e"/>
+            <path d="M78 35V82L39 104V56Z" fill="#aa7e2b"/>
+            <text x="39" y="124">SPONSORS</text>
+          </g>
+
+          <g class="core-node" filter="url(#softGlow)">
+            <ellipse cx="320" cy="234" rx="49" ry="25" fill="#f1c659" opacity=".24"/>
+            <path d="M278 230L320 206L362 230L320 254Z" fill="#f1c659"/>
+            <path d="M278 230V257L320 281V254Z" fill="#9e721d"/>
+            <path d="M362 230V257L320 281V254Z" fill="#c4922e"/>
+            <circle cx="320" cy="242" r="9" fill="#fff"/>
+            <text x="320" y="301" class="you-label">YOU</text>
+          </g>
+
+          <g class="hud-mini" transform="translate(28 24)">
+            <rect width="180" height="46" rx="12" fill="#07111f" fill-opacity=".8" stroke="#31557b"/>
+            <circle cx="20" cy="23" r="5" fill="#66d9df" filter="url(#tinyGlow)"/>
+            <text x="36" y="19" class="mini-label">ECOSYSTEM SIGNAL</text>
+            <text x="36" y="34" class="mini-value">8 sectors connected</text>
+          </g>
+          <g class="hud-mini" transform="translate(430 24)">
+            <rect width="162" height="46" rx="12" fill="#07111f" fill-opacity=".8" stroke="#31557b"/>
+            <text x="18" y="19" class="mini-label">CAREER PATH</text>
+            <text x="18" y="34" class="mini-value">Local → Global</text>
+          </g>
+        </svg>
+        <div class="art-footer"><span>EVERY SECTOR CREATES DEPENDENCIES</span><span>WASD / ARROWS + E</span></div>
+      </div>
+    </div>
+
+    <div class="start-panel">
+      <div class="creator-head">
+        <div><div class="panel-kicker">CAREER SETUP</div><h2>Create your manager</h2><div class="muted">No real name or student email is required. This is an ungraded game save.</div></div>
+        <div class="career-badge"><span>LOCAL + CLOUD SAVE</span><small>Recovery key supported</small></div>
+      </div>
+      <div class="creator-grid">
+        <div class="field"><label>Character name</label><input id="playerName" maxlength="40" placeholder="e.g., Jax, Nova, Coach L"></div>
+        <div class="field"><label>Avatar signal</label><div id="avatarChoices" class="avatars"></div></div>
+      </div>
+      <div id="archetypes" class="archetypes"></div>
+      <div class="actions"><button id="newGameBtn" class="btn btn-primary" disabled>Start New Career</button><button id="resumeBtn" class="btn btn-secondary hidden">Resume Saved Career</button></div>
+      <div id="startStatus" class="status"></div>
+      <div class="recover"><div class="muted">Playing on another device?</div><div class="recover-row"><input id="recoveryInput" placeholder="Paste recovery key"><button id="recoverBtn" class="btn btn-secondary">Recover</button></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="gameScreen" class="screen game-screen hidden">
+  <div class="game-grid">
+    <div class="world-wrap">
+      <div class="world-atmosphere" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="world-topbar">
+        <div class="top-left">
+          <div class="hud-pill hud-location"><span class="hud-label">CURRENT DISTRICT</span><strong id="zoneName">Grassroots Arcade</strong></div>
+          <div class="hud-pill hud-quest"><span class="hud-label">ACTIVE OBJECTIVE</span><span id="activeQuestLabel">Find Maya</span></div>
+        </div>
+        <div class="top-right"><button id="questBtn" class="hud-pill">Quest Log</button><button id="journalBtn" class="hud-pill">Journal</button><button id="menuBtn" class="hud-pill">Menu</button></div>
+      </div>
+      <canvas id="world" class="world-canvas" width="1000" height="650"></canvas>
+      <div id="districtRibbon" class="district-ribbon" aria-hidden="true"></div>
+      <div id="interactPrompt" class="interact hidden">Press <kbd>E</kbd> to talk</div>
+      <div class="mobile-controls"><div class="dpad"><button class="up" data-key="ArrowUp">▲</button><button class="left" data-key="ArrowLeft">◀</button><button class="down" data-key="ArrowDown">▼</button><button class="right" data-key="ArrowRight">▶</button></div><button id="talkMobile" class="talk-mobile">TALK</button></div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="sidebar-brand"><span>CAREER HUD</span><i></i></div>
+      <div class="player-card"><div id="portrait" class="portrait">P1</div><div><h3 id="playerLabel">Player</h3><div id="archetypeLabel" class="small">Strategist</div><div class="small">Level <span id="levelLabel">1</span> · <span id="xpLabel">0</span> XP</div><div class="xpbar"><div id="xpFill" class="xpfill" style="width:0%"></div></div></div></div>
+      <div class="section"><div class="section-title"><h4>Active Quests</h4><span>MISSION QUEUE</span></div><div id="questMini"></div></div>
+      <div class="section"><div class="section-title"><h4>Skills</h4><span>MANAGER BUILD</span></div><div id="skills"></div></div>
+      <div class="section"><div class="section-title"><h4>Relationships</h4><span>STAKEHOLDER TRUST</span></div><div id="relationships"></div></div>
+      <div class="section"><div class="section-title"><h4>Inventory</h4><span>CAREER ASSETS</span></div><div id="inventory" class="inventory-list"></div></div>
+      <div class="section"><div class="section-title"><h4>News Feed</h4><span>ECOSYSTEM PULSE</span></div><div id="newsFeed"></div></div>
+    </aside>
+  </div>
+</section>
+
+<div id="pauseMenu" class="pause-menu hidden"><div class="panel-kicker">SYSTEM</div><h3>Career Menu</h3><div class="small">Cloud save: <span id="cloudStatus">checking…</span></div><button id="saveNowBtn" class="btn btn-secondary">Save Now</button><button id="copyRecoveryBtn" class="btn btn-secondary">Copy Recovery Key</button><div id="recoveryBox" class="recovery-box hidden"></div><button id="returnTitleBtn" class="btn btn-secondary">Return to Title</button><button id="resetBtn" class="btn btn-danger">Start Over on This Device</button></div>
+
+<div id="modalBackdrop" class="modal-backdrop hidden"><div id="modal" class="modal"><div class="modal-head"><div id="modalEyebrow" class="eyebrow"></div><h2 id="modalTitle"></h2></div><div id="modalBody" class="modal-body"></div></div></div>
+<div id="toast" class="toast"></div>
+
+<script src="data.js"></script>
+<script src="audio.js"></script>
+<script src="game.js"></script>
+<script src="visuals.js"></script>
+</body>
+</html>
