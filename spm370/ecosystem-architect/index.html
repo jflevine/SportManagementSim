@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPM 370 — Ecosystem Architect</title>
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="polish.css"><link rel="stylesheet" href="premium.css">
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div><div class="bg-orb orb-a" aria-hidden="true"></div><div class="bg-orb orb-b" aria-hidden="true"></div><div class="bg-orb orb-c" aria-hidden="true"></div>
+<div class="shell">
+  <div class="top"><div class="brand"><div class="badge">370</div><div><strong>SPM 370 · Esports, Video Games, and the Law</strong><span>Chapter 3 · Applied Business-Model Simulation</span></div></div><div class="pill">Ecosystem Architect · Premium Classroom v5</div></div>
+  <div class="command-hud" id="commandHud"><div class="hud-led"><span></span> LIVE SIMULATION</div><div class="hud-stat"><small>MODE</small><strong id="hudMode">BOARDROOM BUILD</strong></div><div class="hud-stat"><small>MODEL</small><strong id="hudModel">UNSET</strong></div><div class="hud-stat"><small>REVENUE STABILITY</small><strong id="hudRevenue">—</strong></div><div class="hud-stat"><small>LEGAL RESILIENCE</small><strong id="hudLegal">55</strong></div><div class="hud-stat threat"><small>RISK TEMP</small><strong id="hudThreat">CALIBRATING</strong></div></div>
+
+  <section class="hero" id="intro">
+    <div class="hero-grid">
+      <div><div class="eyebrow">Interactive Strategy Simulation</div><h1>ECOSYSTEM ARCHITECT</h1><div class="sub">Build an Esports Business Model</div><p>You have been hired to design the competitive ecosystem for a new esport. Build the architecture, fund it, choose the legal tools, and then survive the shocks that expose where your model is resilient—and where it depends on someone else.</p><div class="hero-tags"><span class="hero-tag">Money + Control + Law</span><span class="hero-tag">Publisher Dependency</span><span class="hero-tag">Contract Architecture</span><span class="hero-tag">Live Crisis Simulation</span></div></div>
+      <div class="hero-art"><div class="hero-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+        <svg viewBox="0 0 520 330" aria-hidden="true">
+          <rect x="18" y="22" width="484" height="286" rx="22" fill="#0c1733" stroke="#58d4df" stroke-width="2"/>
+          <circle cx="260" cy="165" r="52" fill="#152552" stroke="#d9a63b" stroke-width="3"/><text x="260" y="157" fill="#fff" text-anchor="middle" font-size="18" font-weight="700">YOUR</text><text x="260" y="181" fill="#f1cb70" text-anchor="middle" font-size="18" font-weight="700">ECOSYSTEM</text>
+          <g stroke="#5671c7" stroke-width="2"><line x1="260" y1="113" x2="260" y2="60"/><line x1="208" y1="165" x2="104" y2="165"/><line x1="312" y1="165" x2="416" y2="165"/><line x1="225" y1="205" x2="150" y2="260"/><line x1="295" y1="205" x2="370" y2="260"/></g>
+          <g fill="#173062" stroke="#66dbe5" stroke-width="2"><circle class="pulse-dot" cx="260" cy="56" r="26"/><circle class="pulse-dot" cx="96" cy="165" r="26"/><circle class="pulse-dot" cx="424" cy="165" r="26"/><circle class="pulse-dot" cx="140" cy="267" r="26"/><circle class="pulse-dot" cx="380" cy="267" r="26"/></g>
+          <g fill="#fff" text-anchor="middle" font-size="13" font-weight="700"><text x="260" y="61">MONEY</text><text x="96" y="170">ACCESS</text><text x="424" y="170">CONTROL</text><text x="140" y="272">LAW</text><text x="380" y="272">FANS</text></g>
+        </svg>
+      </div>
+    </div>
+    <div class="rules"><div class="rule"><strong>No perfect model</strong>Every architecture trades one kind of advantage for another.</div><div class="rule"><strong>Five contract slots</strong>Prioritize the legal tools you think your ecosystem actually needs.</div><div class="rule"><strong>Three live crises</strong>Your choices move the dashboard and expose hidden dependencies.</div></div><div class="flash-banner">Premium classroom build · projector-ready debriefs · instructor-triggered crisis injection</div>
+    <div class="launchbox"><h3>Enter the strategy room</h3><div class="launchrow"><label><span>Team / group name</span><input id="teamName" maxlength="60" placeholder="Team Respawn"></label><label><span>Role</span><input value="Publisher / Ecosystem Designer" disabled></label></div><div class="launchfoot"><span class="note">Premium classroom build. Current role: Publisher / Ecosystem Designer. Progress saves automatically on this device.</span><button class="primary" id="startBtn">Begin Build</button></div></div>
+  </section>
+
+  <div class="app" id="app">
+    <div class="progress"><div class="prow"><strong id="pLabel">Stage 1 of 6</strong><span id="pStage">Competitive Architecture</span></div><div class="track"><div class="bar" id="pBar"></div></div><div class="steps" id="steps"></div></div>
+    <div class="layout">
+      <main class="card main"><div class="stage-ribbon"><span class="ribbon-kicker">ACTIVE WORKSPACE</span><strong id="ribbonTitle">COMPETITIVE ARCHITECTURE</strong><span class="ribbon-signal" id="ribbonSignal">SYSTEM READY</span></div>
+        <section class="section active" data-step="1">
+          <div class="stage">Stage 1 · Competitive Architecture</div><h2>Design the playing field</h2><p class="lead">Choose the competitive level and access model. There is no universally “best” option; each choice changes who gets access, who carries risk, and how much control stays with the publisher.</p>
+          <h3>Competition level</h3><div class="choice-grid" id="levelChoices"></div><h3 style="margin-top:20px">Access model</h3><div class="choice-grid" id="modelChoices"></div>
+          <div class="actions"><span class="helper">Watch the live dashboard as your architecture changes.</span><button class="primary" id="toRevenue" disabled>Build the Money Engine →</button></div>
+        </section>
+
+        <section class="section" data-step="2">
+          <div class="stage">Stage 2 · Money Engine</div><h2>Allocate 100 revenue points</h2><p class="lead">Build the operating mix. Revenue stability and publisher dependency are separate questions: a stream can be reliable while still increasing dependence on the rights holder.</p>
+          <div class="revenue-wrap"><div><div class="sliders" id="sliders"></div><div class="alert warn" style="margin-top:12px">Your sliders must total exactly <strong>100</strong>. Current total: <span class="total" id="total">100</span>.</div></div><div class="revenue-card"><div class="donut" id="donut"><div class="donut-center">Operating<br>revenue mix</div></div><div>Revenue Stability</div><div class="revscore" id="stabilityScore">—</div><div class="revlegend" id="revLegend"></div><div class="alert" id="revenueAlert"></div></div></div>
+          <div class="actions"><button class="secondary" data-back="1">← Architecture</button><button class="primary" id="toContracts" disabled>Choose Legal Tools →</button></div>
+        </section>
+
+        <section class="section" data-step="3">
+          <div class="stage">Stage 3 · Legal Architecture</div><h2>You only get five contract slots</h2><p class="lead">Choose the agreements and clauses that will support the model you built. Scarcity is intentional: prioritize what matters most and accept that omitted protections can become future exposure.</p>
+          <div class="slotbar"><strong>Contract architecture</strong><div class="slots" id="slots"></div><span id="slotText">0 / 5 selected</span></div><div class="contract-grid" id="contractGrid"></div>
+          <div class="actions"><button class="secondary" data-back="2">← Money Engine</button><button class="primary" id="toRisk" disabled>Open Legal Risk Board →</button></div>
+        </section>
+
+        <section class="section" data-step="4">
+          <div class="stage">Stage 4 · Legal Risk Board</div><h2>Where does the model break first?</h2><p class="lead">The board is a diagnostic map, not a legal conclusion. High exposure means the architecture deserves more attention, more facts, or escalation before launch.</p>
+          <div class="risk-wrap"><div class="radarbox" id="radarBox"></div><div><div class="risklist" id="riskList"></div><div class="lens" id="riskLens"></div></div></div>
+          <div class="actions"><button class="secondary" data-back="3">← Legal Architecture</button><button class="danger" id="launchSeason">LAUNCH SEASON</button></div>
+        </section>
+
+        <section class="section" data-step="5">
+          <div class="crisis-head"><div><div class="breaking">Breaking News</div><h2 style="margin-top:8px">Crisis Mode</h2></div><div class="crisiscount" id="crisisCount">Shock 1 of 3</div></div><p class="lead">The same shock does not affect every ecosystem the same way. Respond as management, then use the debrief to identify the legal architecture beneath the decision.</p><div class="crisis-telemetry"><span>LIVE FEED</span><strong id="crisisTelemetry">Awaiting incident analysis…</strong><i></i></div><div id="crisisMount"></div>
+        </section>
+
+        <section class="section" data-step="6">
+          <div class="stage">Stage 6 · Ecosystem DNA</div><h2>Your business model survived the season</h2><p class="lead">The end-state is not a grade. It is a snapshot of the tradeoffs you built—and the legal dependency most likely to matter next.</p><div class="hudline"><span>Premium Classroom Debrief</span><span>Archetype + Risk Story</span><span>Printable Board Report</span></div><div class="report" id="report"></div>
+          <div class="reflection"><label><span>1. What is the strongest feature of your model?</span><textarea id="r1"></textarea></label><label><span>2. What is its most dangerous dependency?</span><textarea id="r2"></textarea></label><label><span>3. What would you change after seeing the risk analysis?</span><textarea id="r3"></textarea></label></div>
+          <div class="report-actions"><button class="primary" id="classView">30-Second Classroom Debrief</button><button class="secondary" id="copyReport">Copy Board Report</button><button class="secondary" onclick="window.print()">Print / Save PDF</button><button class="ghost" id="resetBtn">Reset & Replay</button></div><div class="toast" id="toast">Board report copied.</div>
+        </section>
+      </main>
+
+      <aside class="card side">
+        <h3>Live Ecosystem Dashboard</h3><div class="teamtag" id="teamTag"><strong>NEXUS//ARENA</strong><br>Publisher / Ecosystem Designer</div><div class="snapshot-grid" id="snapshotGrid"></div><div id="metrics"></div>
+        <div class="dependency"><strong><span>Publisher-linked revenue</span><span id="depVal">35%</span></strong><div class="depbar"><div class="depfill" id="depFill" style="width:35%"></div></div></div>
+        <div class="network"><h3 style="margin-bottom:6px">Stakeholder Network</h3><svg id="networkSvg" viewBox="0 0 320 230" aria-label="Stakeholder network"></svg><div class="network-caption" id="networkCaption">Selections light up the stakeholders your current legal architecture touches.</div></div>
+        <div class="mini" id="sideNote">Every choice moves multiple indicators. You cannot maximize access, control, predictability, and independence at the same time.</div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="celebration" id="celebration" aria-hidden="true"></div>
+<div class="overlay" id="launchOverlay"><div class="overlay-card"><div class="eyebrow">Season Initialization</div><h2 id="launchText">LOCKING ARCHITECTURE</h2><div class="countdown" id="countdown">3</div><p>Revenue model loaded. Contract architecture locked. Legal risk board active.</p></div></div>
+<div class="overlay" id="newsOverlay"><div class="overlay-card news-card"><div class="eyebrow">Breaking News</div><h2 id="newsTitle">CRISIS ALERT</h2><div class="news-strip" id="newsTags"></div><p id="newsText"></p><button class="primary" id="openBriefing">Open Crisis Briefing</button></div></div>
+<div class="overlay" id="debriefOverlay"><div class="overlay-card"><div class="eyebrow">Classroom Debrief · 30 Seconds</div><h2 id="debriefArch">THE CONTROLLED HYBRID</h2><div class="debrief-grid" id="debriefStats"></div><p id="debriefPrompt"></p><button class="primary" id="closeDebrief">Return to Board Report</button></div></div>
+<div class="overlay" id="bootOverlay"><div class="overlay-card"><div class="eyebrow">Board Access Sequence</div><h2 id="bootTitle">AUTHENTICATING TEAM</h2><div class="countdown" id="bootCount">01</div><p id="bootText">Loading simulation environment, syncing architecture board, and preparing your strategy room.</p></div></div>
+<div class="overlay" id="chaosOverlay"><div class="overlay-card"><div class="eyebrow">Professor Chaos Mode</div><h2>Inject a Classroom Shock</h2><p>Select a specific crisis to spotlight a concept, or let the system surprise the room with a random disruption.</p><div class="chaos-grid" id="chaosGrid"></div><div class="chaos-actions"><button class="secondary" id="chaosRandom">Random Chaos</button><button class="ghost" id="closeChaos">Close</button></div></div></div>
+
+<script src="data.js"></script><script src="app.js"></script>
+</body>
+</html>
