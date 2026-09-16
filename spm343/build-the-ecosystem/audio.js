@@ -43,9 +43,7 @@ function noise(dur=.05,vol=.025,delay=0,dest=sfxGain,highpass=1200){
 function kick(delay=0,vol=.055){if(muted||!ensure())return;const t=ctx.currentTime+delay,o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(118,t);o.frequency.exponentialRampToValueAtTime(46,t+.12);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.15);o.connect(g);g.connect(musicGain);o.start(t);o.stop(t+.17)}
 function snare(delay=0,vol=.022){noise(.11,vol,delay,musicGain,900);synth(185,.09,'triangle',vol*.55,delay,musicGain,900)}
 function hat(delay=0,vol=.008){noise(.025,vol,delay,musicGain,5200)}
-function pad(root,mode,delay=0,vol=.014,type='sine'){
-  [mode[0],mode[1],mode[2]].forEach((s,i)=>{synth(hz(root,s+(i===2?12:0)),.78,type,vol*(i===0?1:.78),delay,musicGain,1050,i===1?-4:4)});
-}
+function pad(root,mode,delay=0,vol=.014,type='sine'){[mode[0],mode[1],mode[2]].forEach((s,i)=>{synth(hz(root,s+(i===2?12:0)),.78,type,vol*(i===0?1:.78),delay,musicGain,1050,i===1?-4:4)})}
 function arp(mood,index){const degrees=[0,2,1,3,2,1,3,1],s=mood.mode[degrees[index%degrees.length]%mood.mode.length]+(index%4>1?12:0);synth(hz(mood.root,s),.12,mood.lead,.009+.009*mood.energy,0,musicGain,2300+1400*mood.energy,index%2?3:-3)}
 function bass(mood,index){const s=index%2===0?mood.mode[0]:mood.mode[2]-12;synth(hz(mood.root,s),.22,'triangle',.018+.012*mood.energy,0,musicGain,620)}
 function ambience(mood){if(step%32!==0)return;const root=mood.root/2;synth(root,1.8,'sine',.008,0,ambienceGain,520);synth(root*1.5,1.55,'sine',.004,.08,ambienceGain,740)}
@@ -76,9 +74,7 @@ function open(){if(muted)return;synth(330,.055,'sine',.04,0,sfxGain,3500);synth(
 function confirm(){if(muted)return;synth(523.25,.07,'sine',.04,0,sfxGain,4200);synth(783.99,.08,'triangle',.032,.045,sfxGain,5000)}
 function foot(){if(muted||!ensure())return;noise(.018,.006,0,sfxGain,500);synth(105,.025,'sine',.008,0,sfxGain,420)}
 
-function setMuted(v){
-  muted=v;localStorage.setItem(PREF_KEY,muted?'muted':'on');if(master&&ctx)master.gain.setTargetAtTime(muted?0:.72,ctx.currentTime,.04);if(muted)stopMusic();else{ensure();startMusic();blip()}syncButtons();
-}
+function setMuted(v){muted=v;localStorage.setItem(PREF_KEY,muted?'muted':'on');if(master&&ctx)master.gain.setTargetAtTime(muted?0:.72,ctx.currentTime,.04);if(muted)stopMusic();else{ensure();startMusic();blip()}syncButtons()}
 function toggle(e){if(e)e.stopPropagation();ensure();setMuted(!muted)}
 function syncButtons(){document.querySelectorAll('[data-audio-toggle]').forEach(b=>{b.textContent=muted?'🔇 Muted':'🔊 Sound';b.setAttribute('aria-pressed',String(!muted));b.title=muted?'Turn game audio on':'Mute game audio'})}
 function installButtons(){
@@ -89,18 +85,16 @@ function installButtons(){
 
 let lastFoot=0;
 document.addEventListener('pointerdown',()=>{if(!muted){ensure();startMusic()}},{once:true,capture:true});
-document.addEventListener('keydown',e=>{
-  if(!muted){ensure();startMusic()}
-  if((e.key==='e'||e.key==='E')&&!document.getElementById('modalBackdrop')?.classList.contains('hidden'))return;
-  if(e.key==='e'||e.key==='E')talk();
-  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){const now=performance.now();if(now-lastFoot>190){lastFoot=now;foot();}}
-});
-document.addEventListener('click',e=>{if(e.target.closest('[data-audio-toggle]'))return;if(e.target.closest('.choice,.mini-card,#finishQuestBtn,#backWorld'))confirm();else if(e.target.closest('button,.archetype,.avatar-choice,.decision'))blip();if(e.target.closest('#talkMobile'))talk();});
+document.addEventListener('keydown',e=>{if(!muted){ensure();startMusic()}if((e.key==='e'||e.key==='E')&&!document.getElementById('modalBackdrop')?.classList.contains('hidden'))return;if(e.key==='e'||e.key==='E')talk();if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){const now=performance.now();if(now-lastFoot>190){lastFoot=now;foot()}}});
+document.addEventListener('click',e=>{if(e.target.closest('[data-audio-toggle]'))return;if(e.target.closest('.choice,.mini-card,#finishQuestBtn,#backWorld'))confirm();else if(e.target.closest('button,.archetype,.avatar-choice,.decision'))blip();if(e.target.closest('#talkMobile'))talk()});
 
-const toast=document.getElementById('toast');if(toast)new MutationObserver(()=>{const t=(toast.textContent||'').toLowerCase();if(!t)return;if(t.includes('level up'))level();else if(t.includes('item acquired'))item();else if(t.includes('quest')&&t.includes('complete'))quest();else if(t.includes('locked')||t.includes('cannot'))warning();}).observe(toast,{childList:true,subtree:true,characterData:true});
+const toast=document.getElementById('toast');if(toast)new MutationObserver(()=>{const t=(toast.textContent||'').toLowerCase();if(!t)return;if(t.includes('level up'))level();else if(t.includes('item acquired'))item();else if(t.includes('quest')&&t.includes('complete'))quest();else if(t.includes('locked')||t.includes('cannot'))warning()}).observe(toast,{childList:true,subtree:true,characterData:true});
 const modal=document.getElementById('modalBackdrop');if(modal)new MutationObserver(()=>{if(!modal.classList.contains('hidden'))open()}).observe(modal,{attributes:true,attributeFilter:['class']});
 const game=document.getElementById('gameScreen');if(game)new MutationObserver(()=>{if(!game.classList.contains('hidden')&&!muted){ensure();startMusic()}else if(game.classList.contains('hidden'))setMood('title')}).observe(game,{attributes:true,attributeFilter:['class']});
 const zone=document.getElementById('zoneName');if(zone)new MutationObserver(()=>setMood(ZONE_MAP[(zone.textContent||'').trim()]||'title')).observe(zone,{childList:true,subtree:true,characterData:true});
 
 window.RPG_AUDIO={blip,talk,item,quest,level,warning,confirm,setMuted,setMood,isMuted:()=>muted};installButtons();
 })();
+
+// Load the Phase 2 environment renderer after the synchronous game/visual scripts finish.
+setTimeout(()=>{import('./worldart.js').catch(()=>{})},0);
