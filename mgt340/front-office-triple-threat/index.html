@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#08121f">
+  <title>Front Office: Triple Threat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="forge-mark" aria-hidden="true">F</div>
+        <div>
+          <div class="eyebrow">MGT 340 · WEEK 3 MANAGEMENT SIMULATION</div>
+          <div class="brand-title">FORGE SPORTS GROUP</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="soundBtn" class="ghost-btn" type="button" aria-pressed="true">🔊 Sound</button>
+        <button id="restartBtn" class="ghost-btn" type="button">Restart</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="introScreen" class="screen intro-screen">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow cyan">FRONT OFFICE // EXECUTIVE MODE</div>
+            <h1>TRIPLE <span>THREAT</span></h1>
+            <p class="hero-lede">You are the new President of Forge Sports Group. Three teams. Four management functions. One season to modernize the organization before the board decides whether you keep the job.</p>
+            <div class="hero-pill-row">
+              <span>⚽ Planning</span><span>🏒 Organizing</span><span>🏀 Leading</span><span>📊 Evaluating</span>
+            </div>
+            <div class="mission-brief">
+              <div class="brief-label">YOUR MANDATE</div>
+              <p>Make decisions, allocate scarce resources, manage people, define authority, evaluate performance, and live with the consequences. Every choice moves the organization.</p>
+            </div>
+            <div class="start-controls">
+              <label for="execName">Executive name</label>
+              <div class="name-row">
+                <input id="execName" maxlength="24" autocomplete="off" placeholder="e.g., Jordan, Alex, Coach K">
+                <button id="startBtn" class="primary-btn" type="button" disabled>Enter the Front Office →</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="triple-venue" aria-label="Three Forge Sports Group teams">
+            <button class="venue-card soccer-card" type="button" tabindex="-1" aria-hidden="true">
+              <div class="venue-score"><span>FORGE FC</span><strong>⚽</strong></div>
+              <div class="pitch-mini"><i></i><i></i><i></i><i></i><b></b></div>
+              <div class="venue-foot"><span>THE PLAN</span><small>Build for more than one season.</small></div>
+            </button>
+            <button class="venue-card hockey-card" type="button" tabindex="-1" aria-hidden="true">
+              <div class="venue-score"><span>FORGE HOCKEY</span><strong>🏒</strong></div>
+              <div class="rink-mini"><i></i><i></i><b></b></div>
+              <div class="venue-foot"><span>THE STRUCTURE</span><small>Put authority where it belongs.</small></div>
+            </button>
+            <button class="venue-card basketball-card" type="button" tabindex="-1" aria-hidden="true">
+              <div class="venue-score"><span>FORGE BASKETBALL</span><strong>🏀</strong></div>
+              <div class="court-mini"><i></i><i></i><b></b></div>
+              <div class="venue-foot"><span>THE PEOPLE</span><small>Lead when pressure is visible.</small></div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen hidden">
+        <div class="command-header">
+          <div>
+            <div class="eyebrow">FORGE SPORTS GROUP // EXECUTIVE COMMAND</div>
+            <h2 id="stageTitle">Planning Room</h2>
+          </div>
+          <div class="progress-rail" aria-label="Simulation progress">
+            <div class="progress-step active" data-step="1"><span>1</span><small>Plan</small></div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="2"><span>2</span><small>Organize</small></div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="3"><span>3</span><small>Lead</small></div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="4"><span>4</span><small>Evaluate</small></div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="5"><span>5</span><small>Board</small></div>
+          </div>
+        </div>
+
+        <div class="game-layout">
+          <section id="stageHost" class="stage-host" aria-live="polite"></section>
+
+          <aside class="executive-hud">
+            <div class="hud-label-row"><span>EXECUTIVE DASHBOARD</span><strong id="execLabel">PRESIDENT</strong></div>
+            <div class="org-score">
+              <div class="score-ring"><span id="orgScore">70</span><small>ORG<br>SCORE</small></div>
+              <div class="score-copy"><strong>Forge health</strong><span id="healthText">Stable, but exposed</span></div>
+            </div>
+            <div class="metric-stack">
+              <div class="metric-row"><div><span>Performance</span><strong id="performanceValue">70</strong></div><div class="metric-track"><i id="performanceBar" style="width:70%"></i></div></div>
+              <div class="metric-row"><div><span>People</span><strong id="peopleValue">70</strong></div><div class="metric-track"><i id="peopleBar" style="width:70%"></i></div></div>
+              <div class="metric-row"><div><span>Money</span><strong id="moneyValue">70</strong></div><div class="metric-track"><i id="moneyBar" style="width:70%"></i></div></div>
+              <div class="metric-row"><div><span>Fan confidence</span><strong id="fanValue">70</strong></div><div class="metric-track"><i id="fanBar" style="width:70%"></i></div></div>
+            </div>
+
+            <div class="competency-card">
+              <div class="mini-heading">MANAGEMENT BUILD</div>
+              <div class="competency-grid">
+                <div><span>Planning</span><strong id="planningScore">0</strong></div>
+                <div><span>Organizing</span><strong id="organizingScore">0</strong></div>
+                <div><span>Leading</span><strong id="leadingScore">0</strong></div>
+                <div><span>Evaluating</span><strong id="evaluatingScore">0</strong></div>
+              </div>
+            </div>
+
+            <div class="ticker-card">
+              <div class="mini-heading">FORGE WIRE</div>
+              <div id="newsTicker" class="news-ticker">Board mandate issued: modernize all three teams.</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="screen result-screen hidden" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
