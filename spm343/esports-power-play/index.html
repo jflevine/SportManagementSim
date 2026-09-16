@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111d">
+  <title>Esports Power Play — Who Controls the Ecosystem?</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="broadcast-bar">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">PP</div>
+        <div>
+          <div class="eyebrow">SPM 343 · WEEK 3 STAKEHOLDER SIMULATION</div>
+          <div class="brand-title">ESPORTS POWER PLAY</div>
+        </div>
+      </div>
+      <div class="broadcast-actions">
+        <div class="live-pill"><span class="live-dot"></span> LIVE SIM</div>
+        <button id="soundBtn" class="icon-btn" type="button" aria-pressed="true">Sound On</button>
+        <button id="restartBtn" class="icon-btn" type="button">Restart</button>
+      </div>
+    </header>
+
+    <section id="hud" class="hud hidden" aria-label="Ecosystem status">
+      <div class="score-cluster">
+        <div class="score-box"><span>SCORE</span><strong id="scoreValue">0</strong></div>
+        <div class="score-box"><span>STREAK</span><strong id="streakValue">x1</strong></div>
+      </div>
+      <div class="meter-grid">
+        <div class="meter" data-key="access"><div class="meter-top"><span>Publisher Access</span><b id="accessValue">70</b></div><div class="meter-track"><i id="accessBar"></i></div></div>
+        <div class="meter" data-key="welfare"><div class="meter-top"><span>Player Welfare</span><b id="welfareValue">70</b></div><div class="meter-track"><i id="welfareBar"></i></div></div>
+        <div class="meter" data-key="fans"><div class="meter-top"><span>Fan Legitimacy</span><b id="fansValue">70</b></div><div class="meter-track"><i id="fansBar"></i></div></div>
+        <div class="meter" data-key="runway"><div class="meter-top"><span>Financial Runway</span><b id="runwayValue">70</b></div><div class="meter-track"><i id="runwayBar"></i></div></div>
+        <div class="meter" data-key="stability"><div class="meter-top"><span>Ecosystem Stability</span><b id="stabilityValue">70</b></div><div class="meter-track"><i id="stabilityBar"></i></div></div>
+      </div>
+    </section>
+
+    <main id="stage" class="stage" tabindex="-1"></main>
+
+    <footer class="footer-strip">
+      <span>CHAMPIONS OF VALOR WORLD SERIES</span>
+      <span id="footerStatus">Commissioner briefing</span>
+      <span>POWER · LEGITIMACY · URGENCY</span>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="timer-guard.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
