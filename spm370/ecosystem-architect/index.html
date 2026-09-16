@@ -2,90 +2,149 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SPM 370 — Ecosystem Architect</title>
-<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="polish.css"><link rel="stylesheet" href="premium.css">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081326">
+<title>Ecosystem Architect: Season One — Power. Money. Law.</title>
+<link rel="stylesheet" href="season-one.css">
 </head>
 <body>
-<div class="bg-grid" aria-hidden="true"></div><div class="bg-orb orb-a" aria-hidden="true"></div><div class="bg-orb orb-b" aria-hidden="true"></div><div class="bg-orb orb-c" aria-hidden="true"></div>
-<div class="shell">
-  <div class="top"><div class="brand"><div class="badge">370</div><div><strong>SPM 370 · Esports, Video Games, and the Law</strong><span>Chapter 3 · Applied Business-Model Simulation</span></div></div><div class="pill">Ecosystem Architect · Premium Classroom v5</div></div>
-  <div class="command-hud" id="commandHud"><div class="hud-led"><span></span> LIVE SIMULATION</div><div class="hud-stat"><small>MODE</small><strong id="hudMode">BOARDROOM BUILD</strong></div><div class="hud-stat"><small>MODEL</small><strong id="hudModel">UNSET</strong></div><div class="hud-stat"><small>REVENUE STABILITY</small><strong id="hudRevenue">—</strong></div><div class="hud-stat"><small>LEGAL RESILIENCE</small><strong id="hudLegal">55</strong></div><div class="hud-stat threat"><small>RISK TEMP</small><strong id="hudThreat">CALIBRATING</strong></div></div>
+<div class="texture" aria-hidden="true"></div>
+<div class="speedlines" aria-hidden="true"></div>
 
-  <section class="hero" id="intro">
-    <div class="hero-grid">
-      <div><div class="eyebrow">Interactive Strategy Simulation</div><h1>ECOSYSTEM ARCHITECT</h1><div class="sub">Build an Esports Business Model</div><p>You have been hired to design the competitive ecosystem for a new esport. Build the architecture, fund it, choose the legal tools, and then survive the shocks that expose where your model is resilient—and where it depends on someone else.</p><div class="hero-tags"><span class="hero-tag">Money + Control + Law</span><span class="hero-tag">Publisher Dependency</span><span class="hero-tag">Contract Architecture</span><span class="hero-tag">Live Crisis Simulation</span></div></div>
-      <div class="hero-art"><div class="hero-rings" aria-hidden="true"><i></i><i></i><i></i></div>
-        <svg viewBox="0 0 520 330" aria-hidden="true">
-          <rect x="18" y="22" width="484" height="286" rx="22" fill="#0c1733" stroke="#58d4df" stroke-width="2"/>
-          <circle cx="260" cy="165" r="52" fill="#152552" stroke="#d9a63b" stroke-width="3"/><text x="260" y="157" fill="#fff" text-anchor="middle" font-size="18" font-weight="700">YOUR</text><text x="260" y="181" fill="#f1cb70" text-anchor="middle" font-size="18" font-weight="700">ECOSYSTEM</text>
-          <g stroke="#5671c7" stroke-width="2"><line x1="260" y1="113" x2="260" y2="60"/><line x1="208" y1="165" x2="104" y2="165"/><line x1="312" y1="165" x2="416" y2="165"/><line x1="225" y1="205" x2="150" y2="260"/><line x1="295" y1="205" x2="370" y2="260"/></g>
-          <g fill="#173062" stroke="#66dbe5" stroke-width="2"><circle class="pulse-dot" cx="260" cy="56" r="26"/><circle class="pulse-dot" cx="96" cy="165" r="26"/><circle class="pulse-dot" cx="424" cy="165" r="26"/><circle class="pulse-dot" cx="140" cy="267" r="26"/><circle class="pulse-dot" cx="380" cy="267" r="26"/></g>
-          <g fill="#fff" text-anchor="middle" font-size="13" font-weight="700"><text x="260" y="61">MONEY</text><text x="96" y="170">ACCESS</text><text x="424" y="170">CONTROL</text><text x="140" y="272">LAW</text><text x="380" y="272">FANS</text></g>
-        </svg>
-      </div>
-    </div>
-    <div class="rules"><div class="rule"><strong>No perfect model</strong>Every architecture trades one kind of advantage for another.</div><div class="rule"><strong>Five contract slots</strong>Prioritize the legal tools you think your ecosystem actually needs.</div><div class="rule"><strong>Three live crises</strong>Your choices move the dashboard and expose hidden dependencies.</div></div><div class="flash-banner">Premium classroom build · projector-ready debriefs · instructor-triggered crisis injection</div>
-    <div class="launchbox"><h3>Enter the strategy room</h3><div class="launchrow"><label><span>Team / group name</span><input id="teamName" maxlength="60" placeholder="Team Respawn"></label><label><span>Role</span><input value="Publisher / Ecosystem Designer" disabled></label></div><div class="launchfoot"><span class="note">Premium classroom build. Current role: Publisher / Ecosystem Designer. Progress saves automatically on this device.</span><button class="primary" id="startBtn">Begin Build</button></div></div>
-  </section>
+<header class="coursebar">
+  <div class="coursebrand"><span class="coursebadge">370</span><div><strong>SPM 370 · Esports, Video Games, and the Law</strong><small>Weeks 2–3 · Stakeholders, Legal Ecosystems & Business Models</small></div></div>
+  <div class="courseactions"><button id="soundBtn" class="iconbtn" aria-pressed="false">SFX ON</button><button id="resetBtn" class="iconbtn">RESET</button></div>
+</header>
 
-  <div class="app" id="app">
-    <div class="progress"><div class="prow"><strong id="pLabel">Stage 1 of 6</strong><span id="pStage">Competitive Architecture</span></div><div class="track"><div class="bar" id="pBar"></div></div><div class="steps" id="steps"></div></div>
-    <div class="layout">
-      <main class="card main"><div class="stage-ribbon"><span class="ribbon-kicker">ACTIVE WORKSPACE</span><strong id="ribbonTitle">COMPETITIVE ARCHITECTURE</strong><span class="ribbon-signal" id="ribbonSignal">SYSTEM READY</span></div>
-        <section class="section active" data-step="1">
-          <div class="stage">Stage 1 · Competitive Architecture</div><h2>Design the playing field</h2><p class="lead">Choose the competitive level and access model. There is no universally “best” option; each choice changes who gets access, who carries risk, and how much control stays with the publisher.</p>
-          <h3>Competition level</h3><div class="choice-grid" id="levelChoices"></div><h3 style="margin-top:20px">Access model</h3><div class="choice-grid" id="modelChoices"></div>
-          <div class="actions"><span class="helper">Watch the live dashboard as your architecture changes.</span><button class="primary" id="toRevenue" disabled>Build the Money Engine →</button></div>
-        </section>
-
-        <section class="section" data-step="2">
-          <div class="stage">Stage 2 · Money Engine</div><h2>Allocate 100 revenue points</h2><p class="lead">Build the operating mix. Revenue stability and publisher dependency are separate questions: a stream can be reliable while still increasing dependence on the rights holder.</p>
-          <div class="revenue-wrap"><div><div class="sliders" id="sliders"></div><div class="alert warn" style="margin-top:12px">Your sliders must total exactly <strong>100</strong>. Current total: <span class="total" id="total">100</span>.</div></div><div class="revenue-card"><div class="donut" id="donut"><div class="donut-center">Operating<br>revenue mix</div></div><div>Revenue Stability</div><div class="revscore" id="stabilityScore">—</div><div class="revlegend" id="revLegend"></div><div class="alert" id="revenueAlert"></div></div></div>
-          <div class="actions"><button class="secondary" data-back="1">← Architecture</button><button class="primary" id="toContracts" disabled>Choose Legal Tools →</button></div>
-        </section>
-
-        <section class="section" data-step="3">
-          <div class="stage">Stage 3 · Legal Architecture</div><h2>You only get five contract slots</h2><p class="lead">Choose the agreements and clauses that will support the model you built. Scarcity is intentional: prioritize what matters most and accept that omitted protections can become future exposure.</p>
-          <div class="slotbar"><strong>Contract architecture</strong><div class="slots" id="slots"></div><span id="slotText">0 / 5 selected</span></div><div class="contract-grid" id="contractGrid"></div>
-          <div class="actions"><button class="secondary" data-back="2">← Money Engine</button><button class="primary" id="toRisk" disabled>Open Legal Risk Board →</button></div>
-        </section>
-
-        <section class="section" data-step="4">
-          <div class="stage">Stage 4 · Legal Risk Board</div><h2>Where does the model break first?</h2><p class="lead">The board is a diagnostic map, not a legal conclusion. High exposure means the architecture deserves more attention, more facts, or escalation before launch.</p>
-          <div class="risk-wrap"><div class="radarbox" id="radarBox"></div><div><div class="risklist" id="riskList"></div><div class="lens" id="riskLens"></div></div></div>
-          <div class="actions"><button class="secondary" data-back="3">← Legal Architecture</button><button class="danger" id="launchSeason">LAUNCH SEASON</button></div>
-        </section>
-
-        <section class="section" data-step="5">
-          <div class="crisis-head"><div><div class="breaking">Breaking News</div><h2 style="margin-top:8px">Crisis Mode</h2></div><div class="crisiscount" id="crisisCount">Shock 1 of 3</div></div><p class="lead">The same shock does not affect every ecosystem the same way. Respond as management, then use the debrief to identify the legal architecture beneath the decision.</p><div class="crisis-telemetry"><span>LIVE FEED</span><strong id="crisisTelemetry">Awaiting incident analysis…</strong><i></i></div><div id="crisisMount"></div>
-        </section>
-
-        <section class="section" data-step="6">
-          <div class="stage">Stage 6 · Ecosystem DNA</div><h2>Your business model survived the season</h2><p class="lead">The end-state is not a grade. It is a snapshot of the tradeoffs you built—and the legal dependency most likely to matter next.</p><div class="hudline"><span>Premium Classroom Debrief</span><span>Archetype + Risk Story</span><span>Printable Board Report</span></div><div class="report" id="report"></div>
-          <div class="reflection"><label><span>1. What is the strongest feature of your model?</span><textarea id="r1"></textarea></label><label><span>2. What is its most dangerous dependency?</span><textarea id="r2"></textarea></label><label><span>3. What would you change after seeing the risk analysis?</span><textarea id="r3"></textarea></label></div>
-          <div class="report-actions"><button class="primary" id="classView">30-Second Classroom Debrief</button><button class="secondary" id="copyReport">Copy Board Report</button><button class="secondary" onclick="window.print()">Print / Save PDF</button><button class="ghost" id="resetBtn">Reset & Replay</button></div><div class="toast" id="toast">Board report copied.</div>
-        </section>
-      </main>
-
-      <aside class="card side">
-        <h3>Live Ecosystem Dashboard</h3><div class="teamtag" id="teamTag"><strong>NEXUS//ARENA</strong><br>Publisher / Ecosystem Designer</div><div class="snapshot-grid" id="snapshotGrid"></div><div id="metrics"></div>
-        <div class="dependency"><strong><span>Publisher-linked revenue</span><span id="depVal">35%</span></strong><div class="depbar"><div class="depfill" id="depFill" style="width:35%"></div></div></div>
-        <div class="network"><h3 style="margin-bottom:6px">Stakeholder Network</h3><svg id="networkSvg" viewBox="0 0 320 230" aria-label="Stakeholder network"></svg><div class="network-caption" id="networkCaption">Selections light up the stakeholders your current legal architecture touches.</div></div>
-        <div class="toolbox"><strong>Classroom Tools</strong><div class="toolbtns"><button class="secondary" id="chaosBtn">Professor Chaos Mode</button><button class="ghost" id="scenarioBtn">Random Spotlight Crisis</button></div><div class="toolnote">Use on the projector to inject a selected or random crisis for discussion.</div></div>
-        <div class="mini" id="sideNote">Every choice moves multiple indicators. You cannot maximize access, control, predictability, and independence at the same time.</div>
-      </aside>
-    </div>
+<div id="coldOpen" class="cold-open" aria-live="polite">
+  <button id="skipOpening" class="skip">Skip opening ↗</button>
+  <div class="shot active" data-shot="0">
+    <div class="shot-art arena-art"><div class="arena-ring"></div><div class="crowd"></div><div class="champion"></div></div>
+    <div class="shot-copy"><span>THE STAGE</span><h2>Millions can watch a match.</h2><p>But attention alone does not create an ecosystem.</p></div>
+  </div>
+  <div class="shot" data-shot="1">
+    <div class="shot-art contract-art"><div class="paper p1"></div><div class="paper p2"></div><div class="redline"></div></div>
+    <div class="shot-copy"><span>THE RULES</span><h2>Contracts turn relationships into obligations.</h2><p>Every promise shifts leverage, risk, and remedies.</p></div>
+  </div>
+  <div class="shot" data-shot="2">
+    <div class="shot-art capital-art"><div class="tower"></div><div class="coin c1">$</div><div class="coin c2">$</div><div class="coin c3">$</div></div>
+    <div class="shot-copy"><span>THE CAPITAL</span><h2>Money creates capacity.</h2><p>It can scale an ecosystem without making the underlying economics sustainable.</p></div>
+  </div>
+  <div class="shot" data-shot="3">
+    <div class="shot-art community-art"><div class="chat b1">GG</div><div class="chat b2">W</div><div class="chat b3">?</div><div class="fanburst"></div></div>
+    <div class="shot-copy"><span>THE CULTURE</span><h2>Communities decide what feels legitimate.</h2><p>Informal influence can become urgent power overnight.</p></div>
+  </div>
+  <div class="shot" data-shot="4">
+    <div class="shot-art gate-art"><div class="gate"></div><div class="keyhole"></div><div class="signal"></div></div>
+    <div class="shot-copy"><span>THE GATE</span><h2>The game itself is proprietary.</h2><p>Publisher IP can structure access, licensing, rules, and commercial opportunity.</p></div>
+  </div>
+  <div class="shot finale" data-shot="5">
+    <div class="season-mark">SEASON ONE</div>
+    <h1>ECOSYSTEM<br><em>ARCHITECT</em></h1>
+    <p>POWER. MONEY. LAW.</p>
+    <div class="launch-warning">NEXUS//ARENA launches in <strong>180 DAYS</strong>.</div>
+    <button id="enterSim" class="cta">ENTER THE STRATEGY ROOM</button>
   </div>
 </div>
 
-<div class="celebration" id="celebration" aria-hidden="true"></div>
-<div class="overlay" id="launchOverlay"><div class="overlay-card"><div class="eyebrow">Season Initialization</div><h2 id="launchText">LOCKING ARCHITECTURE</h2><div class="countdown" id="countdown">3</div><p>Revenue model loaded. Contract architecture locked. Legal risk board active.</p></div></div>
-<div class="overlay" id="newsOverlay"><div class="overlay-card news-card"><div class="eyebrow">Breaking News</div><h2 id="newsTitle">CRISIS ALERT</h2><div class="news-strip" id="newsTags"></div><p id="newsText"></p><button class="primary" id="openBriefing">Open Crisis Briefing</button></div></div>
-<div class="overlay" id="debriefOverlay"><div class="overlay-card"><div class="eyebrow">Classroom Debrief · 30 Seconds</div><h2 id="debriefArch">THE CONTROLLED HYBRID</h2><div class="debrief-grid" id="debriefStats"></div><p id="debriefPrompt"></p><button class="primary" id="closeDebrief">Return to Board Report</button></div></div>
-<div class="overlay" id="bootOverlay"><div class="overlay-card"><div class="eyebrow">Board Access Sequence</div><h2 id="bootTitle">AUTHENTICATING TEAM</h2><div class="countdown" id="bootCount">01</div><p id="bootText">Loading simulation environment, syncing architecture board, and preparing your strategy room.</p></div></div>
-<div class="overlay" id="chaosOverlay"><div class="overlay-card"><div class="eyebrow">Professor Chaos Mode</div><h2>Inject a Classroom Shock</h2><p>Select a specific crisis to spotlight a concept, or let the system surprise the room with a random disruption.</p><div class="chaos-grid" id="chaosGrid"></div><div class="chaos-actions"><button class="secondary" id="chaosRandom">Random Chaos</button><button class="ghost" id="closeChaos">Close</button></div></div></div>
+<main id="sim" class="sim hidden">
+  <section class="mission-brief" id="missionBrief">
+    <div class="brief-panel manga-panel">
+      <div class="panel-kicker">EXECUTIVE DIRECTIVE // DAY 180</div>
+      <h1>NEXUS//ARENA needs an ecosystem.</h1>
+      <p>You are the newly appointed <strong>Director of Competitive Ecosystem Strategy</strong>. Your job is not simply to launch tournaments. You must decide who gets access, where the money comes from, which stakeholders receive leverage, and which legal tools keep the system from breaking when pressure arrives.</p>
+      <div class="mission-objectives"><span>Map stakeholder power</span><span>Choose the access architecture</span><span>Build recurring revenue</span><span>Allocate legal protection</span><span>Survive three shocks</span></div>
+      <label class="team-entry"><span>Strategy team name</span><input id="teamName" maxlength="48" placeholder="Team Respawn"></label>
+      <button id="beginMission" class="cta">BEGIN EPISODE 1</button>
+    </div>
+    <div class="brief-visual">
+      <div class="portrait-xl publisher"><div class="hair"></div><div class="face"><i></i><i></i></div><div class="jacket"></div></div>
+      <div class="dialogue"><b>AIKO TANAKA · PUBLISHER PRESIDENT</b><p>“We can build anything. We cannot satisfy everyone. Decide which tradeoffs you are willing to own.”</p></div>
+    </div>
+  </section>
 
-<script src="data.js"></script><script src="app-core.js"></script><script src="app-ui.js"></script><script src="premium-runtime.js"></script><script src="app-flow.js"></script>
+  <div class="sim-shell hidden" id="simShell">
+    <nav class="episodebar">
+      <div><small>ECOSYSTEM ARCHITECT · SEASON ONE</small><strong id="episodeTitle">EPISODE 1 — WHO MATTERS?</strong></div>
+      <div class="episode-track"><i id="episodeFill"></i></div>
+      <span id="episodeCount">1 / 7</span>
+    </nav>
+
+    <div class="story-layout">
+      <section class="story-stage">
+        <div class="episode active" data-episode="1" id="ep1">
+          <div class="episode-heading"><span>EPISODE 1</span><h2>Who really matters?</h2><p>Stakeholder salience is not a fixed ranking. Influence changes as <strong>power, legitimacy, and urgency</strong> combine.</p></div>
+          <div class="concept-strip"><div><b>POWER</b><span>Capacity to influence outcomes or control essential resources.</span></div><div><b>LEGITIMACY</b><span>Perceived credibility, appropriateness, and rightful recognition.</span></div><div><b>URGENCY</b><span>Claims that demand immediate attention or response.</span></div></div>
+          <div id="stakeholderGrid" class="stakeholder-grid"></div>
+          <div class="story-actions"><span>Meet the ecosystem before trying to design it.</span><button class="nextbtn" data-next="2">Choose Board Priorities →</button></div>
+        </div>
+
+        <div class="episode" data-episode="2" id="ep2">
+          <div class="episode-heading"><span>EPISODE 2</span><h2>Build the board.</h2><p>You cannot optimize every stakeholder simultaneously. Choose the <strong>three constituencies</strong> whose claims will receive priority when tradeoffs emerge.</p></div>
+          <div class="boardroom-scene">
+            <div class="boardtable"></div><div id="prioritySeats" class="priority-seats"></div>
+            <div class="board-quote" id="priorityQuote">“The stakeholders you prioritize today will shape which problems feel acceptable tomorrow.”</div>
+          </div>
+          <div id="priorityChoices" class="priority-grid"></div>
+          <div class="lesson-box"><b>WHY THIS MATTERS</b><p>Publishers may hold strong structural power through IP. Investors can hold capital and ownership power. Communities can possess cultural legitimacy. Sponsors can create urgency when brand risk spikes. Salience changes with context.</p></div>
+          <div class="story-actions"><button class="backbtn" data-back="1">← Stakeholders</button><button id="toArchitecture" class="nextbtn" disabled>See Three Futures →</button></div>
+        </div>
+
+        <div class="episode" data-episode="3" id="ep3">
+          <div class="episode-heading"><span>EPISODE 3</span><h2>Choose the future of competition.</h2><p>Each architecture allocates access, certainty, publisher control, and commercial risk differently.</p></div>
+          <div id="visionDeck" class="vision-deck"></div>
+          <div id="visionDetail" class="vision-detail hidden"></div>
+          <div class="story-actions"><button class="backbtn" data-back="2">← Board Priorities</button><button id="toRevenue" class="nextbtn" disabled>Fund the Ecosystem →</button></div>
+        </div>
+
+        <div class="episode" data-episode="4" id="ep4">
+          <div class="episode-heading"><span>EPISODE 4</span><h2>The money engine.</h2><p>A business model must survive after the excitement of launch. Allocate <strong>100 operating-revenue points</strong>.</p></div>
+          <div class="mentor-scene cfo-scene"><div class="portrait maya"><div class="hair"></div><div class="face"><i></i><i></i></div><div class="jacket"></div></div><div class="mentor-copy"><b>MAYA CHEN · CFO</b><p>“Capital buys runway. Revenue keeps the lights on. And stable revenue can still make us strategically dependent if someone else controls it.”</p><div class="mentor-concepts"><span>Commercial Revenue</span><span>Publisher-Linked Revenue</span><span>Capital ≠ Revenue</span></div></div></div>
+          <div class="revenue-zone"><div id="revenueSliders" class="revenue-sliders"></div><div class="revenue-intel"><div id="donut" class="donut"><div><strong id="revTotal">100</strong><span>allocated</span></div></div><h3>Revenue Intelligence</h3><div id="revScore" class="big-score">—</div><p id="revMessage"></p><div id="revDependency" class="dependency-meter"></div></div></div>
+          <div class="story-actions"><button class="backbtn" data-back="3">← Architecture</button><button id="toLegal" class="nextbtn" disabled>Build the Legal Loadout →</button></div>
+        </div>
+
+        <div class="episode" data-episode="5" id="ep5">
+          <div class="episode-heading"><span>EPISODE 5</span><h2>Legal loadout.</h2><p>You have negotiating capital for only <strong>five protections</strong>. Every omitted term leaves a vulnerability.</p></div>
+          <div class="mentor-scene counsel-scene"><div class="portrait eli"><div class="hair"></div><div class="face"><i></i><i></i></div><div class="jacket"></div></div><div class="mentor-copy"><b>ELI WARD · GENERAL COUNSEL</b><p>“A contract is not armor against everything. It is a deliberate allocation of rights, obligations, remedies, and risk. Pick what matters for the model you actually built.”</p></div></div>
+          <div class="loadout-head"><span>LEGAL LOADOUT</span><div id="loadoutSlots" class="loadout-slots"></div><b id="loadoutCount">0 / 5</b></div>
+          <div id="contractDeck" class="contract-deck"></div>
+          <div class="story-actions"><button class="backbtn" data-back="4">← Money Engine</button><button id="launchSeason" class="dangerbtn" disabled>LAUNCH SEASON →</button></div>
+        </div>
+
+        <div class="episode" data-episode="6" id="ep6">
+          <div class="episode-heading"><span>EPISODE 6</span><h2>Pressure reveals architecture.</h2><p>Three shocks will hit Year One. Make the management decision first. Then inspect the legal concept beneath it.</p></div>
+          <div id="crisisStage"></div>
+        </div>
+
+        <div class="episode" data-episode="7" id="ep7">
+          <div class="episode-heading"><span>FINAL EPISODE</span><h2>The board meets again.</h2><p>Year One is complete. The question is no longer whether your model looked good at launch. It is whether you would authorize another season.</p></div>
+          <div id="finalReport" class="final-report"></div>
+          <div class="year-two"><h3>YEAR TWO DECISION</h3><div class="year-options"><button data-year="approve">APPROVE</button><button data-year="restructure">APPROVE WITH RESTRUCTURING</button><button data-year="reject">DO NOT RENEW</button></div><textarea id="yearReason" placeholder="Defend your decision in 2–4 sentences. What tradeoff mattered most?"></textarea></div>
+          <div class="playbook"><div class="playbook-head"><span>UNLOCKED</span><h3>Legal & Business Playbook</h3></div><div id="playbookGrid"></div></div>
+          <div class="story-actions"><button id="copyBoard" class="nextbtn">Copy Board Report</button><button onclick="window.print()" class="backbtn">Print / Save PDF</button></div>
+        </div>
+      </section>
+
+      <aside class="intel" id="intelPanel">
+        <div class="intel-head"><span>LIVE INTEL</span><strong id="intelTeam">NEXUS//ARENA</strong></div>
+        <div class="intel-block"><small>CURRENT ARCHITECTURE</small><b id="intelModel">UNSET</b><span id="intelLevel">Professional launch</span></div>
+        <div class="intel-block"><small>BOARD PRIORITIES</small><div id="intelPriorities" class="intel-tags"><span>Not selected</span></div></div>
+        <div class="intel-block"><small>ECOSYSTEM HEALTH</small><div id="healthBars"></div></div>
+        <div class="intel-block"><small>SALIENCE LEADER</small><div id="salienceLeader" class="salience-leader">Publisher</div><div id="salienceMini"></div></div>
+        <div class="intel-block concepts"><small>CONCEPTS UNLOCKED</small><b id="conceptCount">0</b><span>Concepts appear after decisions and crises.</span></div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<div id="cutin" class="cutin hidden" aria-live="assertive">
+  <div class="cut-frame"><div class="cut-speed"></div><div id="cutEyebrow" class="cut-eyebrow">BREAKING</div><h2 id="cutTitle">CRISIS</h2><p id="cutText"></p><button id="cutContinue" class="cta">OPEN BRIEFING</button></div>
+</div>
+
+<div id="unlock" class="unlock hidden" aria-live="polite"><div class="unlock-card"><span>CONCEPT UNLOCKED</span><h3 id="unlockTitle"></h3><p id="unlockText"></p><button id="unlockClose">ADD TO PLAYBOOK</button></div></div>
+<div id="toast" class="toast">Board report copied.</div>
+
+<script src="season-one.js"></script>
 </body>
 </html>
