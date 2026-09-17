@@ -1,6 +1,7 @@
-// Emergency stability hotfix.
-// Phase 2 district rendering is temporarily disabled to guarantee responsive student play.
-// The next visual restoration will use explicit renderer calls rather than Canvas prototype hooks.
+// Safe presentation loader.
+// Heavy per-frame district rendering remains disabled; the movement layer only decorates
+// existing actor draw calls and adds lightweight DOM/CSS motion feedback.
 (function(){
   document.documentElement.dataset.ecosystemWorldArt='safe';
+  import('./motion-enhance.js').catch(err=>{try{console.warn('Movement enhancement unavailable.',err)}catch{}});
 })();
