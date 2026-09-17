@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sport Marketing Pod Draw — MGT 340</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6F8; --panel:#FFFFFF; --panel-2:#EDF0F3; --line:#D6DBE2;
+  --text:#14171C; --muted:#4F5864;
+  --teal:#0A7E73; --blue:#2C55D6; --orange:#B24F1C;
+  --teal-soft:rgba(10,126,115,.10); --orange-soft:rgba(178,79,28,.10);
+  --shadow:0 1px 0 rgba(20,23,28,.04);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1115; --panel:#171A20; --panel-2:#1E222A; --line:#2B303A;
+    --text:#F2F4F7; --muted:#AEB5C2;
+    --teal:#12B5A6; --blue:#7593F8; --orange:#E47A3F;
+    --teal-soft:rgba(18,181,166,.12); --orange-soft:rgba(228,122,63,.13);
+    --shadow:none;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1115; --panel:#171A20; --panel-2:#1E222A; --line:#2B303A;
+  --text:#F2F4F7; --muted:#AEB5C2;
+  --teal:#12B5A6; --blue:#7593F8; --orange:#E47A3F;
+  --teal-soft:rgba(18,181,166,.12); --orange-soft:rgba(228,122,63,.13);
+  --shadow:none;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Source Serif 4","Times New Roman",Times,Georgia,serif;
+  font-size:1.0625rem; line-height:1.55;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 24px 64px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:20px}
+.brand h1{margin:0;font-size:clamp(2rem,4.2vw,3.1rem);line-height:1.05;font-weight:700;letter-spacing:-.01em}
+.brand p{margin:6px 0 0;color:var(--muted)}
+.rule-bar{display:block;width:72px;height:4px;background:var(--teal);margin-bottom:14px}
+.code{display:flex;align-items:baseline;gap:12px}
+.code small{color:var(--muted);font-size:1rem}
+.code strong{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1;letter-spacing:.14em;color:var(--orange);font-variant-numeric:tabular-nums}
+
+/* toolbar */
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.group label{color:var(--muted);font-size:.95rem}
+select,input[type=text]{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 10px;min-height:40px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:8px 14px;min-height:40px;cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#07100F}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:#07100F}}
+.btn.warn{border-color:var(--orange);color:var(--orange);background:transparent}
+.btn.warn[aria-pressed="true"]{background:var(--orange);color:#fff}
+.btn.ghost{background:transparent}
+.spacer{flex:1}
+.timer{font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums;min-width:5ch;text-align:right;line-height:1}
+.timer.done{color:var(--orange)}
+
+/* process strip */
+.process{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:22px 0 8px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.step{padding:14px 18px;border-right:1px solid var(--line)}
+.step:last-child{border-right:0}
+.step b{display:block;font-size:1.05rem}
+.step span{color:var(--muted);font-size:.95rem}
+.step i{font-style:normal;color:var(--teal);font-weight:700;margin-right:6px}
+.rule-line{margin:10px 0 0;color:var(--muted);font-size:.98rem}
+.rule-line b{color:var(--text)}
+
+/* curveball banner */
+.curve{display:none;margin:18px 0 0;padding:14px 18px;border-left:5px solid var(--orange);background:var(--orange-soft);border-radius:0 8px 8px 0}
+.curve.on{display:block}
+.curve b{color:var(--orange)}
+
+/* pod grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:22px}
+.pod{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;min-height:250px}
+.pod:hover{border-color:var(--teal)}
+.pod .letter{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.pod .letter strong{font-size:2.3rem;line-height:1;color:var(--teal)}
+.pod .letter span{font-size:.9rem;color:var(--muted)}
+.pod h3{margin:0;font-size:1.25rem;line-height:1.25}
+.pod .role{margin:0;font-weight:600}
+.pod dl{margin:4px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.95rem}
+.pod dt{color:var(--muted)}
+.pod dd{margin:0}
+.pod .lock{color:var(--orange);font-weight:600}
+.pod .open{margin-top:auto;color:var(--blue);font-size:.95rem}
+.pod .cb{border-top:1px dashed var(--line);padding-top:8px;font-size:.95rem;color:var(--orange);display:none}
+.curve-on .pod .cb{display:block}
+@media (prefers-reduced-motion: no-preference){
+  .dealing .pod{animation:deal .45s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes deal{from{opacity:0;transform:translateY(14px) rotate(-1.5deg)}to{opacity:1;transform:none}}
+}
+
+details{margin-top:28px;border-top:1px solid var(--line);padding-top:14px}
+summary{cursor:pointer;font-weight:700;font-size:1.1rem}
+details ol,details ul{padding-left:1.3em;max-width:78ch}
+details li{margin:6px 0}
+.src-event{margin:12px 0 0;font-weight:600}
+
+/* pod brief */
+.brief{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:32px;margin-top:24px;align-items:start}
+.brief .back{margin-top:18px}
+.brief h2{font-size:clamp(1.6rem,3vw,2.2rem);line-height:1.15;margin:.2em 0 .3em}
+.eyebrowless{color:var(--muted);margin:0}
+.facts{padding-left:1.1em;margin:0 0 18px;max-width:62ch}
+.facts li{margin:8px 0}
+.mission{background:var(--teal-soft);border-left:5px solid var(--teal);padding:14px 16px;border-radius:0 8px 8px 0;margin:0 0 18px}
+.mission b{display:block}
+.draw{border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden}
+.draw div{display:grid;grid-template-columns:9.5em 1fr;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.draw div:last-child{border-bottom:0}
+.draw dt{color:var(--muted)}
+.draw dd{margin:0;font-weight:600}
+.draw .lock{color:var(--orange)}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:.93rem}
+.srcs{font-size:.92rem;color:var(--muted);margin-top:14px}
+.srcs a{word-break:break-word}
+
+.work{display:flex;flex-direction:column;gap:18px}
+.work section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.work h3{margin:0 0 4px;font-size:1.2rem}
+.work h3 i{font-style:normal;color:var(--teal);margin-right:8px}
+.work p{margin:0 0 10px;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.field label{font-weight:600}
+.field label em{font-style:normal;color:var(--orange);font-weight:600}
+textarea{width:100%;min-height:74px;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;line-height:1.45}
+.mix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.reveal{margin-top:6px}
+.cbtext{display:none;margin-top:10px;padding:10px 12px;border-left:4px solid var(--orange);background:var(--orange-soft);border-radius:0 6px 6px 0}
+.cbtext.on{display:block}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.status{color:var(--muted);font-size:.95rem}
+#copyBox{display:none;width:100%;min-height:180px;margin-top:10px}
+
+/* join */
+.join{max-width:520px;margin:48px auto 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px}
+.join h2{margin:0 0 6px}
+.join p{color:var(--muted);margin:0 0 16px}
+.join .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.join .row .field{margin:0}
+#joinCode{text-transform:uppercase;letter-spacing:.14em;width:8ch;font-weight:700}
+.err{color:var(--orange);min-height:1.4em;margin-top:10px}
+
+[hidden]{display:none !important}
+
+@media (max-width: 860px){
+  .brief{grid-template-columns:1fr}
+  .process{grid-template-columns:1fr}
+  .step{border-right:0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:0}
+  .mix{grid-template-columns:1fr}
+  .timer{font-size:1.8rem}
+}
+@media print{
+  .bar,.btn,.back{display:none !important}
+  body{background:#fff;color:#000}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <span class="rule-bar" aria-hidden="true"></span>
+      <h1>Sport Marketing Pod Draw</h1>
+      <p>MGT 340, Introduction to Sport Management. Real events from the past two weeks, one marketing problem per pod.</p>
+    </div>
+    <div class="code" aria-live="polite">
+      <small>Session code</small>
+      <strong id="codeText">----</strong>
+    </div>
+  </header>
+
+  <!-- ROOM VIEW -->
+  <main id="roomView">
+    <div class="bar" role="toolbar" aria-label="Instructor controls">
+      <div class="group">
+        <label for="podCount">Pods</label>
+        <select id="podCount"></select>
+        <button class="btn primary" id="newDraw">New draw</button>
+        <button class="btn ghost" id="useCode">Use a code</button>
+      </div>
+      <div class="group">
+        <button class="btn warn" id="curveBtn" aria-pressed="false">Release curveball</button>
+      </div>
+      <div class="spacer"></div>
+      <div class="group">
+        <label for="minutes">Timer</label>
+        <select id="minutes">
+          <option value="8">8 min</option>
+          <option value="10">10 min</option>
+          <option value="12" selected>12 min</option>
+          <option value="15">15 min</option>
+          <option value="20">20 min</option>
+        </select>
+        <button class="btn" id="timerBtn">Start</button>
+        <button class="btn ghost" id="timerReset">Reset</button>
+        <span class="timer" id="timerText" role="timer" aria-label="Time remaining">12:00</span>
+        <span class="sr" id="timerLive" aria-live="assertive"></span>
+      </div>
+      <div class="group">
+        <button class="btn ghost" id="themeBtn">Light / dark</button>
+        <button class="btn ghost" id="toJoin">Student view</button>
+      </div>
+    </div>
+
+    <div class="process" aria-label="Sport marketing process">
+      <div class="step"><b><i>1</i>Understand the consumer</b><span>Spectators or participants, and what motivates them</span></div>
+      <div class="step"><b><i>2</i>Select the market</b><span>Segment, then commit to a target</span></div>
+      <div class="step"><b><i>3</i>Set the mix</b><span>Product, price, place, promotion, inside your constraints</span></div>
+    </div>
+    <p class="rule-line"><b>Rule:</b> your plan must be cheap enough to repeat and interesting enough to share. Students open their own brief under <b>Student view</b> with the session code and their pod letter.</p>
+
+    <div class="curve" id="curveBanner" role="status">
+      <b>Curveball released.</b> Each pod’s constraint is now on its card. You have three minutes to adjust one of your four Ps.
+    </div>
+
+    <div class="grid" id="grid" aria-label="Pod scenarios"></div>
+
+    <details>
+      <summary>Debrief questions</summary>
+      <ol>
+        <li>Which pod’s locked P forced the most creative move on the other three? What does that tell us about the mix as a system?</li>
+        <li>Who planned for spectators and who planned for participants? How did that change the product you offered?</li>
+        <li>Pass the Veeck test: which pod gave people a reason to show up that has nothing to do with winning?</li>
+        <li>The Clippers and Liverpool draws both involve sponsors. When does a sponsor gain image from a team, and when does it take on risk?</li>
+        <li>If your pod drew the rival airline, where is the line between clever marketing and ambush marketing?</li>
+        <li>Which proof metric was most convincing, and which could be gamed?</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary>Sources for the scenarios</summary>
+      <div id="sourceList"></div>
+      <p class="status">Facts are summarized from the reports linked above, current as of September 16, 2026. Dollar figures described as reported were not officially disclosed. Roles, budgets, and curveballs are fictional prompts.</p>
+    </details>
+  </main>
+
+  <!-- POD VIEW -->
+  <main id="podView" hidden>
+    <button class="btn ghost back" id="backBtn">Back</button>
+    <div class="brief">
+      <div>
+        <p class="eyebrowless" id="pvPod"></p>
+        <h2 id="pvTitle"></h2>
+        <ul class="facts" id="pvFacts"></ul>
+        <div class="mission"><b id="pvRole"></b><span id="pvBrief"></span></div>
+        <dl class="draw" id="pvDraw"></dl>
+        <div class="srcs" id="pvSources"></div>
+      </div>
+
+      <div class="work">
+        <section>
+          <h3><i>1</i>Understand the consumer</h3>
+          <p id="pvStep1Prompt"></p>
+          <div class="field">
+            <label for="f_consumer">Who is this consumer, and what does your lead motive look like in their life?</label>
+            <textarea id="f_consumer" data-k="consumer"></textarea>
+          </div>
+        </section>
+
+        <section>
+          <h3><i>2</i>Select the market</h3>
+          <p id="pvStep2Prompt"></p>
+          <div class="field">
+            <label for="f_segment">Describe one real person in this segment. Why is this group worth your budget?</label>
+            <textarea id="f_segment" data-k="segment"></textarea>
+          </div>
+        </section>
+
+        <section>
+          <h3><i>3</i>Set the mix</h3>
+          <p>One concrete move for each P. For your locked P, explain how the other three work around it.</p>
+          <div class="mix">
+            <div class="field"><label for="f_product" id="l_product">Product</label><textarea id="f_product" data-k="product"></textarea></div>
+            <div class="field"><label for="f_price" id="l_price">Price</label><textarea id="f_price" data-k="price"></textarea></div>
+            <div class="field"><label for="f_place" id="l_place">Place</label><textarea id="f_place" data-k="place"></textarea></div>
+            <div class="field"><label for="f_promotion" id="l_promotion">Promotion</label><textarea id="f_promotion" data-k="promotion"></textarea></div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Veeck test and proof</h3>
+          <p>Cheap enough to repeat, interesting enough to share.</p>
+          <div class="field">
+            <label for="f_veeck">One reason to show up or engage that has nothing to do with winning</label>
+            <textarea id="f_veeck" data-k="veeck"></textarea>
+          </div>
+          <div class="field">
+            <label for="f_proof">The single metric that tells you it worked</label>
+            <textarea id="f_proof" data-k="proof"></textarea>
+          </div>
+        </section>
+
+        <section>
+          <h3>Curveball</h3>
+          <p>Wait until your instructor releases it.</p>
+          <button class="btn warn reveal" id="revealCb" aria-expanded="false">Reveal curveball</button>
+          <div class="cbtext" id="pvCurve" aria-live="polite"></div>
+          <div class="field" id="cbField" hidden>
+            <label for="f_curve">Which P do you change, and how?</label>
+            <textarea id="f_curve" data-k="curve"></textarea>
+          </div>
+        </section>
+
+        <section>
+          <h3>Report out</h3>
+          <p>You have 60 seconds. Lead with your target and your best move, then your metric.</p>
+          <div class="actions">
+            <button class="btn primary" id="copyPlan">Copy our plan</button>
+            <span class="status" id="copyStatus" aria-live="polite"></span>
+          </div>
+          <label for="copyBox" class="sr">Plan text</label>
+          <textarea id="copyBox" readonly></textarea>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- JOIN VIEW -->
+  <main id="joinView" hidden>
+    <div class="join">
+      <h2>Open your pod’s brief</h2>
+      <p>Enter the session code on the screen and your pod letter.</p>
+      <div class="row">
+        <div class="field">
+          <label for="joinCode">Session code</label>
+          <input type="text" id="joinCode" maxlength="4" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="joinPod">Pod</label>
+          <select id="joinPod"></select>
+        </div>
+        <button class="btn primary" id="joinGo">Open brief</button>
+      </div>
+      <div class="err" id="joinErr" role="alert"></div>
+      <p style="margin-top:18px"><button class="btn ghost" id="joinBack">Instructor screen</button></p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Scenario content (verified reporting, Sept. 2–16, 2026) ---------- */
+var EVENTS = [
+  {
+    id:"clippers",
+    title:"The Clippers penalty and Kawhi Leonard’s return to Toronto",
+    tag:"NBA",
+    lens:"spectator",
+    facts:[
+      "On Sept. 2 the NBA penalized the LA Clippers for violating salary-cap circumvention rules in a case tied to an endorsement arrangement involving Kawhi Leonard: a $30 million fine and the loss of five first-round picks (2029–2033).",
+      "Owner Steve Ballmer and business-operations president Gillian Zucker were each suspended for a year; basketball-operations president Lawrence Frank for six months.",
+      "Ballmer said on Sept. 13 that he would accept the penalties, and on Sept. 14 the trade sending Leonard back to the Toronto Raptors was finalized."
+    ],
+    roles:[
+      {who:"Clippers marketing team", brief:"Keep fans and season-ticket holders at Intuit Dome engaged in a season that starts without your star and under a league penalty."},
+      {who:"Toronto Raptors marketing team", brief:"Turn Leonard’s return to the city where he won the 2019 title into ticket and merchandise demand without overpromising a contender."},
+      {who:"Marketing team for a Clippers corporate sponsor", brief:"Your logo sits next to a team in the middle of a league scandal. Decide how to activate this season so the partnership builds your image instead of hurting it."}
+    ],
+    segments:[
+      "Fans who stopped attending games in the last two seasons",
+      "Families who live within 30 minutes of the arena",
+      "Gen Z fans who follow the team mostly through social clips",
+      "Season-ticket holders deciding whether to renew"
+    ],
+    curveballs:[
+      "A national columnist calls your team the league’s cautionary tale, and the phrase trends for two days.",
+      "Another entertainment option in your city launches a half-price offer on your game nights."
+    ],
+    sources:[
+      {label:"ESPN, NBA announces punishments for Clippers (Sept. 2, 2026)", url:"https://www.espn.com/nba/story/_/id/49806356/nba-announces-punishments-clippers-kawhi-probe"},
+      {label:"The Japan Times, Clippers–Raptors trade complete (Sept. 15, 2026)", url:"https://www.japantimes.co.jp/sports/2026/09/15/basketball/nba/raptors-clippers-kawhi-trade-complete/"}
+    ]
+  },
+  {
+    id:"melbourne",
+    title:"The NFL’s first regular-season game in Australia",
+    tag:"NFL",
+    lens:"spectator",
+    facts:[
+      "The Rams and 49ers played at the Melbourne Cricket Ground on Sept. 10 (U.S. time), which was the morning of Sept. 11 in Melbourne. San Francisco won.",
+      "More than 100,000 fans attended. Roughly 50,000 visitors came to the city, and a bank analysis projected more than AU$300 million in local spending over two days.",
+      "Netflix held the global broadcast rights. Earlier in the year, many Australian fans complained that tickets sold out fast at high prices.",
+      "The Rams, Seahawks, Raiders, and Eagles hold the NFL’s international marketing rights in Australia."
+    ],
+    roles:[
+      {who:"Philadelphia Eagles international marketing team", brief:"You hold marketing rights in Australia but weren’t on the field in Melbourne. Build Eagles fandom there before the buzz fades."},
+      {who:"Los Angeles Rams marketing team", brief:"You hosted the game and are committed to returning to Melbourne. Turn a one-time spectacle into a lasting relationship with Australian fans."},
+      {who:"Melbourne tourism marketers", brief:"Convince American NFL fans that next year’s game is worth a trip across the Pacific, and that the city is worth more than one day."}
+    ],
+    segments:[
+      "Australian fans who were priced out of this year’s tickets",
+      "American fans who have never traveled abroad for a game",
+      "Australian rugby and Aussie rules fans curious about the NFL",
+      "Gen Z viewers who watched the game on Netflix"
+    ],
+    curveballs:[
+      "Resale prices for next year’s game spike before general sale opens, and fans are angry.",
+      "Another major league announces a marquee event in the same city on the same weekend next year."
+    ],
+    sources:[
+      {label:"ESPN, Melbourne dazzles as the NFL comes to town (Sept. 2026)", url:"https://www.espn.com/nfl/story/_/id/49875124/nfl-australia-melbourne-game-san-francisco-49ers-los-angeles-rams-always-destined-succeed-mcg"},
+      {label:"AP via WISN, Fans pack Melbourne for Rams–49ers opener (Sept. 10, 2026)", url:"https://www.wisn.com/article/melbourne-rams-49ers-nfl-game-in-australia/73678650"},
+      {label:"ProFootballTalk via Yahoo, Australian fans frustrated by ticket prices (Apr. 8, 2026)", url:"https://sports.yahoo.com/articles/australian-fans-frustrated-high-prices-085845234.html"},
+      {label:"ESPN, 49ers named Rams’ opponent for Australia game (marketing rights)", url:"https://africa.espn.com/nfl/story/_/id/47840040/49ers-named-rams-opponent-nfl-1st-game-australia"}
+    ]
+  },
+  {
+    id:"media",
+    title:"The NFL rethinks how its games are packaged on TV and streaming",
+    tag:"NFL media",
+    lens:"spectator",
+    facts:[
+      "In a CNBC interview from Melbourne on Sept. 10, Commissioner Roger Goodell said the NFL is evaluating whether to repackage its TV and streaming rights because fans are moving to other platforms.",
+      "The league can opt out of its current media deals after the 2029–30 season. Goodell would not say whether it will.",
+      "Goodell said free over-the-air broadcasts in local markets remain central, even as streamers such as Netflix and Amazon carry more games. Netflix held the global rights to the Melbourne game."
+    ],
+    roles:[
+      {who:"NFL media strategy group", brief:"Design one new game package aimed at fans who don’t pay for cable."},
+      {who:"Sports marketing team at a streaming service", brief:"Make the case for why fans should subscribe to your service for NFL games."},
+      {who:"Marketing team at a local TV station in an NFL city", brief:"Keep younger viewers watching free local broadcasts as games spread across apps."}
+    ],
+    segments:[
+      "Cord-cutters aged 18–29",
+      "International fans outside the United States",
+      "Fantasy football players who follow many games at once",
+      "Casual fans who watch only the biggest games"
+    ],
+    curveballs:[
+      "Fans flood social media complaining that they need four subscriptions to follow one team.",
+      "A major streaming service raises its monthly price by 20 percent."
+    ],
+    sources:[
+      {label:"CNBC, Goodell says league could rework TV packages (Sept. 10, 2026)", url:"https://www.cnbc.com/2026/09/10/nfl-roger-goodell-tv-packages-deal.html"},
+      {label:"Sports Media Watch, Goodell on repackaging media rights (Sept. 2026)", url:"https://www.sportsmediawatch.com/2026/09/nfl-goodell-media-rights-packages-fox-sports-nallen-prime-video-fifa-world-cup/"}
+    ]
+  },
+  {
+    id:"hyrox",
+    title:"Hyrox changes hands in a reported €600 million deal",
+    tag:"Participant sport",
+    lens:"participant",
+    facts:[
+      "On Sept. 8, Infront Sports & Media completed the sale of its majority stake in Hyrox, the indoor fitness-racing series, to a group led by private equity firm L Catterton together with Hyrox’s co-founders and the investment firm WndrCo.",
+      "Terms were not disclosed. Several outlets reported a valuation of about €600 million (roughly $700 million).",
+      "Co-founder Christian Toetzke said the company’s priorities include Olympic ambitions, bringing millions more people to the start line, and new products."
+    ],
+    roles:[
+      {who:"Hyrox North America growth team", brief:"Grow participation at a (hypothetical) Philadelphia-area race weekend."},
+      {who:"Marketing team at a regional gym chain that just became an official Hyrox training partner", brief:"Use the partnership to sell memberships, not just race entries."},
+      {who:"Hyrox brand marketing team", brief:"Bring in first-timers who have never entered a race of any kind."}
+    ],
+    segments:[
+      "College students who work out but have never raced",
+      "Adults aged 35–50 getting back into fitness",
+      "Friends who want a doubles or team experience",
+      "Runners who have done 5Ks but never a strength event"
+    ],
+    curveballs:[
+      "Clips of first-timers struggling go viral, and commenters say the event isn’t for normal people.",
+      "A competing fitness-race brand announces an event in your city one week earlier at half the price."
+    ],
+    sources:[
+      {label:"Reuters via Global Banking & Finance, Hyrox founders reclaim majority stake (Sept. 9, 2026)", url:"https://www.globalbankingandfinance.com/hyrox-founders-reclaim-majority-stake-fitness-racing-group-l/"},
+      {label:"Bloomberg, L Catterton said to near acquisition of Hyrox (Sept. 7, 2026)", url:"https://www.bloomberg.com/news/articles/2026-09-07/l-catterton-is-said-to-near-acquisition-of-fitness-brand-hyrox"},
+      {label:"Democrata, L Catterton acquires Hyrox (Sept. 9, 2026)", url:"https://www.democrata.es/en/economy/the-fund-linked-to-louis-vuitton-acquires-hyrox-for-600-million-euros/"}
+    ]
+  },
+  {
+    id:"liverpool",
+    title:"Liverpool replaces its shirt sponsor after 17 years",
+    tag:"Sponsorship",
+    lens:"spectator",
+    facts:[
+      "On Sept. 8, Liverpool announced that Turkish Airlines will become its main partner and front-of-shirt sponsor from June 1, 2027, on the men’s, women’s, and academy shirts.",
+      "Standard Chartered, on the shirt since 2010, will move to a global partner role.",
+      "The club did not disclose the value. The Times reported a five-year deal worth more than £300 million, which would be a Premier League record for a front-of-shirt deal."
+    ],
+    roles:[
+      {who:"Turkish Airlines sponsorship activation team", brief:"Make Liverpool fans in the United States care about the airline before the logo ever reaches the shirt."},
+      {who:"Liverpool commercial team", brief:"Protect fan goodwill as a look fans have known for 17 years changes."},
+      {who:"Marketing team at a rival airline", brief:"You want attention during this moment. Build a campaign that gets noticed without implying you are an official partner. Stay clear of ambush marketing."}
+    ],
+    segments:[
+      "Members of U.S. Liverpool supporters’ clubs",
+      "Fans who buy replica shirts",
+      "Supporters of Liverpool’s women’s team",
+      "Young fans who have only ever known one shirt sponsor"
+    ],
+    curveballs:[
+      "Fans launch a petition arguing that the new sponsor doesn’t fit the club’s identity.",
+      "Images of the 2027–28 shirt leak online before the official launch."
+    ],
+    sources:[
+      {label:"Inside World Football, Liverpool sign record Turkish Airlines deal (Sept. 8, 2026)", url:"https://www.insideworldfootball.com/2026/09/08/liverpool-sign-record-breaking-turkish-airlines-shirt-sponsorship-deal/"},
+      {label:"PM News, Liverpool lands a record shirt deal (Sept. 14, 2026)", url:"https://pmnewsnigeria.com/2026/09/14/liverpool-lands-a-record-shirt-deal-with-turkish-airlines/"}
+    ]
+  }
+];
+
+var MOTIVES = {
+  spectator:[
+    {name:"Self-esteem enhancement", hint:"Fans feel better about themselves when their team matters."},
+    {name:"Diversion from everyday life", hint:"A break from school, work, and stress."},
+    {name:"Entertainment value", hint:"The whole experience is fun, win or lose."},
+    {name:"Aesthetic value", hint:"The skill and beauty of the sport itself."},
+    {name:"Need for affiliation", hint:"Belonging to a group of people who share something."},
+    {name:"Family ties", hint:"Time together and traditions passed down."}
+  ],
+  participant:[
+    {name:"Personal improvement", hint:"Health, accomplishment, and personal growth."},
+    {name:"Sport appreciation", hint:"Enjoying the activity and the competition."},
+    {name:"Social facilitation", hint:"Time with others and feeling part of a group."}
+  ]
+};
+
+var LOCKS = [
+  {p:"product", label:"Product", rule:"You can’t change the core game, event, or deal itself."},
+  {p:"price", label:"Price", rule:"Prices are set by someone else. No discounts."},
+  {p:"place", label:"Place", rule:"The venue, platform, and dates are fixed."},
+  {p:"promotion", label:"Promotion", rule:"No paid advertising. Earned media, social, and partners only."}
+];
+var BUDGETS = ["$40,000", "$150,000", "$600,000", "$2 million"];
+var TIMELINES = ["Launch within 10 days", "Launch within six weeks", "Must still be working a year from now"];
+var GLOBAL_CURVES = [
+  "Your budget is cut by 40 percent, effective now.",
+  "A competitor just launched almost exactly your best idea. Differentiate."
+];
+
+var LETTERS = "ABCDEFGH".split("");
+var CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+
+/* ---------- Seeded randomness ---------- */
+function hashStr(str){
+  var h = 1779033703 ^ str.length;
+  for (var i = 0; i < str.length; i++){
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  return (h ^= h >>> 16) >>> 0;
+}
+function rng(seed){
+  var a = seed >>> 0;
+  return function(){
+    a = (a + 0x6D2B79F5) >>> 0;
+    var t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function pick(r, arr){ return arr[Math.floor(r() * arr.length)]; }
+function shuffle(r, arr){
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(r() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function newCode(){
+  var s = "";
+  var buf = new Uint32Array(4);
+  try { crypto.getRandomValues(buf); } catch(e){ for (var k=0;k<4;k++) buf[k] = Math.floor(Math.random()*1e9); }
+  for (var i = 0; i < 4; i++) s += CODE_CHARS[buf[i] % CODE_CHARS.length];
+  return s;
+}
+function validCode(c){
+  if (!c || c.length !== 4) return false;
+  for (var i = 0; i < 4; i++) if (CODE_CHARS.indexOf(c[i]) < 0) return false;
+  return true;
+}
+
+/* A pod's draw depends only on the code and the pod letter,
+   so the projector and a student's phone always agree. */
+function drawFor(code, idx){
+  var sessionR = rng(hashStr(code + "|session"));
+  var order = shuffle(sessionR, EVENTS);
+  var roleOffset = {};
+  order.forEach(function(ev){ roleOffset[ev.id] = Math.floor(sessionR() * ev.roles.length); });
+
+  var ev = order[idx % order.length];
+  var cycle = Math.floor(idx / order.length);
+  var role = ev.roles[(roleOffset[ev.id] + cycle) % ev.roles.length];
+
+  var r = rng(hashStr(code + "|pod|" + LETTERS[idx]));
+  var motive = pick(r, MOTIVES[ev.lens]);
+  var segment = pick(r, ev.segments);
+  var lock = pick(r, LOCKS);
+  var budget = pick(r, BUDGETS);
+  var timeline = pick(r, TIMELINES);
+  var curve = pick(r, ev.curveballs.concat(GLOBAL_CURVES));
+  return {letter:LETTERS[idx], ev:ev, role:role, motive:motive, segment:segment, lock:lock, budget:budget, timeline:timeline, curve:curve};
+}
+
+/* ---------- State ---------- */
+var state = { code:"", pods:5, view:"room", pod:0, curve:false };
+
+function $(id){ return document.getElementById(id); }
+function el(tag, props, kids){
+  var n = document.createElement(tag);
+  if (props) for (var k in props){
+    if (k === "text") n.textContent = props[k];
+    else if (k === "cls") n.className = props[k];
+    else n.setAttribute(k, props[k]);
+  }
+  (kids || []).forEach(function(c){ if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+  return n;
+}
+
+function readHash(){
+  var h = {};
+  try {
+    (location.hash || "").replace(/^#/, "").split("&").forEach(function(p){
+      var kv = p.split("="); if (kv[0]) h[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || "");
+    });
+  } catch(e){}
+  return h;
+}
+function writeHash(){
+  var parts = ["code=" + state.code, "pods=" + state.pods];
+  if (state.view === "pod") parts.push("pod=" + LETTERS[state.pod]);
+  if (state.view === "join") parts.push("join=1");
+  try { history.replaceState(null, "", "#" + parts.join("&")); } catch(e){}
+}
+
+/* ---------- Room view ---------- */
+function renderRoom(animate){
+  $("codeText").textContent = state.code;
+  var grid = $("grid");
+  grid.innerHTML = "";
+  for (var i = 0; i < state.pods; i++){
+    var d = drawFor(state.code, i);
+    var btn = el("button", {cls:"pod", type:"button", "aria-label":"Open brief for pod " + d.letter}, [
+      el("div", {cls:"letter"}, [ el("strong", {text:d.letter}), el("span", {text:d.ev.tag}) ]),
+      el("h3", {text:d.ev.title}),
+      el("p", {cls:"role", text:d.role.who}),
+      el("dl", null, [
+        el("dt", {text:"Target"}), el("dd", {text:d.segment}),
+        el("dt", {text:"Budget"}), el("dd", {text:d.budget}),
+        el("dt", {text:"Locked"}), el("dd", {cls:"lock", text:d.lock.label})
+      ]),
+      el("div", {cls:"cb", text:"Curveball: " + d.curve}),
+      el("span", {cls:"open", text:"Open pod " + d.letter + " brief"})
+    ]);
+    (function(idx){ btn.addEventListener("click", function(){ openPod(idx); }); })(i);
+    if (animate) btn.style.animationDelay = (i * 70) + "ms";
+    grid.appendChild(btn);
+  }
+  grid.classList.remove("dealing");
+  if (animate){ void grid.offsetWidth; grid.classList.add("dealing"); }
+  document.body.classList.toggle("curve-on", state.curve);
+  $("curveBanner").classList.toggle("on", state.curve);
+  $("curveBtn").setAttribute("aria-pressed", String(state.curve));
+  $("curveBtn").textContent = state.curve ? "Hide curveball" : "Release curveball";
+  renderSources();
+}
+
+function renderSources(){
+  var box = $("sourceList");
+  if (box.childNodes.length) return;
+  EVENTS.forEach(function(ev){
+    box.appendChild(el("p", {cls:"src-event", text:ev.title}));
+    var ul = el("ul");
+    ev.sources.forEach(function(s){
+      ul.appendChild(el("li", null, [ el("a", {href:s.url, target:"_blank", rel:"noopener", text:s.label}) ]));
+    });
+    box.appendChild(ul);
+  });
+}
+
+/* ---------- Pod view ---------- */
+var FIELDS = ["consumer","segment","product","price","place","promotion","veeck","proof","curve"];
+function storeKey(){ return "mgt340-poddraw:" + state.code + ":" + LETTERS[state.pod]; }
+function loadAnswers(){
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem(storeKey()) || "{}") || {}; } catch(e){ data = {}; }
+  FIELDS.forEach(function(k){ $("f_" + k).value = data[k] || ""; });
+}
+function saveAnswers(){
+  var data = {};
+  FIELDS.forEach(function(k){ data[k] = $("f_" + k).value; });
+  try { localStorage.setItem(storeKey(), JSON.stringify(data)); } catch(e){}
+}
+
+function renderPod(){
+  var d = drawFor(state.code, state.pod);
+  $("codeText").textContent = state.code;
+  $("pvPod").textContent = "Pod " + d.letter + ", " + d.ev.tag;
+  $("pvTitle").textContent = d.ev.title;
+
+  var facts = $("pvFacts"); facts.innerHTML = "";
+  d.ev.facts.forEach(function(f){ facts.appendChild(el("li", {text:f})); });
+
+  $("pvRole").textContent = "Your role: " + d.role.who;
+  $("pvBrief").textContent = d.role.brief;
+
+  var lensLabel = d.ev.lens === "participant" ? "Consumers as participants" : "Consumers as spectators";
+  var draw = $("pvDraw"); draw.innerHTML = "";
+  function row(label, value, hint, cls){
+    var dd = el("dd", {cls:cls || "", text:value});
+    if (hint) dd.appendChild(el("span", {cls:"hint", text:hint}));
+    draw.appendChild(el("div", null, [ el("dt", {text:label}), dd ]));
+  }
+  row("Consumer lens", lensLabel);
+  row("Lead motive", d.motive.name, d.motive.hint);
+  row("Target segment", d.segment);
+  row("Budget", d.budget);
+  row("Timeline", d.timeline);
+  row("Locked P", d.lock.label, d.lock.rule, "lock");
+
+  var src = $("pvSources"); src.innerHTML = "";
+  src.appendChild(document.createTextNode("Sources: "));
+  d.ev.sources.forEach(function(s, i){
+    if (i) src.appendChild(document.createTextNode("; "));
+    src.appendChild(el("a", {href:s.url, target:"_blank", rel:"noopener", text:s.label}));
+  });
+
+  $("pvStep1Prompt").textContent = lensLabel + ". Lead with this motive: " + d.motive.name.toLowerCase() + ".";
+  $("pvStep2Prompt").textContent = "Your target: " + d.segment.charAt(0).toLowerCase() + d.segment.slice(1) + ".";
+
+  LOCKS.forEach(function(L){
+    var lab = $("l_" + L.p);
+    lab.innerHTML = "";
+    lab.appendChild(document.createTextNode(L.label));
+    if (L.p === d.lock.p){
+      lab.appendChild(document.createTextNode(" "));
+      lab.appendChild(el("em", {text:"(locked: explain your workaround)"}));
+    }
+  });
+
+  $("pvCurve").textContent = d.curve;
+  $("pvCurve").classList.remove("on");
+  $("cbField").hidden = true;
+  $("revealCb").hidden = false;
+  $("revealCb").setAttribute("aria-expanded", "false");
+  $("copyBox").style.display = "none";
+  $("copyStatus").textContent = "";
+  loadAnswers();
+  if ($("f_curve").value) revealCurve();
+}
+
+function revealCurve(){
+  $("pvCurve").classList.add("on");
+  $("cbField").hidden = false;
+  $("revealCb").hidden = true;
+  $("revealCb").setAttribute("aria-expanded", "true");
+}
+
+function planText(){
+  var d = drawFor(state.code, state.pod);
+  var v = function(k){ return ($("f_" + k).value || "").trim() || "(blank)"; };
+  return [
+    "MGT 340 Sport Marketing Pod Draw, session " + state.code + ", Pod " + d.letter,
+    "Event: " + d.ev.title,
+    "Role: " + d.role.who,
+    "Lead motive: " + d.motive.name + " | Target: " + d.segment + " | Budget: " + d.budget + " | Timeline: " + d.timeline + " | Locked P: " + d.lock.label,
+    "",
+    "1. Consumer: " + v("consumer"),
+    "2. Market selection: " + v("segment"),
+    "3. Product: " + v("product"),
+    "   Price: " + v("price"),
+    "   Place: " + v("place"),
+    "   Promotion: " + v("promotion"),
+    "Veeck test: " + v("veeck"),
+    "Proof metric: " + v("proof"),
+    "Curveball (" + d.curve + "): " + v("curve")
+  ].join("\n");
+}
+
+/* ---------- Navigation ---------- */
+function show(view){
+  state.view = view;
+  $("roomView").hidden = view !== "room";
+  $("podView").hidden = view !== "pod";
+  $("joinView").hidden = view !== "join";
+  writeHash();
+  window.scrollTo(0, 0);
+}
+function openPod(idx){
+  state.pod = idx;
+  show("pod");
+  renderPod();
+  $("pvTitle").setAttribute("tabindex", "-1");
+  $("pvTitle").focus({preventScroll:true});
+}
+function openJoin(){
+  var sel = $("joinPod");
+  if (!sel.options.length) LETTERS.forEach(function(L){ sel.appendChild(el("option", {value:L, text:"Pod " + L})); });
+  $("joinCode").value = "";
+  $("joinErr").textContent = "";
+  show("join");
+  $("joinCode").focus();
+}
+
+/* ---------- Timer ---------- */
+var timer = { total:720, left:720, running:false, endAt:0, id:null };
+function fmt(s){ s = Math.max(0, Math.ceil(s)); return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
+function paintTimer(){
+  $("timerText").textContent = fmt(timer.left);
+  $("timerText").classList.toggle("done", timer.left <= 0);
+  $("timerBtn").textContent = timer.running ? "Pause" : (timer.left < timer.total && timer.left > 0 ? "Resume" : "Start");
+}
+function tick(){
+  timer.left = (timer.endAt - Date.now()) / 1000;
+  if (timer.left <= 0){
+    timer.left = 0; timer.running = false; clearInterval(timer.id);
+    $("timerLive").textContent = "Time. Pods, get ready to report out.";
+  }
+  paintTimer();
+}
+function toggleTimer(){
+  if (timer.running){
+    timer.running = false; clearInterval(timer.id); timer.left = (timer.endAt - Date.now())/1000;
+  } else {
+    if (timer.left <= 0) timer.left = timer.total;
+    timer.running = true; timer.endAt = Date.now() + timer.left*1000;
+    $("timerLive").textContent = "";
+    timer.id = setInterval(tick, 250);
+  }
+  paintTimer();
+}
+function resetTimer(){
+  clearInterval(timer.id); timer.running = false;
+  timer.total = parseInt($("minutes").value, 10) * 60; timer.left = timer.total;
+  $("timerLive").textContent = "";
+  paintTimer();
+}
+
+/* ---------- Theme ---------- */
+function toggleTheme(){
+  var root = document.documentElement;
+  var cur = root.getAttribute("data-theme");
+  var dark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  root.setAttribute("data-theme", dark ? "light" : "dark");
+  try { localStorage.setItem("mgt340-poddraw:theme", root.getAttribute("data-theme")); } catch(e){}
+}
+
+/* ---------- Wire up ---------- */
+function init(){
+  try { var t = localStorage.getItem("mgt340-poddraw:theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch(e){}
+
+  var pc = $("podCount");
+  for (var n = 2; n <= 8; n++) pc.appendChild(el("option", {value:String(n), text:String(n)}));
+
+  var h = readHash();
+  var code = (h.code || "").toUpperCase();
+  state.code = validCode(code) ? code : newCode();
+  var pods = parseInt(h.pods, 10);
+  state.pods = pods >= 2 && pods <= 8 ? pods : 5;
+  pc.value = String(state.pods);
+
+  pc.addEventListener("change", function(){ state.pods = parseInt(pc.value, 10); writeHash(); renderRoom(true); });
+  $("newDraw").addEventListener("click", function(){ state.code = newCode(); state.curve = false; writeHash(); renderRoom(true); });
+  $("useCode").addEventListener("click", function(){
+    var c = (window.prompt("Enter a four-character session code") || "").trim().toUpperCase();
+    if (!c) return;
+    if (!validCode(c)){ window.alert("That code isn’t valid. Codes are four letters or numbers, like " + state.code + "."); return; }
+    state.code = c; writeHash(); renderRoom(true);
+  });
+  $("curveBtn").addEventListener("click", function(){ state.curve = !state.curve; renderRoom(false); });
+  $("timerBtn").addEventListener("click", toggleTimer);
+  $("timerReset").addEventListener("click", resetTimer);
+  $("minutes").addEventListener("change", resetTimer);
+  $("themeBtn").addEventListener("click", toggleTheme);
+  $("toJoin").addEventListener("click", openJoin);
+
+  $("backBtn").addEventListener("click", function(){ show("room"); renderRoom(false); });
+  $("revealCb").addEventListener("click", revealCurve);
+  FIELDS.forEach(function(k){ $("f_" + k).addEventListener("input", saveAnswers); });
+  $("copyPlan").addEventListener("click", function(){
+    var text = planText();
+    var box = $("copyBox");
+    function fallback(){
+      box.value = text; box.style.display = "block"; box.focus(); box.select();
+      $("copyStatus").textContent = "Select all and copy this text.";
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function(){
+        $("copyStatus").textContent = "Copied. Paste it into the class submission.";
+        box.style.display = "none";
+      }, fallback);
+    } catch(e){ fallback(); }
+  });
+
+  $("joinGo").addEventListener("click", function(){
+    var c = $("joinCode").value.trim().toUpperCase();
+    if (!validCode(c)){ $("joinErr").textContent = "Check the code on the screen. It has four letters or numbers."; return; }
+    state.code = c;
+    openPod(LETTERS.indexOf($("joinPod").value));
+  });
+  $("joinCode").addEventListener("keydown", function(e){ if (e.key === "Enter") $("joinGo").click(); });
+  $("joinBack").addEventListener("click", function(){ show("room"); renderRoom(false); });
+
+  resetTimer();
+
+  if (h.pod && LETTERS.indexOf(h.pod.toUpperCase()) >= 0 && validCode(code)){
+    renderRoom(false);
+    openPod(LETTERS.indexOf(h.pod.toUpperCase()));
+  } else if (h.join){
+    renderRoom(false);
+    openJoin();
+  } else {
+    show("room");
+    renderRoom(true);
+  }
+}
+init();
+})();
+</script>
+</body>
+</html>
