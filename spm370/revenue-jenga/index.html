@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Revenue Jenga — Esports Business Model Stability Lab</title>
+<meta name="description" content="Interactive classroom simulation: build an esports revenue model, absorb a shock, and rebuild for 12-month survival." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><span class="badge">Revenue Jenga</span><span class="sub">Esports Business Model Stability Lab</span></div>
+  <div class="phase-meter" aria-label="progress"><i class="phase-dot on"></i><i class="phase-dot"></i><i class="phase-dot"></i><i class="phase-dot"></i><i class="phase-dot"></i></div>
+  <button class="ghost" id="resetTop">Reset</button><div class="ticker"></div>
+</header>
+<main>
+  <section class="screen active" id="intro">
+    <div class="intro-grid">
+      <div>
+        <div class="eyebrow">Live Simulation // Revenue Stability</div>
+        <h1>BUILD.<br>BREAK.<br><span style="color:var(--cyan)">REBUILD.</span></h1>
+        <div class="title-rule"></div>
+        <p class="lede">You have 100 revenue points. Build an esports business model, survive a market shock, and prove the organization can still operate twelve months later.</p>
+        <p style="color:#8195a1;max-width:690px">The challenge is not maximizing theoretical revenue. It is understanding which relationships make that revenue durable—or fragile—and which legal dependency sits underneath the money.</p>
+      </div>
+      <div class="start-card">
+        <div class="eyebrow">Mission Brief</div>
+        <h3>Three decisions. One test.</h3>
+        <div class="mission-list">
+          <div class="mission"><b>01</b><span><strong>Build the stack.</strong><br>Allocate exactly 100 points across revenue streams.</span></div>
+          <div class="mission"><b>02</b><span><strong>Draw the shock.</strong><br>One dependency gets hit. Your original build is locked.</span></div>
+          <div class="mission"><b>03</b><span><strong>Rebuild under pressure.</strong><br>Use limited pivot capacity and identify the new legal dependency.</span></div>
+        </div>
+        <button class="cta" id="begin">Enter the Lab</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="roles">
+    <div class="eyebrow">Phase 01 // Draft a Role</div>
+    <h2>Who are you trying to keep alive?</h2>
+    <p class="lede">Each role has a different relationship to the same revenue streams. Pick one—or use the randomizer so every pod gets a different model.</p>
+    <div class="role-grid" id="roleGrid"></div>
+    <div class="role-actions"><span class="selected-role" id="roleStatus">No role selected.</span><div><button class="secondary" id="randomRole">Randomize</button> <button class="cta" id="lockRole" disabled>Lock Role</button></div></div>
+  </section>
+
+  <section class="screen" id="build">
+    <div class="eyebrow">Phase 02 // Build the Stack</div>
+    <h2>Spend exactly 100 revenue points.</h2>
+    <p class="lede" id="buildPrompt">Your allocation becomes your dependency map. You will not be allowed to undo it after the shock.</p>
+    <div class="lab-grid">
+      <div class="panel">
+        <div class="panel-h"><span>Revenue Ledger</span><strong id="roleChip">—</strong></div>
+        <div class="panel-b">
+          <div id="streamList"></div>
+          <div class="alloc-footer">
+            <div><div class="total bad" id="total">0 / 100</div><div class="hint" id="remainingHint">100 points remaining. Concentration creates efficiency—but also fragility.</div></div>
+            <button class="cta" id="lockBuild" disabled>Lock the Stack</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel tower-stage">
+        <div class="panel-h"><span>Live Tower</span><strong id="forecast">Unrated</strong></div>
+        <div class="tower-wrap"><div class="tower" id="tower"></div></div>
+        <div class="stats"><div class="stat"><small>Top Exposure</small><b id="topExposure">—</b></div><div class="stat"><small>Diversification</small><b id="diversity">—</b></div><div class="stat"><small>Dependency Count</small><b id="depCount">0</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="draw">
+    <div class="eyebrow">Phase 03 // Shock Deck</div>
+    <h2>Pick a sealed case.</h2>
+    <p class="lede">The number is random. The consequence is not. Your original allocation is now locked.</p>
+    <div class="sealed" id="shockDeck"></div>
+  </section>
+
+  <section class="screen" id="rebuild">
+    <div class="eyebrow">Phase 04 // Rebuild Under Pressure</div>
+    <h2>Your tower took a hit.</h2>
+    <div class="shock-shell">
+      <div class="shock-card" id="shockCard"></div>
+      <div class="rebuild-panel">
+        <h3>Pivot capacity: <span style="color:var(--cyan)">20 points</span></h3>
+        <p style="color:#9fb0ba">You may add up to 20 points to surviving/new revenue streams. This is emergency capacity, not free money: each pivot creates a new dependency.</p>
+        <div class="pivot-budget"><span>Points committed</span><strong id="pivotUsed">0 / 20</strong></div>
+        <div id="moveList"></div>
+        <div class="decision-grid">
+          <div class="field"><label for="dependency">New dependency created</label><select id="dependency"></select></div>
+          <div class="field"><label for="contract">Contract / legal instrument that matters more</label><select id="contract"></select></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:18px"><button class="cta" id="resolve" disabled>Run 12-Month Test</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="result">
+    <div class="eyebrow">Phase 05 // 12-Month Survival Test</div>
+    <h2 id="resultTitle">Result</h2>
+    <div class="result-grid">
+      <div class="score-orb"><div><strong id="score">0</strong><span>Resilience</span></div></div>
+      <div class="result-panel">
+        <div class="verdict" id="verdict">—</div>
+        <div class="result-copy" id="resultCopy"></div><div style="margin-top:9px;color:#718793;font-size:12px;text-transform:uppercase;letter-spacing:.08em">Simulation score = discussion heuristic, not a financial forecast.</div>
+        <div class="breakdown"><div class="metric"><small>Revenue left after shock</small><b id="mRemain">—</b></div><div class="metric"><small>Concentration risk</small><b id="mConc">—</b></div><div class="metric"><small>Pivot quality</small><b id="mPivot">—</b></div></div>
+        <div class="lesson" id="lesson"></div>
+        <div class="result-actions"><button class="cta" id="newShock">Same Build / New Shock</button><button class="secondary" id="copyReport">Copy Pod Report</button><button class="secondary" id="startOver">New Business Model</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><span>SPM 370 // Esports, Video Games, and the Law</span><span>Stability &gt; visibility</span></footer>
+</div>
+
+<div class="teacher-drawer">
+  <button class="teacher-btn" id="teacherBtn" aria-label="Instructor guide">i</button>
+  <aside class="teacher-sheet" id="teacherSheet">
+    <h3>Instructor Quick Guide</h3>
+    <p><b>Run time:</b> ~6–8 minutes. Pods should defend their allocation, not chase a single “correct” mix.</p>
+    <ul><li>Ask why their biggest stream is stable—or not.</li><li>After the shock, ask what relationship became the new chokepoint.</li><li>Use the final score as a discussion trigger, not a grade.</li></ul>
+    <div class="shock-mini"><div>01 Sponsor Exit</div><div>02 Rev-Share Cut</div><div>03 Viewership Drop</div><div>04 Fail to Qualify</div><div>05 Platform Change</div><div>06 Compliance Cost</div></div>
+  </aside>
+</div>
+<script src="app.js" defer></script>
+</body>
+</html>
