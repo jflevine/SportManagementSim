@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Revenue Jenga 日本語版 — Esports Business Model Stability Lab</title>
+<meta name="description" content="eスポーツの収益モデルを作り、ショックを受け、12か月後も事業を継続できるかを検証する日本語版クラス演習。" />
+<link rel="stylesheet" href="../revenue-jenga/styles.css" />
+<style>
+  body{font-family:"Times New Roman","Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif}
+  .ja-note{color:#8195a1;font-size:14px;line-height:1.55;margin-top:8px}
+  .term-en{color:#7f9ba8;font-size:.78em;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><span class="badge">Revenue Jenga</span><span class="sub">日本語版 // 収益安定性ラボ</span></div>
+  <div class="phase-meter" aria-label="進捗"><i class="phase-dot on"></i><i class="phase-dot"></i><i class="phase-dot"></i><i class="phase-dot"></i><i class="phase-dot"></i></div>
+  <button class="ghost" id="resetTop">リセット</button><div class="ticker"></div>
+</header>
+<main>
+  <section class="screen active" id="intro">
+    <div class="intro-grid">
+      <div>
+        <div class="eyebrow">ライブ・シミュレーション // 収益の安定性</div>
+        <h1>構築する。<br>崩れる。<br><span style="color:var(--cyan)">再構築する。</span></h1>
+        <div class="title-rule"></div>
+        <p class="lede">100ポイントの収益を配分してeスポーツ事業モデルを作ります。その後、市場ショックに耐え、12か月後も組織が運営を続けられるかを検証します。</p>
+        <p style="color:#8195a1;max-width:690px">目的は「理論上もっとも大きい収益」を作ることではありません。どの関係が収益を安定させ、どの依存関係が事業を脆弱にするのかを理解することです。</p>
+        <p class="ja-note">主要な専門用語は、授業との対応が分かるよう英語も併記しています。</p>
+      </div>
+      <div class="start-card">
+        <div class="eyebrow">ミッション概要</div>
+        <h3>3つの判断。1つのテスト。</h3>
+        <div class="mission-list">
+          <div class="mission"><b>01</b><span><strong>収益構造を作る。</strong><br>100ポイントを収益源に正確に配分します。</span></div>
+          <div class="mission"><b>02</b><span><strong>ショックを引く。</strong><br>依存している収益源の一つが打撃を受けます。最初の配分は変更できません。</span></div>
+          <div class="mission"><b>03</b><span><strong>危機の中で再構築する。</strong><br>限られた追加ポイントを使い、新しく生まれた法的・契約上の依存関係を特定します。</span></div>
+        </div>
+        <button class="cta" id="begin">ラボを開始</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="roles">
+    <div class="eyebrow">フェーズ 01 // 役割を選ぶ</div>
+    <h2>どの組織を生き残らせますか？</h2>
+    <p class="lede">同じ収益源でも、役割によって重要性と依存度が異なります。1つ選ぶか、ランダムで決めてください。</p>
+    <div class="role-grid" id="roleGrid"></div>
+    <div class="role-actions"><span class="selected-role" id="roleStatus">役割はまだ選ばれていません。</span><div><button class="secondary" id="randomRole">ランダム</button> <button class="cta" id="lockRole" disabled>役割を確定</button></div></div>
+  </section>
+
+  <section class="screen" id="build">
+    <div class="eyebrow">フェーズ 02 // 収益構造を作る</div>
+    <h2>100ポイントをちょうど使ってください。</h2>
+    <p class="lede" id="buildPrompt">あなたの配分は、そのまま事業の「依存関係マップ」になります。ショック後は元に戻せません。</p>
+    <div class="lab-grid">
+      <div class="panel">
+        <div class="panel-h"><span>収益台帳 <span class="term-en">Revenue Ledger</span></span><strong id="roleChip">—</strong></div>
+        <div class="panel-b">
+          <div id="streamList"></div>
+          <div class="alloc-footer">
+            <div><div class="total bad" id="total">0 / 100</div><div class="hint" id="remainingHint">残り100ポイント。集中は効率を高めますが、脆弱性も高めます。</div></div>
+            <button class="cta" id="lockBuild" disabled>収益構造を確定</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel tower-stage">
+        <div class="panel-h"><span>ライブ・タワー</span><strong id="forecast">未評価</strong></div>
+        <div class="tower-wrap"><div class="tower" id="tower"></div></div>
+        <div class="stats"><div class="stat"><small>最大の依存</small><b id="topExposure">—</b></div><div class="stat"><small>分散度</small><b id="diversity">—</b></div><div class="stat"><small>主要な依存数</small><b id="depCount">0</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="draw">
+    <div class="eyebrow">フェーズ 03 // ショック・デッキ</div>
+    <h2>封印されたケースを1つ選んでください。</h2>
+    <p class="lede">番号はランダムです。しかし、起きる影響はあなたの事業モデルによって変わります。元の100ポイント配分は固定されています。</p>
+    <div class="sealed" id="shockDeck"></div>
+  </section>
+
+  <section class="screen" id="rebuild">
+    <div class="eyebrow">フェーズ 04 // 危機の中で再構築</div>
+    <h2>あなたの収益タワーが打撃を受けました。</h2>
+    <div class="shock-shell">
+      <div class="shock-card" id="shockCard"></div>
+      <div class="rebuild-panel">
+        <h3>追加できるポイント：<span style="color:var(--cyan)">20ポイント</span></h3>
+        <p style="color:#9fb0ba">生き残った収益源、または新しい収益源に最大20ポイントを追加できます。ただし、これは「無料のお金」ではありません。新しい収益は、新しい依存関係を生みます。</p>
+        <div class="pivot-budget"><span>使用済みポイント</span><strong id="pivotUsed">0 / 20</strong></div>
+        <div id="moveList"></div>
+        <div class="decision-grid">
+          <div class="field"><label for="dependency">新しく生まれた依存関係 <span class="term-en">New dependency</span></label><select id="dependency"></select></div>
+          <div class="field"><label for="contract">より重要になった契約・法的手段 <span class="term-en">Contract / legal instrument</span></label><select id="contract"></select></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:18px"><button class="cta" id="resolve" disabled>12か月テストを実行</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="result">
+    <div class="eyebrow">フェーズ 05 // 12か月生存テスト</div>
+    <h2 id="resultTitle">結果</h2>
+    <div class="result-grid">
+      <div class="score-orb"><div><strong id="score">0</strong><span>レジリエンス</span></div></div>
+      <div class="result-panel">
+        <div class="verdict" id="verdict">—</div>
+        <div class="result-copy" id="resultCopy"></div><div style="margin-top:9px;color:#718793;font-size:12px;text-transform:uppercase;letter-spacing:.08em">このスコアは授業で考えるための指標であり、財務予測ではありません。</div>
+        <div class="breakdown"><div class="metric"><small>ショック後に残った収益</small><b id="mRemain">—</b></div><div class="metric"><small>収益集中リスク</small><b id="mConc">—</b></div><div class="metric"><small>再構築の質</small><b id="mPivot">—</b></div></div>
+        <div class="lesson" id="lesson"></div>
+        <div class="result-actions"><button class="cta" id="newShock">同じモデル / 別のショック</button><button class="secondary" id="copyReport">グループ報告をコピー</button><button class="secondary" id="startOver">新しい事業モデル</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><span>SPM 370 // Esports, Video Games, and the Law</span><span>安定性 &gt; 見かけの大きさ</span></footer>
+</div>
+
+<div class="teacher-drawer">
+  <button class="teacher-btn" id="teacherBtn" aria-label="教員ガイド">i</button>
+  <aside class="teacher-sheet" id="teacherSheet">
+    <h3>教員用クイックガイド</h3>
+    <p><b>所要時間：</b> 約6〜8分。唯一の「正解」の収益配分を探すのではなく、自分たちの配分を説明できることが重要です。</p>
+    <ul><li>最大の収益源がなぜ安定している／不安定なのかを聞く。</li><li>ショック後に、どの関係が新しいチョークポイントになったかを聞く。</li><li>最終スコアは成績ではなく、議論のきっかけとして使う。</li></ul>
+    <div class="shock-mini"><div>01 スポンサー撤退</div><div>02 レベニューシェア削減</div><div>03 視聴者減少</div><div>04 大会出場失敗</div><div>05 プラットフォーム変更</div><div>06 新しいコンプライアンス費用</div></div>
+  </aside>
+</div>
+<script src="app.js" defer></script>
+</body>
+</html>
