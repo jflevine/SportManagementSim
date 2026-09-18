@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Owner's Box | Franchise Finance Tycoon</title>
+  <meta name="description" content="MGT 340 interactive sport-finance simulation: balance revenue, expenses, risk, and competitive performance." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="mark">OB</div>
+        <div>
+          <div class="eyebrow">MGT 340 · HOW DOES THE MONEY WORK?</div>
+          <h1>OWNER'S BOX <span>Franchise Finance Tycoon</span></h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="ghost" id="rulesBtn">How to play</button>
+        <button class="ghost" id="restartBtn">Restart</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="introScreen" class="screen intro-screen">
+        <div class="hero-panel">
+          <div class="hero-copy">
+            <div class="kicker">YOU JUST BOUGHT A PRO FRANCHISE.</div>
+            <h2>Winning is optional.<br><em>Solvency isn't.</em></h2>
+            <p>Run five seasons. Build revenue, control expenses, finance the facility, and stay competitive without wrecking the balance sheet.</p>
+            <div class="objective-strip">
+              <div><strong>5</strong><span>seasons</span></div>
+              <div><strong>7</strong><span>revenue streams</span></div>
+              <div><strong>1</strong><span>board to satisfy</span></div>
+            </div>
+          </div>
+          <div class="scoreboard-art" aria-hidden="true">
+            <div class="stadium-ring"></div>
+            <div class="scoreboard-screen">
+              <small>OWNER'S DASHBOARD</small>
+              <strong>PROFIT</strong>
+              <span>≠</span>
+              <strong>CASH</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-grid">
+          <div class="setup-card">
+            <label for="teamName">Franchise name</label>
+            <input id="teamName" value="Explorer City FC" maxlength="28" />
+          </div>
+          <div class="setup-card">
+            <label for="seedInput">Class seed <span class="muted">(same seed = same shocks)</span></label>
+            <input id="seedInput" value="MGT340" maxlength="24" />
+          </div>
+          <div class="setup-card">
+            <label>Play format</label>
+            <div class="segmented" role="group" aria-label="Play format">
+              <button class="segment active" data-mode="pod">Pod / small group</button>
+              <button class="segment" data-mode="solo">Solo</button>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="choose-title">Choose your market</h3>
+        <div id="scenarioCards" class="scenario-grid"></div>
+        <div class="launch-row">
+          <p class="fineprint">Fictional league model. Dollar figures are simplified for learning—not forecasts or representations of any real team.</p>
+          <button id="startBtn" class="primary">Enter the Owner's Box →</button>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen hidden">
+        <div class="season-header">
+          <div>
+            <div class="kicker" id="scenarioLabel">GROWTH-MARKET CHALLENGER</div>
+            <h2 id="franchiseTitle">Explorer City FC</h2>
+          </div>
+          <div id="seasonDots" class="season-dots" aria-label="Season progress"></div>
+          <div class="season-number"><span>SEASON</span><strong id="seasonNumber">1</strong><em>/5</em></div>
+        </div>
+
+        <div class="dashboard-grid">
+          <aside class="panel dashboard-panel">
+            <div class="panel-title"><span>01</span> Owner dashboard</div>
+            <div class="metric-grid">
+              <div class="metric"><span>Cash</span><strong id="cashMetric">$0M</strong><small id="cashTrend">liquidity</small></div>
+              <div class="metric"><span>Debt</span><strong id="debtMetric">$0M</strong><small>principal outstanding</small></div>
+              <div class="metric"><span>Fan trust</span><strong id="fansMetric">0</strong><small>/ 100</small></div>
+              <div class="metric"><span>Brand</span><strong id="brandMetric">0</strong><small>/ 100</small></div>
+              <div class="metric"><span>Facility</span><strong id="facilityMetric">0</strong><small>/ 100</small></div>
+              <div class="metric"><span>Value</span><strong id="valueMetric">$0B</strong><small>game estimate</small></div>
+            </div>
+            <div class="concept-card">
+              <span class="concept-label">FINANCE LENS</span>
+              <h4 id="conceptTitle">Revenue is not profit.</h4>
+              <p id="conceptText">Your job is to manage both what flows in and what flows out.</p>
+            </div>
+          </aside>
+
+          <section class="panel decisions-panel">
+            <div class="panel-title"><span>02</span> Set the strategy</div>
+            <div class="control-block">
+              <div class="control-head"><label for="ticketPrice">Average ticket price</label><output id="ticketOut">$102</output></div>
+              <input type="range" id="ticketPrice" min="60" max="165" step="1" />
+              <div class="scale"><span>Fill seats</span><span>Max yield</span></div>
+            </div>
+            <div class="control-block">
+              <div class="control-head"><label for="rosterSpend">Roster investment</label><output id="rosterOut">$168M</output></div>
+              <input type="range" id="rosterSpend" min="120" max="240" step="2" />
+              <div class="scale"><span>Lean roster</span><span>Win now</span></div>
+            </div>
+            <div class="dual-controls">
+              <div class="control-block compact">
+                <div class="control-head"><label for="fanExperience">Fan experience</label><output id="fanOut">$16M</output></div>
+                <input type="range" id="fanExperience" min="5" max="45" step="1" />
+              </div>
+              <div class="control-block compact">
+                <div class="control-head"><label for="marketing">Marketing</label><output id="marketingOut">$14M</output></div>
+                <input type="range" id="marketing" min="5" max="38" step="1" />
+              </div>
+            </div>
+
+            <div class="choice-block">
+              <label>Facility capital decision</label>
+              <div id="facilityChoices" class="choice-grid"></div>
+            </div>
+            <div class="choice-block">
+              <label>Commercial focus</label>
+              <div id="focusChoices" class="choice-grid focus-grid"></div>
+            </div>
+          </section>
+
+          <aside class="panel ledger-panel">
+            <div class="panel-title"><span>03</span> Projected P&amp;L</div>
+            <div class="ledger-total revenue"><span>Projected revenue</span><strong id="projectedRevenue">$0M</strong></div>
+            <div id="revenueBars" class="bar-stack"></div>
+            <div class="ledger-total expenses"><span>Operating expenses</span><strong id="projectedExpenses">$0M</strong></div>
+            <div id="expenseBars" class="bar-stack expense-stack"></div>
+            <div class="profit-box" id="profitBox">
+              <span>Projected operating profit</span>
+              <strong id="projectedProfit">$0M</strong>
+              <small id="projectedMargin">0% margin</small>
+            </div>
+            <div class="cash-note" id="cashNote">Capital spending and debt principal affect cash separately from operating profit.</div>
+          </aside>
+        </div>
+
+        <div class="decision-footer">
+          <div class="board-question">
+            <span>BOARD QUESTION</span>
+            <p id="boardQuestion">What tradeoff are you making—and what could go wrong?</p>
+          </div>
+          <button id="runSeasonBtn" class="primary">Lock decisions &amp; run season →</button>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="screen result-screen hidden">
+        <div class="result-header">
+          <div>
+            <div class="kicker">SEASON RESULT</div>
+            <h2 id="resultTitle">The books are closed.</h2>
+          </div>
+          <div class="result-win"><span>WIN %</span><strong id="winPct">.000</strong></div>
+        </div>
+        <div class="event-card">
+          <div class="event-tag">MARKET SHOCK</div>
+          <h3 id="eventTitle">Stable operating environment</h3>
+          <p id="eventText"></p>
+        </div>
+        <div class="result-grid">
+          <div class="result-card"><span>Revenue</span><strong id="actualRevenue">$0M</strong><small id="revenueDelta"></small></div>
+          <div class="result-card"><span>Expenses</span><strong id="actualExpenses">$0M</strong><small>operating</small></div>
+          <div class="result-card accent"><span>Operating profit</span><strong id="actualProfit">$0M</strong><small id="actualMargin">0% margin</small></div>
+          <div class="result-card"><span>Cash change</span><strong id="cashChange">$0M</strong><small>after capex + principal</small></div>
+        </div>
+        <div class="lesson-grid">
+          <div class="lesson-card"><span>What moved?</span><p id="whatMoved"></p></div>
+          <div class="lesson-card"><span>Finance takeaway</span><p id="financeTakeaway"></p></div>
+          <div class="lesson-card"><span>Board pressure</span><p id="boardPressure"></p></div>
+        </div>
+        <div class="result-footer">
+          <div id="distressWarning" class="distress hidden">The franchise breached its financial safety limits. The board has stepped in.</div>
+          <button id="nextSeasonBtn" class="primary">Advance to next season →</button>
+        </div>
+      </section>
+
+      <section id="finalScreen" class="screen final-screen hidden">
+        <div class="final-hero">
+          <div>
+            <div class="kicker">FIVE-SEASON BOARD REVIEW</div>
+            <h2 id="finalTeam">Explorer City FC</h2>
+            <p id="finalLabel">Sustainable contender</p>
+          </div>
+          <div class="score-ring"><strong id="finalScore">0</strong><span>/100</span></div>
+        </div>
+        <div class="score-grid">
+          <div class="score-card"><span>Financial health</span><strong id="scoreFinancial">0</strong><div><i id="barFinancial"></i></div></div>
+          <div class="score-card"><span>Fan &amp; brand equity</span><strong id="scoreFan">0</strong><div><i id="barFan"></i></div></div>
+          <div class="score-card"><span>Competitive results</span><strong id="scoreCompetitive">0</strong><div><i id="barCompetitive"></i></div></div>
+          <div class="score-card"><span>Asset growth</span><strong id="scoreAsset">0</strong><div><i id="barAsset"></i></div></div>
+          <div class="score-card"><span>Revenue diversification</span><strong id="scoreDiversification">0</strong><div><i id="barDiversification"></i></div></div>
+        </div>
+        <div class="board-report-grid">
+          <div class="board-report">
+            <h3>Your five-season numbers</h3>
+            <div id="finalNumbers" class="final-numbers"></div>
+          </div>
+          <div class="board-report debrief">
+            <h3>Pod debrief · 3 minutes</h3>
+            <ol>
+              <li>Which revenue stream mattered most—and why?</li>
+              <li>Which expense or investment created your hardest tradeoff?</li>
+              <li>When did profit and cash tell different stories?</li>
+              <li>What would you change if national revenue sharing disappeared?</li>
+            </ol>
+          </div>
+        </div>
+        <div class="history-wrap">
+          <h3>Season-by-season board report</h3>
+          <div class="table-wrap"><table><thead><tr><th>Season</th><th>Win %</th><th>Revenue</th><th>Expenses</th><th>Profit</th><th>Cash</th><th>Debt</th></tr></thead><tbody id="historyTable"></tbody></table></div>
+        </div>
+        <div class="final-actions">
+          <button id="copyReportBtn" class="ghost">Copy board report</button>
+          <button id="playAgainBtn" class="primary">Run another franchise →</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="rulesDialog">
+    <div class="dialog-head"><h2>How to play</h2><button id="closeRules" aria-label="Close">×</button></div>
+    <div class="dialog-body">
+      <p><strong>Goal:</strong> survive five seasons while balancing profitability, liquidity, competitive performance, fan trust, and long-term asset value.</p>
+      <ol>
+        <li>Set ticket price, roster spending, fan experience, marketing, facility investment, and commercial focus.</li>
+        <li>Read the projected income statement. Profit is <em>not</em> the same as cash flow.</li>
+        <li>Lock decisions. A market shock is revealed after you commit.</li>
+        <li>Repeat for five seasons. Debt above $470M or cash below −$30M triggers financial distress.</li>
+      </ol>
+      <p><strong>Classroom tip:</strong> Use the same seed across pods so everyone faces the same shocks. Different strategies can then be compared fairly.</p>
+    </div>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
