@@ -78,7 +78,7 @@ export function createState(marketId='growth',mandateId='growth',seed='MGT340',m
     marketId, mandateId, seed, mode, cycle:1, maxCycles:mode==='full'?5:3,
     cash:m.cash, brand:m.brand, fanTrust:m.fanTrust, facility:m.facility,
     franchiseValue:m.value, rosterQuality:m.rosterQuality, developmentBonus:0,
-    activeInvestments:[], debtTranches:[{id:'legacy',name:'Existing franchise debt',principal:m.startingDebt,rate:.048,remaining:12,original:m.startingDebt}],
+    activeInvestments:[], debtTranches:[{id:'legacy',name:'Existing franchise debt',principal:m.startingDebt,rate:.048,remaining:12,original:m.startingDebt,originalTerm:12}],
     history:[], rationales:[], distress:false
   };
 }
@@ -88,7 +88,8 @@ export function getDebtSummary(state){
   for(const d of state.debtTranches){
     principal+=d.principal;
     interest+=d.principal*d.rate;
-    principalDue+=d.remaining>0?Math.min(d.principal,d.original/Math.max(1,d.remaining)):0;
+    const originalTerm=d.originalTerm||d.remaining||1;
+    principalDue+=d.remaining>0?Math.min(d.principal,d.original/Math.max(1,originalTerm)):0;
   }
   return {principal:round(principal),interest:round(interest),principalDue:round(principalDue),service:round(interest+principalDue)};
 }
@@ -112,14 +113,19 @@ export function getActiveEffects(state){
 export function getOpportunitySet(state){
   const r=rngFor(state.seed,state.cycle,'opps');
   const used=new Set(state.activeInvestments.map(x=>x.id));
-  const players=shuffle(PLAYERS.filter(x=>!used.has(x.id)),r).slice(0,2);
-  const capitals=shuffle(CAPITAL.filter(x=>!used.has(x.id)),r).slice(0,2);
-  const commercials=shuffle(COMMERCIAL.filter(x=>!used.has(x.id)),r).slice(0,2);
+  const players=shuffle(PLAYERS.filter(x=>!used.has(x.id)),r);
+  const capitals=shuffle(CAPITAL.filter(x=>!used.has(x.id)),r);
+  const commercials=shuffle(COMMERCIAL.filter(x=>!used.has(x.id)),r);
   let pool=[];
-  if(state.cycle===1) pool=[...commercials.slice(0,2),...capitals.slice(0,1),...players.slice(0,1)];
-  else if(state.cycle===2) pool=[...players.slice(0,2),...capitals.slice(0,1),...commercials.slice(0,1)];
-  else pool=shuffle([...players,...capitals,...commercials],r).slice(0,4);
-  return pool.map(x=>({...x}));
+  if(state.cycle===1) pool=[...commercials.slice(0,2),...capitals.slice(0,2),...players.slice(0,1)];
+  else if(state.cycle===2) pool=[...players.slice(0,2),...capitals.slice(0,2),...commercials.slice(0,1)];
+  else {
+    const core=[players[0],capitals[0],commercials[0]].filter(Boolean);
+    const chosen=new Set(core.map(x=>x.id));
+    const rest=shuffle([...players.slice(1),...capitals.slice(1),...commercials.slice(1)].filter(x=>!chosen.has(x.id)),r);
+    pool=[...core,...rest.slice(0,2)];
+  }
+  return pool.filter(Boolean).map(x=>({...x}));
 }
 
 export function estimateProposalImpact(state,proposal,debtPct=0){
@@ -129,50 +135,104 @@ export function estimateProposalImpact(state,proposal,debtPct=0){
   const rate=.058;
   const term=proposal.type==='capital'?10:6;
   const annualDebtService=debtAmount?debtAmount*(rate/(1-Math.pow(1+rate,-term))):0;
-  const baseNet=(proposal.annualRevenue||0)-(proposal.annualCost||0)-annualDebtService;
-  const simpleROI=proposal.upfront?baseNet/proposal.upfront*100:0;
-  return {debtPct:debtAllowed,debtAmount:round(debtAmount),cashNeed:round(cashNeed),annualDebtService:round(annualDebtService),baseNet:round(baseNet),simpleROI:round(simpleROI),term};
+  const directNet=(proposal.annualRevenue||0)-(proposal.annualCost||0);
+  const afterDebtNet=directNet-annualDebtService;
+  const year1Commitment=proposal.type==='capital'?Math.max(1,proposal.upfront):Math.max(1,proposal.upfront+(proposal.annualCost||0));
+  const directROI=afterDebtNet/year1Commitment*100;
+  const cashOnCashROI=cashNeed>0?afterDebtNet/cashNeed*100:0;
+  const breakEvenYears=afterDebtNet>0?proposal.upfront/afterDebtNet:null;
+  return {
+    debtPct:debtAllowed,debtAmount:round(debtAmount),cashNeed:round(cashNeed),annualDebtService:round(annualDebtService),
+    directNet:round(directNet),afterDebtNet:round(afterDebtNet),year1Commitment:round(year1Commitment),
+    directROI:round(directROI),cashOnCashROI:round(cashOnCashROI),breakEvenYears:breakEvenYears?round(breakEvenYears):null,
+    simpleROI:round(directROI),term,rate
+  };
 }
+
+export function getScenarioModel(state,p,debtPct=0){
+  const impact=estimateProposalImpact(state,p,debtPct);
+  const confidenceFactor=p.confidence==='High'?.70:p.confidence==='Medium'?1:1.25;
+  const spread=clamp((p.risk||.15)*confidenceFactor,.08,.48);
+  const downMult=clamp(1-spread*1.35,.42,.94);
+  const upMult=1+spread*1.55;
+  const netFor=mult=>(p.annualRevenue||0)*mult-(p.annualCost||0)-impact.annualDebtService;
+  const roiFor=net=>net/impact.year1Commitment*100;
+  const downsideNet=netFor(downMult),baseNet=netFor(1),upsideNet=netFor(upMult);
+  return {
+    downsideNet:round(downsideNet),baseNet:round(baseNet),upsideNet:round(upsideNet),
+    downsideROI:round(roiFor(downsideNet)),baseROI:round(roiFor(baseNet)),upsideROI:round(roiFor(upsideNet)),
+    downMult,upMult,confidence:p.confidence
+  };
+}
+
+function moneyText(v){return `${v<0?'−':''}${Math.abs(round(v)).toFixed(1)}M`}
 
 export function advisorViews(state,p){
-  const impact=estimateProposalImpact(state,p,p.debtEligible?.5:0);
-  const cfo = impact.cashNeed>state.cash*.45 ? 'Caution: this consumes a large share of available cash.' : (impact.simpleROI>8?'Support: the base-case economics are workable.':'Conditional: the strategic case may be stronger than the direct cash return.');
-  const gm = p.type==='player' ? (p.wins>=.05?'Strong support: this materially changes the competitive ceiling.':'Support if the roster need matches the role; the performance gain is useful but not transformational.') : (p.wins>0?'Support: there is a competitive benefit beyond direct revenue.':'Neutral: this does not directly solve a roster problem.');
-  const cro = (p.annualRevenue||0)>=7 ? 'Support: the proposal creates meaningful monetizable inventory or demand.' : (p.stream?'Support with targets: define the conversion or renewal metric before funding.':'Neutral: direct commercial upside is limited.');
-  const cmo = p.brand>=2 || p.fan>=2 ? 'Support: the brand/fan effect is strategically useful if execution is strong.' : 'Neutral: this is not primarily a brand investment.';
-  const coo = p.type==='capital' ? (p.risk>.28?'Caution: construction and lifecycle assumptions need stress testing.':'Support: manageable project risk if the operating plan is funded.') : 'Neutral: limited facilities exposure.';
-  const analytics = `Base return ${p.base}% | downside ${p.down}% | upside ${p.up}% | confidence ${p.confidence}. The key issue is whether the downside fits the mandate.`;
-  const fan = p.fan>=2 ? 'Support: this should improve the fan relationship if pricing remains credible.' : (p.type==='player'&&p.brand>=4?'Support: star value can increase engagement, but only if the team performs.':'Neutral: limited direct fan benefit.');
-  return {CFO:cfo,'General Manager':gm,'Chief Revenue Officer':cro,'Chief Marketing Officer':cmo,'COO / Facilities':coo,'Analytics Director':analytics,'Fan Insights Director':fan};
+  const debtPct=p.debtEligible?.5:0;
+  const impact=estimateProposalImpact(state,p,debtPct);
+  const scenarios=getScenarioModel(state,p,debtPct);
+  const md=MANDATES[state.mandateId];
+  const cashShare=impact.cashNeed/Math.max(1,state.cash);
+  let cfo;
+  if(cashShare>.45) cfo=`Caution: this uses ${Math.round(cashShare*100)}% of current cash before the rest of the portfolio.`;
+  else if(scenarios.downsideNet<0) cfo=`Conditional: downside annual cash contribution is ${moneyText(scenarios.downsideNet)}. Protect liquidity if you proceed.`;
+  else cfo=`Supportable: base annual cash contribution is ${moneyText(scenarios.baseNet)} after recurring cost${impact.annualDebtService?' and modeled debt service':''}.`;
+  const gm = p.type==='player'
+    ? (p.wins>=.05?`Strong support: projected competitive lift is about ${(p.wins*100).toFixed(1)} win-percentage points, but the ${p.term}-year commitment reduces flexibility.`:`Support if this role solves a real roster need; expected competitive lift is about ${(p.wins*100).toFixed(1)} points.`)
+    : (p.wins>0?`Support: there is a competitive-development benefit beyond direct revenue.`:'Neutral: this does not directly improve the roster.');
+  const cro = (p.annualRevenue||0)>=7
+    ? `Support: base gross annual benefit is ${moneyText(p.annualRevenue||0)}. Verify the demand/inventory assumptions before counting it as guaranteed.`
+    : (p.stream?`Support with targets: this adds to ${p.stream} revenue, but marginal returns should fall as the market saturates.`:'Neutral: direct monetization is limited.');
+  const cmo = p.brand>=2 || p.fan>=2
+    ? `Support: modeled brand/fan lift is meaningful, which can matter beyond the direct cash return.`
+    : 'Neutral: this is not primarily a brand investment.';
+  const coo = p.type==='capital'
+    ? (p.risk>.28?`Caution: this is a high-uncertainty capital project with a ${p.term}-year operating horizon.`:`Support if lifecycle cost is funded; recurring operating cost is ${moneyText(p.annualCost||0)} per year.`)
+    : 'Neutral: limited facilities exposure.';
+  const analytics = `Scenario annual cash contribution: downside ${moneyText(scenarios.downsideNet)} | base ${moneyText(scenarios.baseNet)} | upside ${moneyText(scenarios.upsideNet)}. Confidence: ${p.confidence}. Direct ROI alone does not capture wins, brand, or flexibility.`;
+  const fan = p.fan>=2
+    ? `Support: modeled fan benefit is material. Test whether the value lasts if team performance disappoints.`
+    : (p.type==='player'&&p.brand>=4?'Support with caution: star value can deepen engagement, but it is performance-sensitive.':'Neutral: limited direct fan benefit.');
+  const mandate = state.mandateId==='contender'&&p.type==='player'
+    ? 'Board lens: this fits the mandate if the competitive window is genuinely open.'
+    : state.mandateId==='facility'&&p.type==='capital'
+      ? 'Board lens: this directly addresses the facility mandate, but financing still matters.'
+      : state.mandateId==='turnaround'&&scenarios.downsideNet<0
+        ? 'Board lens: a negative downside case conflicts with the turnaround mandate unless the strategic payoff is compelling.'
+        : `Board lens: test this against “${md.tag},” not against a generic score.`;
+  return {CFO:cfo,'General Manager':gm,'Chief Revenue Officer':cro,'Chief Marketing Officer':cmo,'COO / Facilities':coo,'Analytics Director':analytics,'Fan Insights Director':fan,'Board Strategy':mandate};
 }
 
-function proposalRealization(state,p,index){
+function proposalRealization(state,p,debtPct,index){
   const r=rngFor(state.seed,state.cycle,`proposal-${p.id}-${index}`);
-  const shock=(r()-.5)*2;
-  const spread=Math.max(3,(p.up-p.down)/2);
-  const realizedPct=p.base+shock*spread*p.risk*1.45;
-  return clamp(realizedPct,p.down,p.up);
+  const scenario=getScenarioModel(state,p,debtPct);
+  const movement=(r()-.5)*2;
+  const mult=movement<0?1+movement*(1-scenario.downMult):1+movement*(scenario.upMult-1);
+  return clamp(mult,scenario.downMult,scenario.upMult);
 }
 
 function applyProposalToState(state,p,debtPct,index){
   const impact=estimateProposalImpact(state,p,debtPct);
-  const realizedReturn=proposalRealization(state,p,index);
-  const ratio=p.base===0?1:realizedReturn/p.base;
-  const realizedRevenue=Math.max(0,(p.annualRevenue||0)*clamp(ratio,.35,1.8));
-  const inv={...p,annualRevenue:realizedRevenue,remaining:p.term,forecastReturn:p.base,realizedReturn,debtPct:impact.debtPct};
+  const realizedMultiplier=proposalRealization(state,p,debtPct,index);
+  const realizedRevenue=Math.max(0,(p.annualRevenue||0)*realizedMultiplier);
+  const actualNet=realizedRevenue-(p.annualCost||0)-impact.annualDebtService;
+  const actualROI=actualNet/impact.year1Commitment*100;
+  const inv={...p,annualRevenue:realizedRevenue,remaining:p.term,forecastNet:impact.afterDebtNet,actualNet:round(actualNet),actualROI:round(actualROI),debtPct:impact.debtPct};
   const debts=[...state.debtTranches];
-  if(impact.debtAmount>0){debts.push({id:`${p.id}-${state.cycle}`,name:p.name,principal:impact.debtAmount,rate:.058,remaining:impact.term,original:impact.debtAmount});}
-  return {investment:inv,cashNeed:impact.cashNeed,debtTranches:debts,impact,realizedReturn};
+  if(impact.debtAmount>0){debts.push({id:`${p.id}-${state.cycle}`,name:p.name,principal:impact.debtAmount,rate:.058,remaining:impact.term,original:impact.debtAmount,originalTerm:impact.term});}
+  return {investment:inv,cashNeed:impact.cashNeed,debtTranches:debts,impact,actualNet:round(actualNet),actualROI:round(actualROI),realizedRevenue:round(realizedRevenue)};
 }
 
 export function forecastCycle(state,selections=[]){
   const m=MARKETS[state.marketId];
   const active=getActiveEffects(state);
-  let upfrontCash=0,newDebt=0,annualNewCost=0,annualNewRevenue=0,winsAdd=0;
+  let upfrontCash=0,newDebt=0,annualNewCost=0,annualNewRevenue=0,winsAdd=0,newInterest=0,newPrincipalDue=0;
   for(const s of selections){
     const impact=estimateProposalImpact(state,s.proposal,s.debtPct||0);
     upfrontCash+=impact.cashNeed;newDebt+=impact.debtAmount;
     annualNewCost+=s.proposal.annualCost||0;annualNewRevenue+=s.proposal.annualRevenue||0;winsAdd+=s.proposal.wins||0;
+    newInterest+=impact.debtAmount*impact.rate;
+    newPrincipalDue+=Math.max(0,impact.annualDebtService-impact.debtAmount*impact.rate);
   }
   const debt=getDebtSummary(state);
   const expectedWin=clamp(state.rosterQuality+active.wins+winsAdd+active.development*.5,.30,.75);
@@ -189,8 +249,10 @@ export function forecastCycle(state,selections=[]){
   const revenue=shared+tickets+premium+sponsor+merch+digital+other+active.annualRevenue+annualNewRevenue;
   const rosterBase=(state.marketId==='small'?196:state.marketId==='large'?236:216);
   const activePlayerCost=state.activeInvestments.filter(x=>x.type==='player'&&x.remaining>0).reduce((a,b)=>a+(b.annualCost||0),0);
-  const expenses=m.operatingBase+rosterBase+activePlayerCost+active.annualCost+annualNewCost+debt.interest;
-  return {expectedWin,attendance,revenue,expenses,profit:revenue-expenses,upfrontCash,newDebt,projectedEndingCash:state.cash+(revenue-expenses)-upfrontCash-debt.principalDue,existingDebt:debt.principal};
+  const expenses=m.operatingBase+rosterBase+activePlayerCost+active.annualCost+annualNewCost+debt.interest+newInterest;
+  const profit=revenue-expenses;
+  const projectedEndingCash=state.cash+profit-upfrontCash-debt.principalDue-newPrincipalDue;
+  return {expectedWin,attendance,revenue,expenses,profit,upfrontCash,newDebt,newInterest,newPrincipalDue,projectedEndingCash,existingDebt:debt.principal,projectedDebt:debt.principal+newDebt-debt.principalDue-newPrincipalDue};
 }
 
 export function runCycle(state,selections,rationale){
@@ -202,7 +264,7 @@ export function runCycle(state,selections,rationale){
     working.debtTranches=a.debtTranches;
     working.activeInvestments.push(a.investment);
     upfrontCash+=a.cashNeed;
-    realized.push({id:s.proposal.id,name:s.proposal.name,forecast:s.proposal.base,actual:round(a.realizedReturn),cashNeed:a.cashNeed,debt:a.impact.debtAmount});
+    realized.push({id:s.proposal.id,name:s.proposal.name,forecastNet:a.impact.afterDebtNet,actualNet:a.actualNet,forecastROI:a.impact.directROI,actualROI:a.actualROI,cashNeed:a.cashNeed,debt:a.impact.debtAmount});
   });
   const active=getActiveEffects(working);
   const m=MARKETS[working.marketId];
@@ -237,11 +299,11 @@ export function runCycle(state,selections,rationale){
   const principalPaid=debtBefore.principalDue;
   const cashChange=profit-upfrontCash-principalPaid;
   const cash=working.cash+cashChange;
-  const newDebts=working.debtTranches.map(d=>({
-    ...d,
-    principal:Math.max(0,d.principal-Math.min(d.principal,d.original/Math.max(1,d.remaining))),
-    remaining:Math.max(0,d.remaining-1)
-  })).filter(d=>d.principal>.05&&d.remaining>0);
+  const newDebts=working.debtTranches.map(d=>{
+    const originalTerm=d.originalTerm||d.remaining||1;
+    const scheduledPrincipal=Math.min(d.principal,d.original/Math.max(1,originalTerm));
+    return {...d,principal:Math.max(0,d.principal-scheduledPrincipal),remaining:Math.max(0,d.remaining-1),originalTerm};
+  }).filter(d=>d.principal>.05&&d.remaining>0);
   const debtAfter=newDebts.reduce((a,b)=>a+b.principal,0);
   const fan=clamp(working.fanTrust+(wins-.5)*10+active.fan*.55+(mods.fan||0)-.5,20,95);
   const brand=clamp(working.brand+(wins-.5)*9+active.brand*.45+(mods.brand||0),20,95);
