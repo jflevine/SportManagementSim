@@ -1,4 +1,4 @@
-import {MARKETS,MANDATES,createState,getOpportunitySet,advisorViews,estimateProposalImpact,forecastCycle,runCycle,finalEvaluation,getDebtSummary} from './model.js';
+import {MARKETS,MANDATES,createState,getOpportunitySet,advisorViews,estimateProposalImpact,getScenarioModel,forecastCycle,runCycle,finalEvaluation,getDebtSummary} from './model.js';
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const money=v=>`${v<0?'−':''}$${Math.abs(v).toFixed(Math.abs(v)>=100?0:1)}M`;
@@ -41,7 +41,7 @@ function renderBriefing(){
   $('#healthBrand').textContent=Math.round(state.brand);
   $('#healthFacility').textContent=Math.round(state.facility);
   $('#healthValue').textContent=`$${state.franchiseValue.toFixed(1)}B`;
-  $('#commitments').innerHTML=state.activeInvestments.length?state.activeInvestments.map(x=>`<li><b>${x.name}</b><span>${x.remaining} yr${x.remaining===1?'':'s'} remaining</span></li>`).join(''):'<li class="empty">No new commitments yet.</li>';
+  $('#commitments').innerHTML=state.activeInvestments.length?state.activeInvestments.map(x=>`<li><b>${x.name}</b><span>${x.remaining} yr${x.remaining===1?'':'s'} · ${money(x.annualRevenue||0)} benefit / ${money(x.annualCost||0)} cost</span></li>`).join(''):'<li class="empty">No new commitments yet.</li>';
 }
 
 function renderDecisionCenter(){
@@ -59,7 +59,8 @@ function renderDecisionCenter(){
 function renderProposalDetail(){
   const p=activeProposal;if(!p)return;
   $('#proposalType').textContent=p.type.toUpperCase();$('#proposalTitle').textContent=p.name;$('#proposalSubtitle').textContent=p.subtitle;$('#proposalDetail').textContent=p.detail;
-  $('#forecastDown').textContent=`${p.down}%`;$('#forecastBase').textContent=`${p.base}%`;$('#forecastUp').textContent=`${p.up}%`;$('#forecastConfidence').textContent=p.confidence;
+  const scenario=getScenarioModel(state,p,selections.find(s=>s.proposal.id===p.id)?.debtPct||0);
+  $('#forecastDown').textContent=money(scenario.downsideNet);$('#forecastBase').textContent=money(scenario.baseNet);$('#forecastUp').textContent=money(scenario.upsideNet);$('#forecastConfidence').textContent=p.confidence;
   $('#proposalCost').textContent=money(p.upfront);$('#proposalAnnual').textContent=money(p.annualRevenue||0);$('#proposalOpex').textContent=money(p.annualCost||0);$('#proposalTerm').textContent=`${p.term} yrs`;
   $('#fundingWrap').classList.toggle('hidden',!p.debtEligible);
   const existing=selections.find(s=>s.proposal.id===p.id);const debtPct=existing?.debtPct||0;
@@ -77,22 +78,27 @@ function selectProposal(p,debtPct=0){
 function removeProposal(id){selections=selections.filter(s=>s.proposal.id!==id);renderDecisionCenter();}
 
 function renderDocuments(p,debtPct){
-  const impact=estimateProposalImpact(state,p,debtPct);const views=advisorViews(state,p);
+  const impact=estimateProposalImpact(state,p,debtPct);const scenario=getScenarioModel(state,p,debtPct);const views=advisorViews(state,p);
+  const roiLabel=p.type==='capital'?'Direct project ROI':'Year-1 direct cash ROI';
   $('#docWorkbook').innerHTML=`<div class="sheet"><table><tbody>
     <tr><th>Initial commitment</th><td>${money(p.upfront)}</td></tr><tr><th>Cash required now</th><td>${money(impact.cashNeed)}</td></tr>
-    <tr><th>New debt</th><td>${money(impact.debtAmount)}</td></tr><tr><th>Base annual revenue / benefit</th><td>${money(p.annualRevenue||0)}</td></tr>
-    <tr><th>Annual operating cost</th><td>${money(p.annualCost||0)}</td></tr><tr><th>Estimated annual debt service</th><td>${money(impact.annualDebtService)}</td></tr>
-    <tr class="strong"><th>Simple base-case cash return</th><td>${impact.simpleROI.toFixed(1)}%</td></tr>
-  </tbody></table><p class="sheet-note">Introductory teaching model. Return assumptions are scenarios, not guarantees.</p></div>`;
-  $('#docScenario').innerHTML=`<div class="scenario-bars"><div><span>Downside</span><b>${p.down}%</b><i style="width:${Math.max(8,40+p.down*1.2)}%"></i></div><div><span>Base</span><b>${p.base}%</b><i style="width:${Math.min(95,40+p.base*1.7)}%"></i></div><div><span>Upside</span><b>${p.up}%</b><i style="width:${Math.min(100,40+p.up*1.5)}%"></i></div></div><p><b>Confidence:</b> ${p.confidence}. Ask which assumption is doing the most work before treating the forecast as a fact.</p>`;
+    <tr><th>New debt</th><td>${money(impact.debtAmount)}</td></tr><tr><th>Base annual gross benefit</th><td>${money(p.annualRevenue||0)}</td></tr>
+    <tr><th>Annual recurring cost</th><td>${money(p.annualCost||0)}</td></tr><tr><th>Estimated annual debt service</th><td>${money(impact.annualDebtService)}</td></tr>
+    <tr class="strong"><th>Base annual cash contribution</th><td>${money(scenario.baseNet)}</td></tr>
+    <tr class="strong"><th>${roiLabel}</th><td>${impact.directROI.toFixed(1)}%</td></tr>
+    <tr><th>Approx. break-even</th><td>${impact.breakEvenYears?`${impact.breakEvenYears.toFixed(1)} years`:'No direct-cash break-even in base case'}</td></tr>
+  </tbody></table><p class="sheet-note">Direct ROI captures modeled cash economics only. Player wins, brand value, fan effects, and strategic flexibility are shown separately because they are not guaranteed cash receipts.</p></div>`;
+  const maxAbs=Math.max(1,Math.abs(scenario.downsideNet),Math.abs(scenario.baseNet),Math.abs(scenario.upsideNet));
+  const bar=v=>Math.max(10,Math.round(Math.abs(v)/maxAbs*95));
+  $('#docScenario').innerHTML=`<div class="scenario-bars"><div><span>Downside</span><b>${money(scenario.downsideNet)}</b><i style="width:${bar(scenario.downsideNet)}%"></i></div><div><span>Base</span><b>${money(scenario.baseNet)}</b><i style="width:${bar(scenario.baseNet)}%"></i></div><div><span>Upside</span><b>${money(scenario.upsideNet)}</b><i style="width:${bar(scenario.upsideNet)}%"></i></div></div><p><b>Confidence:</b> ${p.confidence}. These are annual cash-contribution scenarios after recurring cost${impact.annualDebtService?' and modeled debt service':''}. Ask which assumption is doing the most work.</p>`;
   $('#docAdvisors').innerHTML=Object.entries(views).map(([name,text])=>`<article class="advisor"><span>${name}</span><p>${text}</p></article>`).join('');
   $('#docMemo').innerHTML=departmentMemo(p);
-  $$('.doc-tab').forEach(b=>b.onclick=()=>{const id=b.dataset.doc;$$('.doc-tab').forEach(x=>x.classList.toggle('selected',x===b));$$('.doc-panel').forEach(x=>x.classList.toggle('active',x.id===id));});
+  $('.doc-tab').forEach(b=>b.onclick=()=>{const id=b.dataset.doc;$('.doc-tab').forEach(x=>x.classList.toggle('selected',x===b));$('.doc-panel').forEach(x=>x.classList.toggle('active',x.id===id));});
 }
 
 function departmentMemo(p){
-  if(p.type==='player')return `<div class="memo"><h4>PLAYER / SCOUTING REPORT</h4><p><b>Competitive contribution:</b> ${(p.wins*100).toFixed(1)} expected win-percentage points before uncertainty.</p><p><b>Commercial effect:</b> ${p.brand>=4?'High star / brand potential':'Moderate or limited star effect'}.</p><p><b>Risk lens:</b> Performance and availability can move the actual return well outside the base case.</p><p><b>Exit flexibility:</b> ${p.term>=4?'Long commitment; later years matter.':'Shorter commitment; easier to reset.'}</p></div>`;
-  if(p.type==='capital')return `<div class="memo"><h4>FACILITY / OPERATIONS MEMO</h4><p><b>Development period:</b> Assume the project begins immediately and produces recurring effects once committed in this teaching model.</p><p><b>Facility benefit:</b> +${p.facility||0} long-run facility points before annual depreciation.</p><p><b>Lifecycle cost:</b> ${money(p.annualCost||0)} recurring annual operating cost.</p><p><b>Key risk:</b> ${p.risk>.28?'High construction / adoption uncertainty.':'Moderate project and demand uncertainty.'}</p></div>`;
+  if(p.type==='player')return `<div class="memo"><h4>PLAYER / SCOUTING REPORT</h4><p><b>Competitive contribution:</b> ${(p.wins*100).toFixed(1)} expected win-percentage points before uncertainty.</p><p><b>Commercial effect:</b> ${p.brand>=4?'High star / brand potential':'Moderate or limited star effect'}.</p><p><b>Contract burden:</b> ${money(p.annualCost||0)} per year for ${p.term} years, plus ${money(p.upfront)} upfront.</p><p><b>Risk lens:</b> Direct cash ROI may be negative even when the competitive case is strong. Availability and performance can move the realized value materially.</p><p><b>Exit flexibility:</b> ${p.term>=4?'Long commitment; later years matter.':'Shorter commitment; easier to reset.'}</p></div>`;
+  if(p.type==='capital')return `<div class="memo"><h4>FACILITY / OPERATIONS MEMO</h4><p><b>Planning horizon:</b> ${p.term} years in this teaching model.</p><p><b>Facility benefit:</b> +${p.facility||0} long-run facility points before annual depreciation.</p><p><b>Lifecycle cost:</b> ${money(p.annualCost||0)} recurring annual operating cost.</p><p><b>Financing choice:</b> Debt preserves cash today but creates fixed annual debt service and reduces future flexibility.</p><p><b>Key risk:</b> ${p.risk>.28?'High construction / adoption uncertainty.':'Moderate project and demand uncertainty.'}</p></div>`;
   return `<div class="memo"><h4>REVENUE / FAN MEMO</h4><p><b>Primary engine:</b> ${p.stream||'commercial operations'}.</p><p><b>Expected annual gross contribution:</b> ${money(p.annualRevenue||0)} before recurring program cost.</p><p><b>Fan effect:</b> ${p.fan>=2?'Meaningful relationship benefit.':'Limited direct fan effect.'}</p><p><b>Watch:</b> Marginal return can decline as the local market saturates.</p></div>`;
 }
 
@@ -122,7 +128,7 @@ function renderResults({record,event,distress}){
   $('#resultCycle').textContent=`CYCLE ${record.cycle} CLOSE`;
   $('#resultEvent').textContent=event.title;$('#resultEventText').textContent=event.desc;
   $('#resWins').textContent=pct(record.wins);$('#resRevenue').textContent=money(record.revTotal);$('#resProfit').textContent=money(record.profit);$('#resCash').textContent=money(record.cash);$('#resDebt').textContent=money(record.debt);
-  $('#actualVsForecast').innerHTML=record.realized.length?record.realized.map(x=>`<tr><td>${x.name}</td><td>${x.forecast}%</td><td>${x.actual}%</td><td>${x.actual>=x.forecast?'Above / at forecast':'Below forecast'}</td></tr>`).join(''):'<tr><td colspan="4">No new proposal results.</td></tr>';
+  $('#actualVsForecast').innerHTML=record.realized.length?record.realized.map(x=>`<tr><td>${x.name}</td><td>${money(x.forecastNet)}</td><td>${money(x.actualNet)}</td><td>${x.actualNet>=x.forecastNet?'Above / at forecast':'Below forecast'}</td></tr>`).join(''):'<tr><td colspan="4">No new proposal results.</td></tr>';
   $('#originalRationale').textContent=`“${record.rationale.text}” Risk accepted: ${record.rationale.risk}.`;
   $('#diagnosis').textContent=record.cashChange<record.profit-10?'Operating profit and cash diverged because upfront investment and principal repayment consumed liquidity.':record.profit<0?'The core operating result was negative this cycle. Look first at recurring costs and demand—not merely the event shock.':'Operating performance translated reasonably well into cash this cycle, but persistent commitments still shape the next decision.';
   $('#distress').classList.toggle('hidden',!distress);
