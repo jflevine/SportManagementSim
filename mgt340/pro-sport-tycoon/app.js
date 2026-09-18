@@ -8,7 +8,7 @@ let marketId='growth', mandateId='growth', mode='class', state=null, opportuniti
 function show(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 function team(){return $('#teamName').value.trim()||'Explorer Sport Group';}
 function seed(){return $('#seed').value.trim()||'MGT340';}
-function esc(s=''){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function esc(s=''){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
 function renderSetup(){
   $('#marketOptions').innerHTML=Object.values(MARKETS).map(m=>`<button class="select-card ${m.id===marketId?'selected':''}" data-market="${m.id}"><span>MARKET</span><b>${m.name}</b><small>${m.subtitle}</small></button>`).join('');
