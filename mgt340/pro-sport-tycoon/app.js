@@ -93,7 +93,7 @@ function renderDocuments(p,debtPct){
   $('#docScenario').innerHTML=`<div class="scenario-bars"><div><span>Downside</span><b>${money(scenario.downsideNet)}</b><i style="width:${bar(scenario.downsideNet)}%"></i></div><div><span>Base</span><b>${money(scenario.baseNet)}</b><i style="width:${bar(scenario.baseNet)}%"></i></div><div><span>Upside</span><b>${money(scenario.upsideNet)}</b><i style="width:${bar(scenario.upsideNet)}%"></i></div></div><p><b>Confidence:</b> ${p.confidence}. These are annual cash-contribution scenarios after recurring cost${impact.annualDebtService?' and modeled debt service':''}. Ask which assumption is doing the most work.</p>`;
   $('#docAdvisors').innerHTML=Object.entries(views).map(([name,text])=>`<article class="advisor"><span>${name}</span><p>${text}</p></article>`).join('');
   $('#docMemo').innerHTML=departmentMemo(p);
-  $('.doc-tab').forEach(b=>b.onclick=()=>{const id=b.dataset.doc;$('.doc-tab').forEach(x=>x.classList.toggle('selected',x===b));$('.doc-panel').forEach(x=>x.classList.toggle('active',x.id===id));});
+  $$('.doc-tab').forEach(b=>b.onclick=()=>{const id=b.dataset.doc;$$('.doc-tab').forEach(x=>x.classList.toggle('selected',x===b));$$('.doc-panel').forEach(x=>x.classList.toggle('active',x.id===id));});
 }
 
 function departmentMemo(p){
