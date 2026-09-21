@@ -79,9 +79,9 @@ Use for extended activity periods, review sessions, or a more formal decision ex
 
 ## What the scores mean
 
-The numerical indicators are **instructional diagnostics, not legal conclusions and not grades**.
+The numerical ecosystem indicators are **instructional diagnostics, not legal conclusions and not grades**.
 
-They exist to make tradeoffs visible. Students should be evaluated on the quality of their reasoning, not on maximizing a numerical score.
+Legal Decision Lab 1 is graded from the student's individual written analysis using the 10-point rubric below. Every group receives the same three crises in the same order: **The Pathway Disappears**, **The Sponsor Walks**, and **The Unlicensed Major**. This standardization keeps the legal fact patterns comparable across students while preserving different group architectures and strategic choices.
 
 ## Legal Decision Lab 1: graded use
 
@@ -124,23 +124,23 @@ Example: 8, 9, 7, 10, 6 → drop the 6 → best-four average = 8.5/10 = 85% → 
 
 ### Collection workflow
 
-The current site remains a static GitHub Pages activity and does **not** transmit student work to a server. At the end of the run, each student can:
+The GitHub Pages site now sends the completed **individual** Legal Decision Lab submission to the course's secure assessment backend. Students enter first name, last name, and a La Salle email address. The official record includes the group simulation evidence plus the student's four individual analysis responses.
 
-- copy the completed Legal Decision Lab submission;
-- download it as a `.txt` file; or
-- print/save the page as a PDF.
+Because the GitHub repository is public, **student names, email addresses, and responses are not committed to GitHub**. They are stored in the private Supabase assessment table `spm370_ldl1_submissions`, using the same backend pattern as the course knowledge checks. The public repository contains only the application code.
 
-Students should submit that artifact through the course LMS. If one group shares a device, students can complete the individual check-out one at a time and use **Clear for Next Student** without resetting the group's simulation.
+The backend records four nullable grading fields—issue spotting (0–2), legal application (0–3), stakeholder analysis (0–2), and recommendation (0–3)—and automatically calculates the total once all four scores are entered. A private grading view, `spm370_ldl1_grading_queue`, presents the submission text and rubric columns for instructor review.
 
-The ecosystem-health indicators remain **instructional diagnostics, not grades**. They are included in the submission as evidence the student may use in the legal analysis.
+Students receive a unique receipt after successful submission. No LMS upload is required. A backup text download remains available in case of a connection problem. If one group shares a device, students can submit one at a time and use **Clear for Next Student** without resetting the group simulation.
+
+The ecosystem-health indicators remain **instructional diagnostics, not grades**. They are stored with the submission as evidence the student may use in the legal analysis.
 
 ## Privacy guidance
 
-The current MVP does not transmit student gameplay to a server. Progress stays in the browser unless students deliberately export their session JSON or copy the board report.
+Group gameplay progress remains local to the browser until the individual student submits the lab. The official submission sends only the information needed for assessment: student name, La Salle email, the group simulation record, and the student's individual legal analysis.
 
-Avoid asking students to enter student ID numbers, personal email addresses, or sensitive information as their team name.
+Identifiable student records are stored in the private assessment backend and are **not** written to the public GitHub repository. The submission table has row-level security enabled and no public read policy. The public Edge Function accepts submissions only from the approved course site origin and validates La Salle email addresses.
 
-If session collection is added later, use a dedicated backend with explicit access controls, retention rules, and minimal student-identifying information.
+Do not ask students to place student ID numbers or other sensitive information in the team-name field.
 
 ## Troubleshooting
 
