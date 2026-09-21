@@ -17,3 +17,24 @@
 body.mvp-reduce-motion *,body.mvp-reduce-motion *:before,body.mvp-reduce-motion *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 @media(max-width:720px){.mvp-modes{grid-template-columns:1fr}.mvp-help-grid{grid-template-columns:1fr}.mvp-completion-grid{grid-template-columns:1fr}.mvp-dock{left:10px;right:10px;bottom:10px;justify-content:center}.mvp-dock button{flex:1}.mvp-drawer-panel{width:100vw}.mvp-instructor-actions{grid-template-columns:1fr}}
 @media print{.mvp-dock,.mvp-drawer,.mvp-completion,.mvp-error,.mvp-mode-wrap{display:none!important}}
+
+
+/* Legal Decision Lab 1 — individual graded checkout */
+.mvp-lab-wrap{margin-top:22px;padding:22px;border:1px solid rgba(66,213,231,.28);background:linear-gradient(145deg,rgba(7,18,38,.98),rgba(15,31,57,.98));color:#edf5ff;border-radius:18px;box-shadow:0 18px 50px rgba(6,14,35,.22)}
+.mvp-lab-wrap h3{margin:5px 0 8px;font-size:1.35rem}
+.mvp-lab-intro{margin:0 0 18px;color:#c3d0e8;line-height:1.6}
+.mvp-lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mvp-lab-grid label{display:flex;flex-direction:column;gap:7px}
+.mvp-lab-grid label.wide{grid-column:1/-1}
+.mvp-lab-grid label>span{font-size:.78rem;font-weight:800;letter-spacing:.04em;color:#dce8f7;text-transform:uppercase}
+.mvp-lab-grid label em{float:right;font-style:normal;color:#42d5e7}
+.mvp-lab-grid input,.mvp-lab-grid select,.mvp-lab-grid textarea{width:100%;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.055);color:#fff;padding:11px 12px;outline:none}
+.mvp-lab-grid select option{color:#11192c;background:#fff}
+.mvp-lab-grid textarea{min-height:92px;resize:vertical;line-height:1.5}
+.mvp-lab-grid input:focus,.mvp-lab-grid select:focus,.mvp-lab-grid textarea:focus{border-color:#42d5e7;box-shadow:0 0 0 3px rgba(66,213,231,.11)}
+.mvp-lab-rubric{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:7px;margin:16px 0 10px;padding:12px;border:1px solid rgba(227,181,69,.26);border-radius:10px;background:rgba(227,181,69,.06);font-size:.75rem}
+.mvp-lab-rubric b{color:#f3d982}.mvp-lab-rubric span{color:#e7edf6}
+.mvp-lab-note{margin:10px 0 14px;color:#cbd7e8;font-size:.84rem;line-height:1.5}
+.mvp-lab-ready{margin-top:10px;color:#9fb0c8;font-size:.78rem}.mvp-lab-ready.ready{color:#74e3ad;font-weight:700}
+@media(max-width:760px){.mvp-lab-grid{grid-template-columns:1fr}.mvp-lab-grid label.wide{grid-column:auto}.mvp-lab-rubric{grid-template-columns:1fr 1fr}}
+@media print{.mvp-lab-wrap{break-before:page;background:#fff!important;color:#111!important;border:1px solid #999}.mvp-lab-wrap input,.mvp-lab-wrap select,.mvp-lab-wrap textarea{color:#111!important;border:1px solid #aaa!important;background:#fff!important}.mvp-lab-intro,.mvp-lab-note,.mvp-lab-grid label>span,.mvp-lab-rubric span{color:#222!important}.mvp-complete-actions{display:none!important}}
