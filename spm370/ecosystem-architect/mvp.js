@@ -1,7 +1,7 @@
 /* Ecosystem Architect: Season One — MVP classroom layer */
 (()=>{
 'use strict';
-const APP_VERSION='Season One MVP 1.0';
+const APP_VERSION='Season One MVP 1.1 · Legal Decision Lab 1';
 const CRISIS_COUNTS={sprint:2,standard:3,deep:4};
 const MODE_LABELS={sprint:'Sprint · 10–12 min',standard:'Standard Class · 18–22 min',deep:'Deep Dive · 25–30 min'};
 const nowIso=()=>new Date().toISOString();
@@ -165,12 +165,37 @@ function installCrisisWrapper(){
 function enhanceFinal(){
   const area=document.querySelector('.year-two');if(!area||document.getElementById('mvpCompleteWrap'))return;
   const box=document.createElement('div');box.id='mvpCompleteWrap';box.className='mvp-complete-wrap';
-  box.innerHTML=`<h3>Complete the board defense</h3><p>Select a Year Two decision and defend it in at least 30 characters. This creates a portable session record for discussion or submission.</p><div class="mvp-complete-actions"><button class="primary" id="mvpComplete" disabled>COMPLETE RUN</button><button id="mvpExport">Download Session JSON</button><button id="mvpCopySummary">Copy Debrief</button></div>`;
+  box.innerHTML=`<h3>Complete the board defense</h3><p>Your group selects a Year Two decision and defends it in at least 30 characters. This is the shared deliberation portion of Legal Decision Lab 1.</p><div class="mvp-complete-actions"><button class="primary" id="mvpComplete" disabled>COMPLETE GROUP RUN</button><button id="mvpExport">Download Session JSON</button><button id="mvpCopySummary">Copy Debrief</button></div>`;
   area.appendChild(box);
+
+  const lab=document.createElement('section');lab.id='mvpLabWrap';lab.className='mvp-lab-wrap';
+  const crisisOptions=(state.crises||[]).map(id=>{const c=crisisBank.find(x=>x.id===id);return c?`<option value="${c.id}">${safe(c.title)}</option>`:''}).join('');
+  lab.innerHTML=`<div class="mvp-kicker">LEGAL DECISION LAB 1 · INDIVIDUAL CHECK-OUT</div>
+    <h3>Individual legal decision memo</h3>
+    <p class="mvp-lab-intro">Complete this section <strong>individually</strong> after your group finishes the simulation. Choose one crisis from your run and show that you can spot the issue, apply a legal principle, analyze stakeholders, and recommend a course of action. Your group's simulation results are shared evidence; the writing below must be your own.</p>
+    <div class="mvp-lab-grid">
+      <label><span>Student name</span><input id="labStudentName" maxlength="80" autocomplete="name" placeholder="First and last name"></label>
+      <label><span>Crisis you are analyzing</span><select id="labCrisis"><option value="">Select one crisis…</option>${crisisOptions}</select></label>
+      <label class="wide"><span>1 · Issue spotting <em>2 pts</em></span><textarea id="labIssue" maxlength="500" placeholder="Identify the one or two legally significant issues raised by this crisis."></textarea></label>
+      <label class="wide"><span>2 · Legal principle + application <em>3 pts</em></span><textarea id="labLaw" maxlength="900" placeholder="State the relevant legal principle, doctrine, contractual concept, or rule and apply it to the facts your group faced."></textarea></label>
+      <label class="wide"><span>3 · Stakeholder analysis <em>2 pts</em></span><textarea id="labStakeholder" maxlength="600" placeholder="Which stakeholders' rights, power, risk, or interests matter most here, and why?"></textarea></label>
+      <label class="wide"><span>4 · Recommended course of action <em>3 pts</em></span><textarea id="labRecommendation" maxlength="900" placeholder="What should management do next? Give a specific recommendation and defend it using the law and the tradeoffs revealed by the simulation."></textarea></label>
+    </div>
+    <div class="mvp-lab-rubric"><b>10-point scoring rubric</b><span>Issue spotting 2</span><span>Legal application 3</span><span>Stakeholder analysis 2</span><span>Recommendation 3</span></div>
+    <div class="mvp-lab-note"><strong>Important:</strong> ecosystem-health numbers are evidence, not points. There is no single “correct” ecosystem score. The lab grade comes from the quality of the individual legal analysis.</div>
+    <div class="mvp-complete-actions"><button class="primary" id="labCopy" disabled>COPY MY LAB SUBMISSION</button><button id="labDownload" disabled>DOWNLOAD .TXT</button><button id="labClear">CLEAR FOR NEXT STUDENT</button></div>
+    <div id="labReady" class="mvp-lab-ready">Complete all five fields to create your individual submission.</div>`;
+  area.appendChild(lab);
+
   document.getElementById('mvpComplete').onclick=completeRun;
   document.getElementById('mvpExport').onclick=exportSession;
   document.getElementById('mvpCopySummary').onclick=()=>copyText(buildDebrief());
-  updateCompletionGate();
+  document.getElementById('labCopy').onclick=()=>copyText(buildLabSubmission());
+  document.getElementById('labDownload').onclick=downloadLabSubmission;
+  document.getElementById('labClear').onclick=clearLabSubmission;
+  ['labStudentName','labCrisis','labIssue','labLaw','labStakeholder','labRecommendation'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateLabGate));
+  document.getElementById('labCrisis')?.addEventListener('change',updateLabGate);
+  updateCompletionGate();updateLabGate();
 }
 function updateCompletionGate(){const b=document.getElementById('mvpComplete');if(!b)return;const reason=(document.getElementById('yearReason')?.value||'').trim();b.disabled=!(state.yearDecision&&reason.length>=30)}
 function completeRun(){
@@ -188,6 +213,91 @@ function sessionPayload(){
   return {app:'Ecosystem Architect: Season One',version:APP_VERSION,sessionId:state.mvp.sessionId,team:state.team,mode:state.mvp.mode,startedAt:state.mvp.startedAt,completedAt:state.mvp.completedAt,architecture:state.architecture,priorities:state.priorities,revenue:state.revenue,contracts:state.contracts,metrics:state.metrics,publisherDependency:publisherDependency(),salienceLeader:leader?.role,crises:state.crises,crisisAnswers:state.crisisAnswers,conceptsUnlocked:state.unlocked,yearDecision:state.yearDecision,yearReason:state.mvp.yearReason||document.getElementById('yearReason')?.value||'',journal:state.mvp.journal,privacy:'Local browser export; no centralized submission in MVP.'};
 }
 function exportSession(){const data=JSON.stringify(sessionPayload(),null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ecosystem-architect-${state.mvp.sessionId}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+
+function labFormData(){
+  return {
+    student:(document.getElementById('labStudentName')?.value||'').trim(),
+    crisisId:(document.getElementById('labCrisis')?.value||'').trim(),
+    issue:(document.getElementById('labIssue')?.value||'').trim(),
+    law:(document.getElementById('labLaw')?.value||'').trim(),
+    stakeholder:(document.getElementById('labStakeholder')?.value||'').trim(),
+    recommendation:(document.getElementById('labRecommendation')?.value||'').trim()
+  };
+}
+function updateLabGate(){
+  const d=labFormData(),ready=!!(d.student&&d.crisisId&&d.issue&&d.law&&d.stakeholder&&d.recommendation);
+  const copy=document.getElementById('labCopy'),download=document.getElementById('labDownload'),status=document.getElementById('labReady');
+  if(copy)copy.disabled=!ready;if(download)download.disabled=!ready;
+  if(status){status.textContent=ready?'Individual submission ready. Copy it or download the .txt file for your LMS submission.':'Complete all five fields to create your individual submission.';status.classList.toggle('ready',ready)}
+}
+function buildLabSubmission(){
+  const d=labFormData();if(!(d.student&&d.crisisId&&d.issue&&d.law&&d.stakeholder&&d.recommendation))return '';
+  const crisis=crisisBank.find(c=>c.id===d.crisisId),leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]);
+  const crisisTrail=(state.crises||[]).map(id=>{const c=crisisBank.find(x=>x.id===id),answer=state.crisisAnswers?.[id],opt=c&&answer!==undefined?c.options?.[answer]:null;return c?`- ${c.title}: ${opt?.label||'No recorded response'}`:''}).filter(Boolean).join('\n');
+  const priorities=(state.priorities||[]).map(stakeholderName).join(' · ')||'Not recorded';
+  const protections=(state.contracts||[]).map(id=>contractDefs.find(c=>c.id===id)?.name).filter(Boolean).join(' · ')||'Not recorded';
+  return `SPM 370 — LEGAL DECISION LAB 1
+ECOSYSTEM ARCHITECT: SEASON ONE
+
+STUDENT
+Name: ${d.student}
+Session: ${state.mvp?.sessionId||'—'}
+Team: ${state.team||'—'}
+Completed: ${new Date().toLocaleString()}
+
+SHARED GROUP EVIDENCE
+Architecture: ${architectureName()}
+Board priorities: ${priorities}
+Legal protections selected: ${protections}
+Financial sustainability: ${state.metrics.financial}/100
+Competitive access: ${state.metrics.access}/100
+Publisher control: ${state.metrics.control}/100
+Legal resilience: ${state.metrics.resilience}/100
+Legitimacy: ${state.metrics.legitimacy}/100
+Publisher-linked revenue: ${publisherDependency()}%
+Salience leader: ${leader?.role||'—'}
+Group Year Two decision: ${state.yearDecision||'Not selected'}
+Group defense: ${state.mvp?.yearReason||document.getElementById('yearReason')?.value||'Not recorded'}
+
+CRISIS TRAIL
+${crisisTrail}
+
+INDIVIDUAL ANALYSIS
+Chosen crisis: ${crisis?.title||d.crisisId}
+Scenario: ${crisis?.text||''}
+
+1. ISSUE SPOTTING (0–2)
+${d.issue}
+
+2. LEGAL PRINCIPLE + APPLICATION (0–3)
+${d.law}
+
+3. STAKEHOLDER ANALYSIS (0–2)
+${d.stakeholder}
+
+4. RECOMMENDED COURSE OF ACTION (0–3)
+${d.recommendation}
+
+INSTRUCTOR SCORE
+Issue spotting: ____ / 2
+Legal principle + application: ____ / 3
+Stakeholder analysis: ____ / 2
+Recommended course of action: ____ / 3
+TOTAL: ____ / 10
+
+Scoring note: the simulation's numerical ecosystem indicators are diagnostic evidence, not the grade. The grade is based on the student's individual legal reasoning.`;
+}
+function downloadLabSubmission(){
+  const txt=buildLabSubmission();if(!txt)return;
+  const d=labFormData(),safeName=d.student.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'student';
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`spm370-legal-decision-lab-1-${safeName}.txt`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function clearLabSubmission(){
+  ['labStudentName','labCrisis','labIssue','labLaw','labStakeholder','labRecommendation'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  updateLabGate();document.getElementById('labStudentName')?.focus();
+}
+
 function installErrorBoundary(){
   const box=document.createElement('div');box.id='mvpError';box.className='mvp-error';box.innerHTML='<b>Simulation issue detected.</b> Your local progress is still saved. Reload the page to resume.';document.body.appendChild(box);
   window.addEventListener('error',e=>{console.error(e.error||e.message);box.classList.add('show')});window.addEventListener('unhandledrejection',e=>{console.error(e.reason);box.classList.add('show')});
