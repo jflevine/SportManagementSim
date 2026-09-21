@@ -83,16 +83,56 @@ The numerical indicators are **instructional diagnostics, not legal conclusions 
 
 They exist to make tradeoffs visible. Students should be evaluated on the quality of their reasoning, not on maximizing a numerical score.
 
-## Suggested assessment rubric
+## Legal Decision Lab 1: graded use
 
-A short board-defense submission can be scored on four dimensions:
+The activity now includes an **individual Legal Decision Lab check-out** after the group simulation. This is the scorable artifact for the syllabus category.
 
-- **Issue identification** — identifies the important business/legal problem.
-- **Stakeholder reasoning** — recognizes who has power, legitimacy, and urgency.
-- **Tradeoff analysis** — explains what the chosen model gains and sacrifices.
-- **Recommendation quality** — proposes a defensible Year Two strategy tied to the evidence generated during play.
+The simulation itself supplies the small-group deliberation and shared factual record. Each student then chooses one crisis from the group's run and independently completes four prompts:
 
-A simple 4-point scale per category creates a 16-point exercise without turning the simulation itself into a quiz.
+1. **Issue spotting** — identify the legally significant issue or issues.
+2. **Legal principle + application** — state the relevant doctrine, contractual principle, rule, or legal concept and apply it to the facts.
+3. **Stakeholder analysis** — explain whose rights, power, risks, or interests matter most.
+4. **Recommended course of action** — give a specific management recommendation and defend it.
+
+### Recommended scoring: 10 points per lab
+
+- **Issue spotting — 0–2 points**
+  - 2: identifies the material legal issue(s) accurately and specifically.
+  - 1: identifies a relevant issue but incompletely or too generally.
+  - 0: misses the material legal issue.
+
+- **Legal principle + application — 0–3 points**
+  - 3: states an appropriate legal principle and applies it accurately to the scenario facts.
+  - 2: generally correct principle/application with a meaningful omission or imprecision.
+  - 1: names a relevant concept but offers little or flawed application.
+  - 0: no meaningful legal application.
+
+- **Stakeholder analysis — 0–2 points**
+  - 2: identifies the key stakeholders and explains the competing rights, leverage, risks, or interests.
+  - 1: identifies relevant stakeholders with limited analysis.
+  - 0: no meaningful stakeholder analysis.
+
+- **Recommended course of action — 0–3 points**
+  - 3: gives a specific, feasible recommendation tied to law, facts, and tradeoffs.
+  - 2: defensible recommendation with incomplete support.
+  - 1: recommendation is generic, weakly supported, or disconnected from the analysis.
+  - 0: no actionable recommendation.
+
+For the course's five Legal Decision Labs, record each lab out of 10. Drop the lowest score and average the best four. That percentage becomes the student's score for the **20% Legal Decision Labs** course category.
+
+Example: 8, 9, 7, 10, 6 → drop the 6 → best-four average = 8.5/10 = 85% → 17/20 course percentage points.
+
+### Collection workflow
+
+The current site remains a static GitHub Pages activity and does **not** transmit student work to a server. At the end of the run, each student can:
+
+- copy the completed Legal Decision Lab submission;
+- download it as a `.txt` file; or
+- print/save the page as a PDF.
+
+Students should submit that artifact through the course LMS. If one group shares a device, students can complete the individual check-out one at a time and use **Clear for Next Student** without resetting the group's simulation.
+
+The ecosystem-health indicators remain **instructional diagnostics, not grades**. They are included in the submission as evidence the student may use in the legal analysis.
 
 ## Privacy guidance
 
