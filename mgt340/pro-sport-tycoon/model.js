@@ -31,14 +31,14 @@ export const MANDATES = {
   facility:{id:'facility',name:'The Facility Crossroads',tag:'Solve the building problem',brief:'The venue is aging. Improve the asset and revenue platform without turning the franchise into a debt-service machine.',weights:{financial:.25,fan:.16,competitive:.09,asset:.31,flexibility:.19}}
 };
 
-const PLAYERS = [
+export const PLAYERS = [
   {id:'p_star',type:'player',name:'Acquire Jalen Cross',subtitle:'27-year-old star scorer',upfront:8,annualCost:38,term:4,risk:.34,wins:.060,brand:5,fan:3,annualRevenue:10,down:-8,base:9,up:28,confidence:'Low',detail:'Elite production and national visibility. Expensive, injury-sensitive, and difficult to exit after Year 2.'},
   {id:'p_rising',type:'player',name:'Sign Andre Vega',subtitle:'23-year-old two-way starter',upfront:4,annualCost:18,term:4,risk:.21,wins:.036,brand:2,fan:1,annualRevenue:4.5,down:2,base:8,up:16,confidence:'Medium',detail:'Lower star effect, stronger contract flexibility, and a more balanced downside profile.'},
   {id:'p_vet',type:'player',name:'Add veteran depth',subtitle:'Two-year rotation package',upfront:2,annualCost:9,term:2,risk:.14,wins:.018,brand:0.5,fan:.5,annualRevenue:1.2,down:1,base:6,up:10,confidence:'High',detail:'Modest upside, reliable availability, and limited long-run commitment.'},
   {id:'p_dev',type:'player',name:'Fund player development lab',subtitle:'Development + analytics staff',upfront:6,annualCost:5,term:4,risk:.18,wins:.015,brand:.5,fan:.5,annualRevenue:1.4,development:.012,down:0,base:7,up:14,confidence:'Medium',detail:'Less immediate than a star signing; compounds through development and availability.'}
 ];
 
-const CAPITAL = [
+export const CAPITAL = [
   {id:'c_premium',type:'capital',name:'Build a premium club',subtitle:'New hospitality inventory',upfront:42,annualCost:4.1,term:8,risk:.20,wins:0,brand:2,fan:1,facility:6,annualRevenue:9.5,debtEligible:true,down:4,base:13,up:18,confidence:'High',detail:'Contracted hospitality revenue with construction, occupancy, and servicing-cost risk.'},
   {id:'c_training',type:'capital',name:'Build a performance center',subtitle:'Training + recovery infrastructure',upfront:32,annualCost:2.5,term:8,risk:.15,wins:.012,development:.008,brand:1,fan:.5,facility:5,annualRevenue:1.5,debtEligible:true,down:2,base:7,up:12,confidence:'Medium',detail:'Weak direct revenue but potential development, availability, and recruiting benefits.'},
   {id:'c_fantech',type:'capital',name:'Install a fan-tech platform',subtitle:'CRM, mobile, loyalty + concessions',upfront:18,annualCost:1.8,term:6,risk:.28,wins:0,brand:2,fan:3,facility:2,annualRevenue:5.2,debtEligible:true,down:-2,base:14,up:24,confidence:'Low',detail:'Creates data and sponsor inventory; payoff depends on adoption and execution.'},
@@ -46,7 +46,7 @@ const CAPITAL = [
   {id:'c_district',type:'capital',name:'Develop an event district',subtitle:'Year-round venue activation',upfront:68,annualCost:7.5,term:10,risk:.36,wins:0,brand:4,fan:1,facility:7,annualRevenue:16,debtEligible:true,down:-5,base:12,up:25,confidence:'Low',detail:'Large, long-horizon bet with non-game revenue upside and significant capital exposure.'}
 ];
 
-const COMMERCIAL = [
+export const COMMERCIAL = [
   {id:'r_ticket',type:'commercial',name:'Add ticket-sales capacity',subtitle:'Two sellers + CRM support',upfront:1,annualCost:2.4,term:3,risk:.11,wins:0,brand:.5,fan:.5,annualRevenue:5.6,stream:'tickets',down:5,base:18,up:28,confidence:'High',detail:'Strong incremental contribution until the market begins to saturate.'},
   {id:'r_sponsor',type:'commercial',name:'Expand partnership sales',subtitle:'Seller + activation specialist',upfront:2,annualCost:3.3,term:3,risk:.19,wins:0,brand:1,fan:0,annualRevenue:7.4,stream:'sponsor',down:2,base:16,up:30,confidence:'Medium',detail:'Higher gross revenue, but servicing and inventory constraints matter.'},
   {id:'r_digital',type:'commercial',name:'Launch digital membership',subtitle:'Paid content + loyalty bundle',upfront:5,annualCost:2.2,term:4,risk:.30,wins:0,brand:2,fan:2,annualRevenue:4.8,stream:'digital',down:-6,base:11,up:27,confidence:'Low',detail:'Scalable if adoption is strong; uncertain conversion and retention.'},
@@ -72,267 +72,353 @@ function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>1
 export function rngFor(seed,cycle,salt=''){return mulberry32(hash(`${seed}|${cycle}|${salt}`))}
 function shuffle(arr,r){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
-export function createState(marketId='growth',mandateId='growth',seed='MGT340',mode='class'){
+// All amounts are fictional $M. Operating result excludes interest; capital spending
+// is depreciated, not charged twice. Forecast and actual use the same close engine.
+export const LEAGUE_RULES = {
+  statusQuo:{name:'National sharing only',effect:'Equal national revenue. No added local redistribution or payroll rule.'},
+  sharing:{name:'Share local revenue',effect:'Transfer $22M from large to smaller markets: small +$18M; growth +$4M. Resources, not a payroll requirement.'},
+  cap:{name:'Payroll cap',effect:'A $280M roster ceiling limits new commitments. Existing contracts remain payable; excess is grandfathered.'},
+  floor:{name:'Payroll floor',effect:'Roster expense must reach $245M. A top-up pays retained depth; talent is not guaranteed.'},
+  tax:{name:'Payroll tax',effect:'Each roster dollar above $250M costs an extra $0.65. Proceeds support opponents.'},
+  draft:{name:'Reverse-order draft',effect:'Teams below .500 receive priority talent access next season, without a cash transfer.'}
+};
+export const POD_ROLES = [
+  ['CFO','Protect the downside: reconcile cash, debt service and liquidity.'],
+  ['Competition','Argue for wins and the roster window; name what you would give up.'],
+  ['Commercial','Challenge demand forecasts and revenue concentration.'],
+  ['Fan / brand','Test affordability, sponsor fit and long-run trust.'],
+  ['Facilities','Price the asset, lifecycle costs and construction risk.'],
+  ['Board chair','Record the tradeoff and the dissent before locking the decision.']
+];
+export const DILEMMAS = [
+  {id:'sponsor',title:'The sponsor your fans are questioning',body:'A legal but divisive sponsor offers a three-year deal. A local coalition offers less cash and a stronger relationship.',
+    options:[
+      {id:'national',name:'Sign the divisive national deal',summary:'+$14M revenue / +$2M servicing each year for 3 years; fan trust −4 each year; brand +1.',annualRevenue:14,annualCost:2,fan:-4,brand:1,term:3},
+      {id:'local',name:'Choose the local coalition',summary:'+$6M revenue / +$2M servicing each year for 3 years; fan trust +2.',annualRevenue:6,annualCost:2,fan:2,term:3},
+      {id:'pass',name:'Keep the category open',summary:'No new contract. Preserve fan trust and future sponsor flexibility.',term:1}
+    ]},
+  {id:'extension',title:'The competitive window is closing',body:'Your captain wants a guaranteed extension. Finance wants a shorter commitment. Neither forecast guarantees availability.',
+    options:[
+      {id:'extend',name:'Guarantee the star extension',summary:'+$12M annual payroll for 3 years; +3 potential win-percentage points before diminishing returns and injury; +$4M forecast attention revenue; brand +2 each year.',annualCost:12,annualRevenue:4,wins:.03,brand:2,term:3,risk:.35,type:'player'},
+      {id:'depth',name:'Retain two depth players',summary:'+$5M annual payroll for 2 years; +1.3 potential win-percentage points before diminishing returns and injury; less upside and a shorter commitment.',annualCost:5,wins:.013,term:2,type:'player'},
+      {id:'wait',name:'Wait for next year',summary:'No new payroll. Immediate fan trust −2; preserve room for other investments.',fan:-2,term:1}
+    ]},
+  {id:'maintenance',title:'The building has a deadline',body:'An inspection finds tired public areas and rising repair bills. A capital repair lasts; a patch buys time.',
+    options:[
+      {id:'renew',name:'Fund a lasting repair',summary:'$16M capex; +9 facility points when completed; $1M annual savings for 6 operating years. Cash-funded; construction risk remains.',upfront:16,annualCost:-1,facility:9,term:6,type:'capital'},
+      {id:'patch',name:'Make a one-season patch',summary:'$4M expense now; +2 facility points now. Normal wear continues; more replacement work remains.',upfront:4,facility:2,term:1},
+      {id:'defer',name:'Defer the work',summary:'Save cash today; −6 facility and −2 fan points each year; +$3M maintenance cost for 2 years.',annualCost:3,facility:-6,fan:-2,term:2,facilityRecurring:true}
+    ]},
+  {id:'events',title:'The venue calendar conflict',body:'A concert promoter wants prime dates. Extra events create revenue but add wear and consume staff time.',
+    options:[
+      {id:'exclusive',name:'Give the promoter an exclusive window',summary:'+$11M forecast event revenue / +$4M cost for 2 years; −2 facility points each year; +1 brand each year.',annualRevenue:11,annualCost:4,facility:-2,brand:1,term:2,facilityRecurring:true},
+      {id:'selective',name:'Keep a selective event calendar',summary:'+$5M revenue / +$2M cost for 2 years; retain flexibility and limit wear.',annualRevenue:5,annualCost:2,term:2},
+      {id:'protect',name:'Protect the field and calendar',summary:'No event revenue; +2 fan trust this season.',fan:2,term:1}
+    ]}
+];
+export function createState(marketId='growth',mandateId='growth',seed='MGT340',mode='class',leaguePolicy='statusQuo'){
+  if(!MARKETS[marketId]||!MANDATES[mandateId]||!LEAGUE_RULES[leaguePolicy])throw new Error('Choose a valid market, mandate and league policy.');
+  if(!['class','full'].includes(mode))throw new Error('Choose Class or Full mode.');
+  if(!['class','full'].includes(mode))throw new Error('Choose Class or Full mode.');
   const m=MARKETS[marketId];
-  return {
-    marketId, mandateId, seed, mode, cycle:1, maxCycles:mode==='full'?5:3,
-    cash:m.cash, brand:m.brand, fanTrust:m.fanTrust, facility:m.facility,
-    franchiseValue:m.value, rosterQuality:m.rosterQuality, developmentBonus:0,
-    activeInvestments:[], debtTranches:[{id:'legacy',name:'Existing franchise debt',principal:m.startingDebt,rate:.048,remaining:12,original:m.startingDebt,originalTerm:12}],
-    history:[], rationales:[], distress:false
-  };
+  const bookAssets=420+(marketId==='large'?90:marketId==='small'?-50:0);
+  return {marketId,mandateId,seed:String(seed),mode,leaguePolicy,cycle:1,maxCycles:mode==='full'?5:3,
+    cash:m.cash,brand:m.brand,fanTrust:m.fanTrust,facility:m.facility,franchiseValue:m.value,
+    rosterQuality:m.rosterQuality,developmentBonus:0,bookAssets,bookEquity:m.cash+bookAssets-m.startingDebt,
+    ownerShare:1,equityRaised:0,publicRaised:0,arrears:0,leagueHealth:68,
+    rivals:[{market:'small',cash:38,payroll:218,wins:.42},{market:'growth',cash:52,payroll:252,wins:.50},{market:'large',cash:85,payroll:306,wins:.60}],
+    activeInvestments:[],debtTranches:[{id:'legacy',name:'Existing franchise debt',principal:m.startingDebt,rate:.048,remaining:12,original:m.startingDebt,payment:payment(m.startingDebt,.048,12)}],
+    history:[],rationales:[],distress:false};
 }
-
+export function payment(principal,rate,term){
+  return principal<=0?0:rate===0?principal/term:principal*rate/(1-Math.pow(1+rate,-term));
+}
 export function getDebtSummary(state){
   let principal=0,interest=0,principalDue=0;
   for(const d of state.debtTranches){
     principal+=d.principal;
-    interest+=d.principal*d.rate;
-    const originalTerm=d.originalTerm||d.remaining||1;
-    principalDue+=d.remaining>0?Math.min(d.principal,d.original/Math.max(1,originalTerm)):0;
+    const i=d.principal*d.rate;
+    interest+=i;
+    principalDue+=Math.min(d.principal,Math.max(0,(d.payment??payment(d.original,d.rate,d.originalTerm||d.remaining))-i));
   }
-  return {principal:round(principal),interest:round(interest),principalDue:round(principalDue),service:round(interest+principalDue)};
+  return {principal,interest,principalDue,service:interest+principalDue};
 }
-
+export function getBorrowingCapacity(state){
+  return Math.max(0,({small:360,growth:430,large:530}[state.marketId])-getDebtSummary(state).principal);
+}
+function stack(p,funding=0){
+  const f=typeof funding==='number'?{debtPct:funding}:funding||{};
+  for(const [key,max] of [['debtPct',.7],['equityPct',.5],['publicPct',.2]]){
+    const value=Number(f[key]??0);
+    if(!Number.isFinite(value)||value<0||value>max)throw new Error('Funding shares must stay within the disclosed source limits.');
+    if(!p.debtEligible&&value!==0)throw new Error('Only eligible capital projects accept outside financing.');
+  }
+  for(const [key,max] of [['debtPct',.7],['equityPct',.5],['publicPct',.2]]){
+    if(f[key]!==undefined&&(!Number.isFinite(Number(f[key]))||Number(f[key])<0||Number(f[key])>max))throw new Error('Invalid '+key+' financing share.');
+    if(!p.debtEligible&&Number(f[key]||0)!==0)throw new Error('Only eligible capital projects can use outside financing.');
+  }
+  const debtPct=p.debtEligible?clamp(Number(f.debtPct)||0,0,.7):0;
+  const equityPct=p.debtEligible?clamp(Number(f.equityPct)||0,0,.5):0;
+  const publicPct=p.debtEligible?clamp(Number(f.publicPct)||0,0,.2):0;
+  if(debtPct+equityPct+publicPct>1.00000001)throw new Error('Capital sources exceed 100%.');
+  return {debtPct,equityPct,publicPct};
+}
+export function estimateProposalImpact(state,p,funding=0){
+  const s=stack(p,funding),debtAmount=p.upfront*s.debtPct,equityAmount=p.upfront*s.equityPct,publicAmount=p.upfront*s.publicPct;
+  const cashNeed=p.upfront-debtAmount-equityAmount-publicAmount;
+  const rate=.058+(state.distress?.02:0),term=10;
+  const annualDebtService=payment(debtAmount,rate,term);
+  const revenue=(p.annualRevenue||0)*(s.publicPct? .92:1);
+  const directNet=revenue-(p.annualCost||0),afterDebtNet=directNet-annualDebtService;
+  const year1Commitment=p.type==='capital'?p.upfront:Math.max(1,p.upfront+(p.annualCost||0));
+  return {...s,debtAmount,equityAmount,publicAmount,cashNeed,rate,term,annualDebtService,directNet,afterDebtNet,year1Commitment,
+    directROI:directNet/Math.max(1,year1Commitment)*100,equityCashYield:cashNeed+equityAmount>0?afterDebtNet/(cashNeed+equityAmount)*100:null,
+    simpleROI:directNet/Math.max(1,year1Commitment)*100,dscr:annualDebtService?directNet/annualDebtService:null,
+    breakEvenYears:directNet>0?p.upfront/directNet:null};
+}
+export function getScenarioModel(state,p,funding=0){
+  const i=estimateProposalImpact(state,p,funding);
+  const spread=clamp((p.risk||.15)*(p.confidence==='High'?.7:p.confidence==='Low'?1.25:1),.08,.48);
+  const downMult=clamp(1-spread*1.35,.42,.94),upMult=1+spread*1.55;
+  const net=mult=>(p.annualRevenue||0)*(i.publicPct?.92:1)*mult-(p.annualCost||0)-i.annualDebtService;
+  return {downsideNet:net(downMult),baseNet:net(1),upsideNet:net(upMult),downsideROI:net(downMult)/i.year1Commitment*100,baseROI:net(1)/i.year1Commitment*100,upsideROI:net(upMult)/i.year1Commitment*100,downMult,upMult,confidence:p.confidence};
+}
 export function getActiveEffects(state){
-  const e={annualRevenue:0,annualCost:0,wins:0,brand:0,fan:0,facility:0,development:state.developmentBonus,streams:{}};
+  const e={annualRevenue:0,annualCost:0,playerCost:0,wins:0,brand:0,fan:0,facility:0,development:state.developmentBonus,streams:{}};
   for(const inv of state.activeInvestments){
     if(inv.remaining<=0)continue;
+    const open=!inv.delay;
+    const cost=(inv.annualCost||0)*(open?1:.25);
+    if(inv.type==='player')e.playerCost+=cost;else e.annualCost+=cost;
+    if(!open)continue;
     if(inv.stream)e.streams[inv.stream]=(e.streams[inv.stream]||0)+(inv.annualRevenue||0);
     else e.annualRevenue+=inv.annualRevenue||0;
-    if(inv.type!=='player')e.annualCost+=inv.annualCost||0;
-    e.wins+=inv.wins||0;
-    e.brand+=inv.brand||0;
-    e.fan+=inv.fan||0;
-    e.facility+=inv.facility||0;
+    e.wins+=inv.wins||0;e.brand+=(inv.brand||0)*(inv.isBoard?1:.45);e.fan+=(inv.fan||0)*(inv.isBoard?1:.55);
+    if(inv.facilityRecurring||!inv.commissioned)e.facility+=inv.facility||0;
     e.development+=inv.development||0;
   }
   return e;
 }
-
 export function getOpportunitySet(state){
-  const r=rngFor(state.seed,state.cycle,'opps');
-  const used=new Set(state.activeInvestments.map(x=>x.id));
-  const players=shuffle(PLAYERS.filter(x=>!used.has(x.id)),r);
-  const capitals=shuffle(CAPITAL.filter(x=>!used.has(x.id)),r);
-  const commercials=shuffle(COMMERCIAL.filter(x=>!used.has(x.id)),r);
-  let pool=[];
-  if(state.cycle===1) pool=[...commercials.slice(0,2),...capitals.slice(0,2),...players.slice(0,1)];
-  else if(state.cycle===2) pool=[...players.slice(0,2),...capitals.slice(0,2),...commercials.slice(0,1)];
-  else {
-    const core=[players[0],capitals[0],commercials[0]].filter(Boolean);
-    const chosen=new Set(core.map(x=>x.id));
-    const rest=shuffle([...players.slice(1),...capitals.slice(1),...commercials.slice(1)].filter(x=>!chosen.has(x.id)),r);
-    pool=[...core,...rest.slice(0,2)];
-  }
-  return pool.filter(Boolean).map(x=>({...x}));
+  const r=rngFor(state.seed,state.cycle,'opps'),used=new Set(state.activeInvestments.map(x=>x.id));
+  // Sorting is independent of prior selections, and common proposals keep the same uncertainty draw.
+  const players=shuffle(PLAYERS.filter(x=>!used.has(x.id)),r),capital=shuffle(CAPITAL.filter(x=>!used.has(x.id)),r),commercial=shuffle(COMMERCIAL.filter(x=>!used.has(x.id)),r);
+  const first=[players[0],capital[0],commercial[0]].filter(Boolean);
+  const rest=shuffle([...players.slice(1),...capital.slice(1),...commercial.slice(1)],r);
+  return [...first,...rest.slice(0,2)].map(p=>({...p}));
 }
-
-export function estimateProposalImpact(state,proposal,debtPct=0){
-  const debtAllowed=proposal.debtEligible?clamp(debtPct,0,.7):0;
-  const debtAmount=proposal.upfront*debtAllowed;
-  const cashNeed=proposal.upfront-debtAmount;
-  const rate=.058;
-  const term=proposal.type==='capital'?10:6;
-  const annualDebtService=debtAmount?debtAmount*(rate/(1-Math.pow(1+rate,-term))):0;
-  const directNet=(proposal.annualRevenue||0)-(proposal.annualCost||0);
-  const afterDebtNet=directNet-annualDebtService;
-  const year1Commitment=proposal.type==='capital'?Math.max(1,proposal.upfront):Math.max(1,proposal.upfront+(proposal.annualCost||0));
-  const directROI=afterDebtNet/year1Commitment*100;
-  const cashOnCashROI=cashNeed>0?afterDebtNet/cashNeed*100:0;
-  const breakEvenYears=afterDebtNet>0?proposal.upfront/afterDebtNet:null;
+export function getBoardDilemma(state){
+  const offset=Math.floor(rngFor(state.seed,0,'dilemmas')()*DILEMMAS.length);
+  return DILEMMAS[(offset+state.cycle-1)%DILEMMAS.length];
+}
+function normalizePlan(state,plan={}){
+  const d=getBoardDilemma(state),choice=d.options.find(o=>o.id===plan.boardChoice)||d.options[d.options.length-1];
+  return {ticketYield:clamp(Number(plan.ticketYield)||1,.8,1.25),boardChoice:choice.id,choice,dilemma:d};
+}
+export function advisorViews(state,p,funding=0){
+  const i=estimateProposalImpact(state,p,funding),s=getScenarioModel(state,p,funding);
   return {
-    debtPct:debtAllowed,debtAmount:round(debtAmount),cashNeed:round(cashNeed),annualDebtService:round(annualDebtService),
-    directNet:round(directNet),afterDebtNet:round(afterDebtNet),year1Commitment:round(year1Commitment),
-    directROI:round(directROI),cashOnCashROI:round(cashOnCashROI),breakEvenYears:breakEvenYears?round(breakEvenYears):null,
-    simpleROI:round(directROI),term,rate
+    CFO:'Cash needed now: $'+i.cashNeed.toFixed(1)+'M. Annual debt service: $'+i.annualDebtService.toFixed(1)+'M. Downside contribution: $'+s.downsideNet.toFixed(1)+'M.',
+    'General Manager':p.wins?'Potential lift: '+(p.wins*100).toFixed(1)+' win-percentage points before diminishing returns and uncertainty. A '+p.term+'-year commitment competes with future payroll.':'This does not directly add talent; explain its opportunity cost.',
+    'Commercial / fan':'Gross revenue is not contribution. Test demand, servicing cost and whether fan benefits persist after losses.',
+    'Facilities / capital':p.type==='capital'?'Book an asset, then fund its operating life. A delay can remove first-year revenue while the lender still gets paid.':'This is a contract or operating program, not a capital-asset accounting shortcut.',
+    'Board chair':'Choose for '+MANDATES[state.mandateId].tag.toLowerCase()+'. Name one defensible alternative and the risk you accept.'
   };
 }
-
-export function getScenarioModel(state,p,debtPct=0){
-  const impact=estimateProposalImpact(state,p,debtPct);
-  const confidenceFactor=p.confidence==='High'?.70:p.confidence==='Medium'?1:1.25;
-  const spread=clamp((p.risk||.15)*confidenceFactor,.08,.48);
-  const downMult=clamp(1-spread*1.35,.42,.94);
-  const upMult=1+spread*1.55;
-  const netFor=mult=>(p.annualRevenue||0)*mult-(p.annualCost||0)-impact.annualDebtService;
-  const roiFor=net=>net/impact.year1Commitment*100;
-  const downsideNet=netFor(downMult),baseNet=netFor(1),upsideNet=netFor(upMult);
-  return {
-    downsideNet:round(downsideNet),baseNet:round(baseNet),upsideNet:round(upsideNet),
-    downsideROI:round(roiFor(downsideNet)),baseROI:round(roiFor(baseNet)),upsideROI:round(roiFor(upsideNet)),
-    downMult,upMult,confidence:p.confidence
-  };
-}
-
-function moneyText(v){return `${v<0?'−':''}${Math.abs(round(v)).toFixed(1)}M`}
-
-export function advisorViews(state,p){
-  const debtPct=p.debtEligible?.5:0;
-  const impact=estimateProposalImpact(state,p,debtPct);
-  const scenarios=getScenarioModel(state,p,debtPct);
-  const md=MANDATES[state.mandateId];
-  const cashShare=impact.cashNeed/Math.max(1,state.cash);
-  let cfo;
-  if(cashShare>.45) cfo=`Caution: this uses ${Math.round(cashShare*100)}% of current cash before the rest of the portfolio.`;
-  else if(scenarios.downsideNet<0) cfo=`Conditional: downside annual cash contribution is ${moneyText(scenarios.downsideNet)}. Protect liquidity if you proceed.`;
-  else cfo=`Supportable: base annual cash contribution is ${moneyText(scenarios.baseNet)} after recurring cost${impact.annualDebtService?' and modeled debt service':''}.`;
-  const gm = p.type==='player'
-    ? (p.wins>=.05?`Strong support: projected competitive lift is about ${(p.wins*100).toFixed(1)} win-percentage points, but the ${p.term}-year commitment reduces flexibility.`:`Support if this role solves a real roster need; expected competitive lift is about ${(p.wins*100).toFixed(1)} points.`)
-    : (p.wins>0?`Support: there is a competitive-development benefit beyond direct revenue.`:'Neutral: this does not directly improve the roster.');
-  const cro = (p.annualRevenue||0)>=7
-    ? `Support: base gross annual benefit is ${moneyText(p.annualRevenue||0)}. Verify the demand/inventory assumptions before counting it as guaranteed.`
-    : (p.stream?`Support with targets: this adds to ${p.stream} revenue, but marginal returns should fall as the market saturates.`:'Neutral: direct monetization is limited.');
-  const cmo = p.brand>=2 || p.fan>=2
-    ? `Support: modeled brand/fan lift is meaningful, which can matter beyond the direct cash return.`
-    : 'Neutral: this is not primarily a brand investment.';
-  const coo = p.type==='capital'
-    ? (p.risk>.28?`Caution: this is a high-uncertainty capital project with a ${p.term}-year operating horizon.`:`Support if lifecycle cost is funded; recurring operating cost is ${moneyText(p.annualCost||0)} per year.`)
-    : 'Neutral: limited facilities exposure.';
-  const analytics = `Scenario annual cash contribution: downside ${moneyText(scenarios.downsideNet)} | base ${moneyText(scenarios.baseNet)} | upside ${moneyText(scenarios.upsideNet)}. Confidence: ${p.confidence}. Direct ROI alone does not capture wins, brand, or flexibility.`;
-  const fan = p.fan>=2
-    ? `Support: modeled fan benefit is material. Test whether the value lasts if team performance disappoints.`
-    : (p.type==='player'&&p.brand>=4?'Support with caution: star value can deepen engagement, but it is performance-sensitive.':'Neutral: limited direct fan benefit.');
-  const mandate = state.mandateId==='contender'&&p.type==='player'
-    ? 'Board lens: this fits the mandate if the competitive window is genuinely open.'
-    : state.mandateId==='facility'&&p.type==='capital'
-      ? 'Board lens: this directly addresses the facility mandate, but financing still matters.'
-      : state.mandateId==='turnaround'&&scenarios.downsideNet<0
-        ? 'Board lens: a negative downside case conflicts with the turnaround mandate unless the strategic payoff is compelling.'
-        : `Board lens: test this against “${md.tag},” not against a generic score.`;
-  return {CFO:cfo,'General Manager':gm,'Chief Revenue Officer':cro,'Chief Marketing Officer':cmo,'COO / Facilities':coo,'Analytics Director':analytics,'Fan Insights Director':fan,'Board Strategy':mandate};
-}
-
-function proposalRealization(state,p,debtPct,index){
-  const r=rngFor(state.seed,state.cycle,`proposal-${p.id}-${index}`);
-  const scenario=getScenarioModel(state,p,debtPct);
-  const movement=(r()-.5)*2;
-  const mult=movement<0?1+movement*(1-scenario.downMult):1+movement*(scenario.upMult-1);
-  return clamp(mult,scenario.downMult,scenario.upMult);
-}
-
-function applyProposalToState(state,p,debtPct,index){
-  const impact=estimateProposalImpact(state,p,debtPct);
-  const realizedMultiplier=proposalRealization(state,p,debtPct,index);
-  const realizedRevenue=Math.max(0,(p.annualRevenue||0)*realizedMultiplier);
-  const actualNet=realizedRevenue-(p.annualCost||0)-impact.annualDebtService;
-  const actualROI=actualNet/impact.year1Commitment*100;
-  const inv={...p,annualRevenue:realizedRevenue,remaining:p.term,forecastNet:impact.afterDebtNet,actualNet:round(actualNet),actualROI:round(actualROI),debtPct:impact.debtPct};
-  const debts=[...state.debtTranches];
-  if(impact.debtAmount>0){debts.push({id:`${p.id}-${state.cycle}`,name:p.name,principal:impact.debtAmount,rate:.058,remaining:impact.term,original:impact.debtAmount,originalTerm:impact.term});}
-  return {investment:inv,cashNeed:impact.cashNeed,debtTranches:debts,impact,actualNet:round(actualNet),actualROI:round(actualROI),realizedRevenue:round(realizedRevenue)};
-}
-
-export function forecastCycle(state,selections=[]){
-  const m=MARKETS[state.marketId];
-  const active=getActiveEffects(state);
-  let upfrontCash=0,newDebt=0,annualNewCost=0,annualNewRevenue=0,winsAdd=0,newInterest=0,newPrincipalDue=0;
+export function validateDecision(state,selections=[],plan={}){
+  const errors=[];
+  if(state.cycle>state.maxCycles)errors.push('This game is complete; start a new franchise.');
+  if(selections.length>2)errors.push('Choose at most two new proposals.');
+  if(plan.ticketYield!==undefined&&(!Number.isFinite(Number(plan.ticketYield))||Number(plan.ticketYield)<.8||Number(plan.ticketYield)>1.25))errors.push('Ticket yield must be between 80% and 125%.');
+  if(plan.boardChoice!==undefined&&!getBoardDilemma(state).options.some(o=>o.id===plan.boardChoice))errors.push('Choose a valid board response.');
+  const available=getOpportunitySet(state),seen=new Set();
+  let cash=0,debt=0,equity=0,newPlayer=0;
   for(const s of selections){
-    const impact=estimateProposalImpact(state,s.proposal,s.debtPct||0);
-    upfrontCash+=impact.cashNeed;newDebt+=impact.debtAmount;
-    annualNewCost+=s.proposal.annualCost||0;annualNewRevenue+=s.proposal.annualRevenue||0;winsAdd+=s.proposal.wins||0;
-    newInterest+=impact.debtAmount*impact.rate;
-    newPrincipalDue+=Math.max(0,impact.annualDebtService-impact.debtAmount*impact.rate);
+    const p=available.find(p=>p.id===s.proposal?.id);
+    if(!p){errors.push('That proposal is not available this season.');continue;}
+    if(seen.has(p.id)){errors.push('A proposal cannot be funded twice.');continue;}
+    seen.add(p.id);
+    try{const i=estimateProposalImpact(state,p,s);cash+=i.cashNeed;debt+=i.debtAmount;equity+=i.equityAmount;}catch(e){errors.push(e.message);}
+    if(p.type==='player')newPlayer+=p.annualCost||0;
   }
-  const debt=getDebtSummary(state);
-  const expectedWin=clamp(state.rosterQuality+active.wins+winsAdd+active.development*.5,.30,.75);
-  const price=m.baseTicket;
-  const demand=.86+expectedWin*.25+state.fanTrust/550+state.brand/950;
-  const attendance=clamp(m.baseAttendance*demand,m.capacity*.48,m.capacity*.99);
-  const tickets=attendance*9*price/1e6+(active.streams.tickets||0);
-  const premium=m.premiumBase*m.localFactor*(.82+state.facility/120+expectedWin*.18)+(active.streams.premium||0);
-  const sponsor=m.sponsorBase*(.82+state.brand/250+expectedWin*.12)+(active.streams.sponsor||0);
-  const merch=m.merchandiseBase*m.localFactor*(.76+state.brand/210+expectedWin*.22);
-  const digital=10*m.localFactor*(.8+state.brand/250)+(active.streams.digital||0);
-  const other=14*m.localFactor+Math.max(0,state.facility-55)*.20+(active.streams.other||0);
-  const shared=m.sharedRevenue;
-  const revenue=shared+tickets+premium+sponsor+merch+digital+other+active.annualRevenue+annualNewRevenue;
-  const rosterBase=(state.marketId==='small'?196:state.marketId==='large'?236:216);
-  const activePlayerCost=state.activeInvestments.filter(x=>x.type==='player'&&x.remaining>0).reduce((a,b)=>a+(b.annualCost||0),0);
-  const expenses=m.operatingBase+rosterBase+activePlayerCost+active.annualCost+annualNewCost+debt.interest+newInterest;
-  const profit=revenue-expenses;
-  const projectedEndingCash=state.cash+profit-upfrontCash-debt.principalDue-newPrincipalDue;
-  return {expectedWin,attendance,revenue,expenses,profit,upfrontCash,newDebt,newInterest,newPrincipalDue,projectedEndingCash,existingDebt:debt.principal,projectedDebt:debt.principal+newDebt-debt.principalDue-newPrincipalDue};
+  const n=normalizePlan(state,plan),effects=getActiveEffects(state);
+  cash+=n.choice.upfront||0;
+  if(n.choice.type==='player')newPlayer+=n.choice.annualCost||0;
+  if(cash>Math.max(0,state.cash)+.00001)errors.push('Upfront cash exceeds available cash. Revise financing, choose a lower-cost board response, or hold.');
+  if(debt>getBorrowingCapacity(state)+.00001)errors.push('New debt exceeds the disclosed credit limit.');
+  if(equity+state.equityRaised>65.00001)errors.push('Outside investors have committed no more than $65M across this run.');
+  if(state.arrears>0&&selections.some(s=>s.proposal.type==='capital'))errors.push('Unpaid obligations must be cleared before new capital projects.');
+  const base={small:196,growth:216,large:236}[state.marketId];
+  if(state.leaguePolicy==='cap'&&base+effects.playerCost+newPlayer>280+.00001&&newPlayer>0)errors.push('New roster commitments would breach the $280M payroll cap.');
+  const publicActive=state.activeInvestments.some(i=>i.publicPct>0)||selections.some(s=>s.publicPct>0);
+  if(publicActive&&n.ticketYield>1.05)errors.push('Your public-capital covenant limits ticket yield to 105% of the base price.');
+  return errors;
 }
-
-export function runCycle(state,selections,rationale){
-  let working={...state,activeInvestments:[...state.activeInvestments],debtTranches:[...state.debtTranches]};
-  const realized=[];
-  let upfrontCash=0;
-  selections.forEach((s,i)=>{
-    const a=applyProposalToState(working,s.proposal,s.debtPct||0,i);
-    working.debtTranches=a.debtTranches;
-    working.activeInvestments.push(a.investment);
-    upfrontCash+=a.cashNeed;
-    realized.push({id:s.proposal.id,name:s.proposal.name,forecastNet:a.impact.afterDebtNet,actualNet:a.actualNet,forecastROI:a.impact.directROI,actualROI:a.actualROI,cashNeed:a.cashNeed,debt:a.impact.debtAmount});
+function realizeProposal(state,p,s,actual){
+  const impact=estimateProposalImpact(state,p,s);
+  const r=rngFor(state.seed,state.cycle,'proposal-'+p.id);
+  const scenarios=getScenarioModel(state,p,s),movement=(r()-.5)*2;
+  const multiplier=actual?(movement<0?1+movement*(1-scenarios.downMult):1+movement*(scenarios.upMult-1)):1;
+  const draw=r(),delay=actual&&p.type==='capital'&&draw<(p.risk||.2)*.32?1:0;
+  const overrun=actual&&p.type==='capital'&&draw>.72?(p.upfront*(.06+r()*.12)):0;
+  const injury=actual&&p.type==='player'&&draw<(p.risk||.2);
+  const revenue=(p.annualRevenue||0)*multiplier*(impact.publicPct?.92:1)*(injury?.55:1);
+  const investment={...p,...impact,annualRevenue:revenue,wins:(p.wins||0)*(injury?.35:1),remaining:p.term,delay,assetBasis:p.type==='capital'?p.upfront+overrun:0,bookValue:p.type==='capital'?p.upfront+overrun:0,commissioned:false,
+    recoverAfterSeason:injury?{wins:p.wins||0,annualRevenue:(p.annualRevenue||0)*multiplier*(impact.publicPct?.92:1)}:null};
+  return {investment,impact,overrun,delay,injury,revenue,multiplier};
+}
+// Three disclosed benchmark opponents make joint production visible. These are
+// illustrative club budgets, not a simulation of every club or a real CBA.
+// Policy changes resources, costs or talent access; none awards "health points".
+function closeRivals(state,rule,event,actual,ourTax){
+  const mods=actual?event.mods:{};
+  const drafts=state.rivals.map(r=>rule==='draft'&&r.wins<.5?.025:0);
+  const rows=state.rivals.map((r,index)=>{
+    const planned=r.plannedPayroll??r.payroll;
+    const talentPayroll=rule==='cap'?Math.min(planned,280):planned;
+    const payroll=rule==='floor'?Math.max(245,talentPayroll):talentPayroll;
+    const floorTopup=payroll-talentPayroll;
+    const tax=rule==='tax'?Math.max(0,payroll-250)*.65:0;
+    const transfer=rule==='sharing'?{small:18,growth:4,large:-22}[r.market]:0;
+    const localBase={small:75,growth:100,large:155}[r.market];
+    const localShock=localBase*((mods.premium||1)+(mods.sponsor||1)-2)/2;
+    const nationalDelta=390*(.88+.12*state.leagueHealth/68)-390+(mods.shared||0);
+    const resources={small:233,growth:264,large:331}[r.market]+localShock+nationalDelta+transfer;
+    const rawWins=.5+(talentPayroll-252)*.0015+drafts[index]+(actual?(rngFor(state.seed,state.cycle,'rival-'+r.market)()-.5)*.04+(mods.wins||0):0);
+    return {...r,payroll,plannedPayroll:planned,resources,tax,transfer,floorTopup,draftBoost:drafts[index],wins:clamp(rawWins,.25,.75)};
   });
-  const active=getActiveEffects(working);
-  const m=MARKETS[working.marketId];
-  const r=rngFor(working.seed,working.cycle,'cycle');
-  const event=EVENTS[Math.floor(r()*EVENTS.length)];
-  const mods=event.mods||{};
-  const debtBefore=getDebtSummary(working);
-  let expectedWin=clamp(working.rosterQuality+active.wins+active.development*.5,.30,.78);
-  const wins=clamp(expectedWin+(r()-.5)*.055+(mods.wins||0),.22,.82);
-  const demand=.86+wins*.26+working.fanTrust/540+working.brand/950;
-  const attendance=clamp(m.baseAttendance*demand*(mods.tickets||1),m.capacity*.44,m.capacity*.995);
-  let revenue={
-    shared:m.sharedRevenue+(mods.shared||0),
-    tickets:attendance*9*m.baseTicket/1e6+(active.streams.tickets||0),
-    premium:m.premiumBase*m.localFactor*(.82+working.facility/120+wins*.19)+(active.streams.premium||0),
-    sponsor:m.sponsorBase*(.82+working.brand/250+wins*.13)+(active.streams.sponsor||0),
-    merchandise:m.merchandiseBase*m.localFactor*(.76+working.brand/210+wins*.25),
-    digital:10*m.localFactor*(.8+working.brand/250)+(active.streams.digital||0),
-    other:14*m.localFactor+Math.max(0,working.facility-55)*.20+(active.streams.other||0),
+  const taxPool=rows.reduce((n,r)=>n+r.tax,0)+ourTax;
+  rows.forEach(r=>{
+    r.taxSupport=rule==='tax'?taxPool*({small:.65,growth:.35,large:0}[r.market]):0;
+    r.cashChange=r.resources+r.taxSupport-r.payroll-r.tax;
+    r.cash=r.cash+r.cashChange;
+  });
+  const mean=rows.reduce((n,r)=>n+r.wins,0)/rows.length;
+  const spread=Math.sqrt(rows.reduce((n,r)=>n+(r.wins-mean)**2,0)/rows.length);
+  const competitive=clamp(1-spread/.18,0,1)*100;
+  const financial=rows.reduce((n,r)=>n+clamp(r.cash/90,0,1),0)/rows.length*100;
+  const health=clamp(state.leagueHealth*.5+(financial*.55+competitive*.45)*.5,25,95);
+  return {rows,financial,competitive,health,taxPool,
+    explanation:'Rival health combines disclosed cash resilience (55%) and dispersion in rival win percentages (45%), smoothed halfway from last season. It changes next season’s shared media revenue. Floor top-ups are costs, not guaranteed talent.'};
+}
+function annualClose(state,selections=[],plan={},actual=false){
+  const n=normalizePlan(state,plan),m=MARKETS[state.marketId];
+  const working={...state,activeInvestments:state.activeInvestments.map(i=>({...i})),debtTranches:state.debtTranches.map(d=>({...d}))};
+  let capex=0,launchExpense=0,newDebt=0,newEquity=0,newPublic=0,totalOutlay=0;
+  const realized=[];
+  const selected=selections.map(s=>({...s,proposal:getOpportunitySet(state).find(p=>p.id===s.proposal.id)||s.proposal}));
+  const board={...n.choice,id:'board-'+n.dilemma.id+'-'+state.cycle,type:n.choice.type||'commercial',name:n.choice.name,upfront:n.choice.upfront||0,confidence:'Medium',isBoard:true};
+  for(const s of [...selected,{proposal:board}]){
+    const p=s.proposal,a=realizeProposal(state,p,s,actual),i=a.impact;
+    totalOutlay+=p.upfront+a.overrun;
+    if(p.type==='capital')capex+=p.upfront+a.overrun;else launchExpense+=p.upfront;
+    newDebt+=i.debtAmount;newEquity+=i.equityAmount;newPublic+=i.publicAmount;
+    working.activeInvestments.push(a.investment);
+    if(i.debtAmount>0)working.debtTranches.push({id:p.id+'-'+state.cycle,name:p.name,principal:i.debtAmount,original:i.debtAmount,rate:i.rate,remaining:i.term,payment:i.annualDebtService});
+    const actualNet=(a.delay?0:a.revenue)-(p.annualCost||0)*(a.delay?.25:1)-i.annualDebtService;
+    realized.push({id:p.id,name:p.name,forecastNet:i.afterDebtNet,actualNet,forecastROI:i.directROI,actualROI:((a.delay?0:a.revenue)-(p.annualCost||0)*(a.delay?.25:1))/Math.max(1,i.year1Commitment+a.overrun)*100,
+      cashNeed:i.cashNeed+a.overrun,debt:i.debtAmount,equity:i.equityAmount,public:i.publicAmount,overrun:a.overrun,delay:a.delay,injury:a.injury,
+      explanation:a.delay?'Opening delayed: first-year revenue is absent; 25% of operating costs and full debt service remain.':a.injury?'Availability shock reduces both playing contribution and attention revenue; guaranteed payroll remains.':a.overrun?'Construction overrun is cash-funded; the original loan and public/equity commitments do not increase.':'Demand / delivery realization changes the proposal benefit, not the contractual cost.'});
+  }
+  const active=getActiveEffects(working),r=rngFor(state.seed,state.cycle,'cycle');
+  const event=EVENTS[Math.floor(r()*EVENTS.length)],mods=actual?event.mods:{};
+  const rule=state.leaguePolicy,basePayroll={small:196,growth:216,large:236}[state.marketId];
+  const draftBoost=rule==='draft'&&(state.history.at(-1)?.wins??state.rosterQuality)<.5?.016:0;
+  const effectiveTalent=active.wins/(1+Math.max(0,active.wins)*1.6);
+  const expectedWin=clamp(state.rosterQuality+effectiveTalent+active.development*.5+draftBoost,.28,.77);
+  const wins=clamp(expectedWin+(actual?(r()-.5)*.055+(mods.wins||0):0),.2,.82);
+  const facilityForDemand=clamp(state.facility+active.facility,15,100);
+  const demand=.80+wins*.28+state.fanTrust/620+state.brand/1000;
+  const elasticity={small:1.6,growth:1.25,large:1.05}[state.marketId];
+  const priceResponse=Math.max(.45,1-elasticity*(n.ticketYield-1));
+  const attendance=clamp(m.baseAttendance*demand*priceResponse*(mods.tickets||1),m.capacity*.30,m.capacity*.995);
+  const sharing=rule==='sharing'?{small:18,growth:4,large:-22}[state.marketId]:0;
+  const leagueFactor=.88+.12*state.leagueHealth/68;
+  const revenue={
+    shared:(m.sharedRevenue+(mods.shared||0))*leagueFactor+sharing,
+    tickets:attendance*9*m.baseTicket*n.ticketYield/1e6+(active.streams.tickets||0),
+    premium:(m.premiumBase*m.localFactor*(.82+facilityForDemand/120+wins*.18)+(active.streams.premium||0))*(mods.premium||1),
+    sponsor:(m.sponsorBase*(.82+state.brand/250+wins*.12)+(active.streams.sponsor||0))*(mods.sponsor||1),
+    merchandise:m.merchandiseBase*m.localFactor*(.76+state.brand/210+wins*.22)*(mods.merch||1),
+    digital:(10*m.localFactor*(.8+state.brand/250)+(active.streams.digital||0))*(mods.digital||1),
+    other:(14*m.localFactor+Math.max(0,facilityForDemand-55)*.20+(active.streams.other||0))*(mods.other||1),
     investment:active.annualRevenue
   };
-  ['premium','sponsor','digital','other'].forEach(k=>{if(mods[k])revenue[k]*=mods[k]});
-  if(mods.merch)revenue.merchandise*=mods.merch;
-  const rosterBase=(working.marketId==='small'?196:working.marketId==='large'?236:216);
-  const playerCost=working.activeInvestments.filter(x=>x.type==='player'&&x.remaining>0).reduce((a,b)=>a+(b.annualCost||0),0);
-  let operating=m.operatingBase+active.annualCost;
-  if(mods.opex)operating*=mods.opex;
-  const expenses={roster:rosterBase+playerCost,operations:operating,interest:debtBefore.interest};
-  const revTotal=Object.values(revenue).reduce((a,b)=>a+b,0);
-  const expTotal=Object.values(expenses).reduce((a,b)=>a+b,0);
-  const profit=revTotal-expTotal;
+  const rawPayroll=basePayroll+active.playerCost,floorTopup=rule==='floor'?Math.max(0,245-rawPayroll):0;
+  const payroll=rawPayroll+floorTopup,payrollTax=rule==='tax'?Math.max(0,payroll-250)*.65:0;
+  const maintenance=Math.max(0,58-facilityForDemand)*.45;
+  const operating=(m.operatingBase+active.annualCost+maintenance)*(mods.opex||1);
+  const depreciationFor=i=>i.type==='capital'&&!i.delay?Math.min(i.bookValue||0,i.assetBasis/i.term):0;
+  const priorProjectAssets=state.activeInvestments.reduce((sum,i)=>sum+(i.bookValue||0),0);
+  const legacyDepreciation=Math.min(Math.max(0,state.bookAssets-priorProjectAssets),8);
+  const depreciation=legacyDepreciation+working.activeInvestments.reduce((sum,i)=>sum+depreciationFor(i),0);
+  const debtBefore=getDebtSummary(working);
+  const expenses={roster:payroll,operations:operating,payrollTax,launch:launchExpense,depreciation};
+  const revTotal=Object.values(revenue).reduce((a,b)=>a+b,0),expTotal=Object.values(expenses).reduce((a,b)=>a+b,0);
+  const operatingResult=revTotal-expTotal,netIncome=operatingResult-debtBefore.interest;
   const principalPaid=debtBefore.principalDue;
-  const cashChange=profit-upfrontCash-principalPaid;
-  const cash=working.cash+cashChange;
-  const newDebts=working.debtTranches.map(d=>{
-    const originalTerm=d.originalTerm||d.remaining||1;
-    const scheduledPrincipal=Math.min(d.principal,d.original/Math.max(1,originalTerm));
-    return {...d,principal:Math.max(0,d.principal-scheduledPrincipal),remaining:Math.max(0,d.remaining-1),originalTerm};
-  }).filter(d=>d.principal>.05&&d.remaining>0);
-  const debtAfter=newDebts.reduce((a,b)=>a+b.principal,0);
-  const fan=clamp(working.fanTrust+(wins-.5)*10+active.fan*.55+(mods.fan||0)-.5,20,95);
-  const brand=clamp(working.brand+(wins-.5)*9+active.brand*.45+(mods.brand||0),20,95);
-  const facility=clamp(working.facility+active.facility*.28-.6,20,100);
-  const rosterQuality=clamp(working.rosterQuality+(wins-expectedWin)*.05+active.development*.10,.32,.70);
-  const margin=profit/revTotal;
-  const valueGrowth=clamp(.015+(wins-.5)*.055+(brand-working.brand)/250+(facility-working.facility)/330+margin*.07,-.07,.13);
-  const franchiseValue=Math.max(2,working.franchiseValue*(1+valueGrowth));
-  const distress=cash<-25||debtAfter>560||(margin<-.10&&working.cycle>=2);
-  const agedInvestments=working.activeInvestments.map(x=>({...x,remaining:Math.max(0,x.remaining-1)})).filter(x=>x.remaining>0);
-  const record={cycle:working.cycle,event,wins,attendance,revenue,expenses,revTotal,expTotal,profit,cash,cashChange,debt:debtAfter,principalPaid,fan,brand,facility,franchiseValue,realized,rationale,upfrontCash};
-  const next={...working,cycle:working.cycle+1,cash,fanTrust:fan,brand,facility,rosterQuality,franchiseValue,activeInvestments:agedInvestments,debtTranches:newDebts,history:[...working.history,record],rationales:[...working.rationales,rationale],distress:working.distress||distress};
-  return {next,record,event,distress};
+  let cashBeforeRescue=state.cash+netIncome+depreciation-capex+newDebt+newEquity+newPublic-principalPaid;
+  const scheduledDebts=working.debtTranches.map(d=>{
+    const principal=Math.min(d.principal,Math.max(0,d.payment-d.principal*d.rate));
+    return {...d,principal:Math.max(0,d.principal-principal),remaining:Math.max(0,d.remaining-1)};
+  }).filter(d=>d.principal>1e-8);
+  let emergencyDebt=0,newArrears=0,arrearsPaid=0;
+  const currentDebt=scheduledDebts.reduce((sum,d)=>sum+d.principal,0);
+  if(cashBeforeRescue<0){
+    emergencyDebt=Math.min(-cashBeforeRescue,Math.max(0,({small:360,growth:430,large:530}[state.marketId])-currentDebt),80);
+    if(emergencyDebt>0)scheduledDebts.push({id:'bridge-'+state.cycle,name:'Emergency liquidity facility',principal:emergencyDebt,original:emergencyDebt,rate:.095,remaining:3,payment:payment(emergencyDebt,.095,3)});
+    newArrears=Math.max(0,-cashBeforeRescue-emergencyDebt);
+  }else arrearsPaid=Math.min(state.arrears,cashBeforeRescue);
+  const cash=Math.max(0,cashBeforeRescue+emergencyDebt+newArrears-arrearsPaid);
+  const arrears=state.arrears+newArrears-arrearsPaid,debt=scheduledDebts.reduce((sum,d)=>sum+d.principal,0);
+  const fan=clamp(state.fanTrust+(wins-.5)*10+active.fan+(mods.fan||0)-Math.max(0,n.ticketYield-1)*18+Math.max(0,1-n.ticketYield)*6-.7,10,98);
+  const brand=clamp(state.brand+(wins-.5)*9+active.brand+(mods.brand||0),10,98);
+  const facility=clamp(state.facility+active.facility-1.5,15,100);
+  const rivals=closeRivals(state,rule,event,actual,payrollTax),leagueHealth=rivals.health;
+  const bookAssets=Math.max(0,state.bookAssets+capex-depreciation);
+  const bookEquity=state.bookEquity+netIncome+newEquity+newPublic;
+  const ownerShare=newEquity?state.ownerShare*Math.max(1,state.bookEquity)/(Math.max(1,state.bookEquity)+newEquity):state.ownerShare;
+  const franchiseValue=Math.max(2,state.franchiseValue*(1+clamp(.014+(wins-.5)*.055+(brand-state.brand)/250+(facility-state.facility)/330+operatingResult/revTotal*.07,-.08,.13)));
+  const aged=working.activeInvestments.map(i=>({...i,...(i.recoverAfterSeason||{}),recoverAfterSeason:null,remaining:i.remaining-(i.type==='capital'&&i.delay?0:1),delay:Math.max(0,(i.delay||0)-1),commissioned:i.commissioned||!i.delay,bookValue:Math.max(0,(i.bookValue||0)-depreciationFor(i))})).filter(i=>i.remaining>0);
+  const record={cycle:state.cycle,event:actual?event:{id:'forecast',title:'Base forecast',desc:'No macro shock; proposal assumptions at base case.'},wins,expectedWin,attendance,ticketYield:n.ticketYield,ticketPrice:m.baseTicket*n.ticketYield,
+    revenue,expenses,revTotal,expTotal,operatingResult,profit:operatingResult,interest:debtBefore.interest,netIncome,depreciation,
+    beginningCash:state.cash,cash,cashChange:cash-state.cash,debt,principalPaid,fan,brand,facility,franchiseValue,
+    realized,upfrontCash:totalOutlay-newDebt-newEquity-newPublic,totalOutlay,capex,newDebt,newEquity,newPublic,emergencyDebt,newArrears,arrearsPaid,arrears,bookAssets,bookEquity,ownerShare,
+    floorTopup,payrollTax,draftBoost,sharing,leagueHealth,leagueFactor,rivals,boardTitle:n.dilemma.title,boardChoice:n.choice.name,plan:{ticketYield:n.ticketYield,boardChoice:n.boardChoice}};
+  const next={...working,cycle:state.cycle+1,cash,fanTrust:fan,brand,facility,franchiseValue,bookAssets,bookEquity,ownerShare,
+    equityRaised:state.equityRaised+newEquity,publicRaised:state.publicRaised+newPublic,arrears,leagueHealth,rivals:rivals.rows,activeInvestments:aged,debtTranches:scheduledDebts,
+    rosterQuality:clamp(state.rosterQuality+active.development*.1-.008,.3,.7),history:state.history,rationales:state.rationales,distress:state.distress||newArrears>0||emergencyDebt>0};
+  return {next,record};
 }
-
+export function forecastCycle(state,selections=[],plan={}){
+  const {record:r}=annualClose(state,selections,plan,false);
+  return {...r,revenue:r.revTotal,expenses:r.expTotal,profit:r.operatingResult,upfrontCash:r.upfrontCash,newDebt:r.newDebt,projectedEndingCash:r.cash,projectedDebt:r.debt,existingDebt:getDebtSummary(state).principal,rawEndingCash:r.cash-r.emergencyDebt-r.newArrears,record:r};
+}
+export function runCycle(state,selections=[],rationale={text:'Hold and preserve flexibility.',risk:'Opportunity cost'},plan={},options={}){
+  const errors=validateDecision(state,selections,plan);
+  if(errors.length)throw new Error(errors.join(' '));
+  const forecast=forecastCycle(state,selections,plan),{next,record}=annualClose(state,selections,plan,!options.noUncertainty);
+  record.forecast={revenue:forecast.record.revTotal,operatingResult:forecast.record.operatingResult,netIncome:forecast.record.netIncome,cash:forecast.record.cash,debt:forecast.record.debt,wins:forecast.record.wins};
+  record.rationale=rationale;
+  record.why=[
+    'Revenue: '+record.event.desc+' Ticket yield was '+Math.round(record.ticketYield*100)+'% of base, with '+Math.round(record.attendance).toLocaleString('en-US')+' attendees per game. Shared revenue contributed $'+record.revenue.shared.toFixed(1)+'M.',
+    'Costs: roster $'+record.expenses.roster.toFixed(1)+'M; operations $'+record.expenses.operations.toFixed(1)+'M; launch expense $'+record.expenses.launch.toFixed(1)+'M; depreciation $'+record.depreciation.toFixed(1)+'M; payroll tax $'+record.payrollTax.toFixed(1)+'M.',
+    'Profit to cash: $'+record.netIncome.toFixed(1)+'M simplified net income + $'+record.depreciation.toFixed(1)+'M noncash depreciation − $'+record.capex.toFixed(1)+'M capex − $'+record.principalPaid.toFixed(1)+'M principal. Funding and arrears are shown in the cash bridge.',
+    'Debt: $'+record.newDebt.toFixed(1)+'M project borrowing + $'+record.emergencyDebt.toFixed(1)+'M emergency liquidity − $'+record.principalPaid.toFixed(1)+'M principal repayment. Interest of $'+record.interest.toFixed(1)+'M reduced net income, not operating result.',
+    'Next season: '+next.activeInvestments.length+' commitments remain; available credit $'+getBorrowingCapacity(next).toFixed(1)+'M; unpaid obligations $'+next.arrears.toFixed(1)+'M. Rival health '+Math.round(next.leagueHealth)+'/100 changes next year’s shared media value.'
+  ];
+  next.history=[...state.history,record];next.rationales=[...state.rationales,rationale];
+  return {next,record,event:record.event,distress:record.newArrears>0||record.emergencyDebt>0};
+}
 export function finalEvaluation(state){
-  const h=state.history;
-  if(!h.length)return null;
-  const m=MARKETS[state.marketId],mandate=MANDATES[state.mandateId];
-  const avgMargin=h.reduce((a,b)=>a+b.profit/b.revTotal,0)/h.length;
-  const avgWins=h.reduce((a,b)=>a+b.wins,0)/h.length;
-  const debt=getDebtSummary(state).principal;
-  const financial=clamp(52+avgMargin*120+(state.cash/180)*22-(state.distress?28:0),0,100);
-  const fan=clamp((state.fanTrust+state.brand)/2,0,100);
-  const competitive=clamp(25+avgWins*95,0,100);
-  const asset=clamp(42+(state.franchiseValue-m.value)*16+(state.facility-m.facility)*.45,0,100);
-  const flexibility=clamp(75+(state.cash-m.cash)*.14-(debt-(m.startingDebt||0))*.08-(state.activeInvestments.length>7?8:0),0,100);
-  const s={financial,fan,competitive,asset,flexibility};
-  let total=0;for(const [k,w] of Object.entries(mandate.weights))total+=s[k]*w;
-  if(state.distress)total=Math.min(total,58);
-  return {total:round(total,0),...Object.fromEntries(Object.entries(s).map(([k,v])=>[k,round(v,0)])),avgMargin,avgWins,mandate};
+  if(!state.history.length)return null;
+  const h=state.history,cumulativeRevenue=h.reduce((s,r)=>s+r.revTotal,0),cumulativeOperating=h.reduce((s,r)=>s+r.operatingResult,0);
+  const cumulativeNet=h.reduce((s,r)=>s+r.netIncome,0),avgWins=h.reduce((s,r)=>s+r.wins,0)/h.length;
+  const streams={};h.forEach(r=>Object.entries(r.revenue).forEach(([k,v])=>streams[k]=(streams[k]||0)+v));
+  const largest=Object.entries(streams).sort((a,b)=>b[1]-a[1])[0],debt=getDebtSummary(state);
+  const biggestMiss=[...h].sort((a,b)=>Math.abs(b.cash-b.forecast.cash)-Math.abs(a.cash-a.forecast.cash))[0];
+  const profile=state.arrears>0?'Restructuring required':state.distress?'Growth with a liquidity rescue':avgWins>.57&&state.cash>40?'Competitive builder':state.facility>MARKETS[state.marketId].facility+4?'Asset builder':state.cash>MARKETS[state.marketId].cash+70?'Liquidity steward':'Balanced operator';
+  return {profile,mandate:MANDATES[state.mandateId],cumulativeRevenue,cumulativeOperating,cumulativeNet,avgWins,avgMargin:cumulativeOperating/cumulativeRevenue,
+    debt:debt.principal,debtService:debt.service,concentration:largest[1]/cumulativeRevenue,largestStream:largest[0],biggestMiss,
+    originalOwner:state.ownerShare,credit:getBorrowingCapacity(state),streams};
 }
