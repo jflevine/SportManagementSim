@@ -1,20 +1,21 @@
 /* Ecosystem Architect: Season One — MVP classroom layer */
 (()=>{
 'use strict';
-const APP_VERSION='Season One MVP 1.0';
-const CRISIS_COUNTS={sprint:2,standard:3,deep:4};
-const MODE_LABELS={sprint:'Sprint · 10–12 min',standard:'Standard Class · 18–22 min',deep:'Deep Dive · 25–30 min'};
+const APP_VERSION='Season One MVP 1.2 · Legal Decision Lab 1';
+const MODE_LABELS={standard:'Legal Decision Lab · 18–22 min · 3 fixed crises'};
+const FIXED_LAB_CRISES=['pathway','sponsor','license'];
+const SUBMISSION_ENDPOINT='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/submit-spm370-ldl1';
 const nowIso=()=>new Date().toISOString();
 const safe=(v='')=>String(v).replace(/[<>]/g,'');
 const ensureMvp=()=>{
   state.mvp=state.mvp||{};
   state.mvp.version=APP_VERSION;
-  state.mvp.mode=state.mvp.mode||'standard';
+  state.mvp.mode='standard';
   state.mvp.sessionId=state.mvp.sessionId||`NX-${Math.random().toString(36).slice(2,7).toUpperCase()}-${Date.now().toString(36).slice(-4).toUpperCase()}`;
   state.mvp.startedAt=state.mvp.startedAt||null;
   state.mvp.completedAt=state.mvp.completedAt||null;
   state.mvp.journal=Array.isArray(state.mvp.journal)?state.mvp.journal:[];
-  state.mvp.forcedCrisis=state.mvp.forcedCrisis||null;
+  state.mvp.forcedCrisis=null;
   state.mvp.reduceMotion=!!state.mvp.reduceMotion;
   save();
 };
@@ -39,25 +40,17 @@ function appendMissionMode(){
   if(!brief||document.getElementById('mvpModeWrap'))return;
   const wrap=document.createElement('div');
   wrap.id='mvpModeWrap';wrap.className='mvp-mode-wrap';
-  wrap.innerHTML=`<div class="mvp-mode-head"><b>CLASSROOM RUN MODE</b><span>Changes crisis depth, not core concepts.</span></div>
-  <div class="mvp-modes">
-    <button class="mvp-mode" data-mode="sprint"><strong>SPRINT</strong><em>10–12 MIN · 2 CRISES</em><small>Fast pod activity. Best for a lecture block or recap.</small></button>
-    <button class="mvp-mode" data-mode="standard"><strong>STANDARD CLASS</strong><em>18–22 MIN · 3 CRISES</em><small>Recommended. Full arc with enough pressure for discussion.</small></button>
-    <button class="mvp-mode" data-mode="deep"><strong>DEEP DIVE</strong><em>25–30 MIN · 4 CRISES</em><small>More strategic variance for extended discussion or assessment.</small></button>
-  </div>
+  wrap.innerHTML=`<div class="mvp-mode-head"><b>LEGAL DECISION LAB 1</b><span>Graded standardized run</span></div>
+  <div class="mvp-modes"><div class="mvp-mode selected mvp-mode-locked"><strong>STANDARDIZED LAB</strong><em>18–22 MIN · 3 FIXED CRISES</em><small>Every group receives the same three legal fact patterns in the same order so grading is comparable across the class.</small></div></div>
   <div class="mvp-session-chip">SESSION <b id="mvpSessionId"></b> · <span id="mvpModeLabel"></span></div>
-  <div class="mvp-privacy">No student response data is transmitted by this MVP. Progress stays in this browser unless exported.</div>`;
+  <div class="mvp-privacy">Group gameplay is saved locally. Each student's final individual legal analysis is submitted securely to the instructor record system using their La Salle email.</div>`;
   const teamEntry=brief.querySelector('.team-entry');
   brief.insertBefore(wrap,teamEntry);
-  wrap.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{
-    state.mvp.mode=btn.dataset.mode;save();renderMode();
-  }));
   renderMode();
 }
 function renderMode(){
-  document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.mode===state.mvp.mode));
   const id=document.getElementById('mvpSessionId'),label=document.getElementById('mvpModeLabel');
-  if(id)id.textContent=state.mvp.sessionId;if(label)label.textContent=MODE_LABELS[state.mvp.mode];
+  if(id)id.textContent=state.mvp.sessionId;if(label)label.textContent=MODE_LABELS.standard;
 }
 function buildDock(){
   if(document.getElementById('mvpDock'))return;
@@ -112,12 +105,10 @@ function renderPlaybookPane(){
 }
 function renderInstructor(){
   const p=document.querySelector('[data-pane-body="instructor"]');
-  p.innerHTML=`<div class="mvp-kicker">Projector / Demo Controls</div><h3>Instructor Console</h3><p>These controls affect only this browser. They do not remotely control student devices in the current MVP.</p>
-  <div class="mvp-instructor"><label>Run mode</label><select id="mvpInstructorMode"><option value="sprint">Sprint · 2 crises</option><option value="standard">Standard · 3 crises</option><option value="deep">Deep Dive · 4 crises</option></select><label>Force next spotlight crisis</label><select id="mvpCrisisSelect"><option value="">No override</option>${crisisBank.map(c=>`<option value="${c.id}">${c.title}</option>`).join('')}</select><div class="mvp-instructor-actions"><button id="mvpSetCrisis">Set Next Crisis</button><button id="mvpRevealConcepts">Reveal Concepts</button><button id="mvpCopyDebrief">Copy Debrief</button><button id="mvpJumpFinal">Jump to Final Board</button></div></div>
-  <div class="mvp-progress-card"><div class="line"><span>Session</span><b>${state.mvp.sessionId}</b></div><div class="line"><span>Mode</span><b>${MODE_LABELS[state.mvp.mode]}</b></div><div class="line"><span>Elapsed</span><b>${elapsed()}</b></div><div class="line"><span>Current architecture</span><b>${architectureName()}</b></div></div>`;
-  const mode=document.getElementById('mvpInstructorMode');mode.value=state.mvp.mode;mode.onchange=()=>{state.mvp.mode=mode.value;save();renderMode();renderInstructor()};
-  const crisis=document.getElementById('mvpCrisisSelect');crisis.value=state.mvp.forcedCrisis||'';
-  document.getElementById('mvpSetCrisis').onclick=()=>{state.mvp.forcedCrisis=crisis.value||null;save();journal('instructor','Crisis override',state.mvp.forcedCrisis?crisisBank.find(c=>c.id===state.mvp.forcedCrisis)?.title:'Override cleared');renderInstructor()};
+  p.innerHTML=`<div class="mvp-kicker">Projector / Demo Controls</div><h3>Instructor Console</h3>
+  <p>Legal Decision Lab 1 is locked to a standardized three-crisis sequence for scoring consistency. Student devices all receive the same fact patterns in the same order.</p>
+  <div class="mvp-progress-card"><div class="line"><span>Assessment</span><b>Legal Decision Lab 1</b></div><div class="line"><span>Fixed crises</span><b>The Pathway Disappears · The Sponsor Walks · The Unlicensed Major</b></div><div class="line"><span>Session</span><b>${state.mvp.sessionId}</b></div><div class="line"><span>Elapsed</span><b>${elapsed()}</b></div><div class="line"><span>Current architecture</span><b>${architectureName()}</b></div></div>
+  <div class="mvp-instructor-actions"><button id="mvpRevealConcepts">Reveal Concepts</button><button id="mvpCopyDebrief">Copy Debrief</button><button id="mvpJumpFinal">Jump to Final Board</button></div>`;
   document.getElementById('mvpRevealConcepts').onclick=()=>{state.unlocked=Object.keys(concepts);save();renderIntel();renderInstructor()};
   document.getElementById('mvpCopyDebrief').onclick=()=>copyText(buildDebrief());
   document.getElementById('mvpJumpFinal').onclick=()=>{closeDrawer();showEpisode(7);renderFinal();enhanceFinal()};
@@ -128,13 +119,7 @@ function buildDebrief(){
 }
 async function copyText(txt){try{await navigator.clipboard.writeText(txt);const t=document.getElementById('toast');if(t){t.textContent='Copied to clipboard.';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}}catch(e){console.warn(e)}}
 function chooseCrises(){
-  const count=CRISIS_COUNTS[state.mvp.mode]||3;
-  const categories=[['pathway','capital','platform'],['sponsor','labor','consumer'],['betting','antitrust','license','governance']];
-  let picks=categories.map(g=>g[Math.floor(Math.random()*g.length)]);
-  const pool=crisisBank.map(c=>c.id).filter(id=>!picks.includes(id));
-  while(picks.length<count&&pool.length){picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0])}
-  if(state.mvp.forcedCrisis){picks=picks.filter(x=>x!==state.mvp.forcedCrisis);picks.unshift(state.mvp.forcedCrisis);state.mvp.forcedCrisis=null}
-  return picks.slice(0,count);
+  return [...FIXED_LAB_CRISES];
 }
 function installSeasonOverride(){
   const button=document.getElementById('launchSeason');if(!button)return;
@@ -147,7 +132,7 @@ function installSeasonOverride(){
     unlockConcept('contractWeb',false);
     state.crises=chooseCrises();state.crisisIndex=0;state.crisisAnswers={};
     journal('legal loadout','Five protections selected',state.contracts.map(id=>contractDefs.find(c=>c.id===id)?.name).filter(Boolean).join(' · '));
-    journal('season launch',MODE_LABELS[state.mvp.mode],`${state.crises.length} Year One incidents armed.`);
+    journal('season launch',MODE_LABELS.standard,`Standardized crises: The Pathway Disappears · The Sponsor Walks · The Unlicensed Major.`);
     save();showEpisode(6);showCrisisCutin();
   };
 }
@@ -165,29 +150,198 @@ function installCrisisWrapper(){
 function enhanceFinal(){
   const area=document.querySelector('.year-two');if(!area||document.getElementById('mvpCompleteWrap'))return;
   const box=document.createElement('div');box.id='mvpCompleteWrap';box.className='mvp-complete-wrap';
-  box.innerHTML=`<h3>Complete the board defense</h3><p>Select a Year Two decision and defend it in at least 30 characters. This creates a portable session record for discussion or submission.</p><div class="mvp-complete-actions"><button class="primary" id="mvpComplete" disabled>COMPLETE RUN</button><button id="mvpExport">Download Session JSON</button><button id="mvpCopySummary">Copy Debrief</button></div>`;
+  box.innerHTML=`<h3>Complete the board defense</h3><p>Your group selects a Year Two decision and defends it in at least 30 characters. This completes the shared deliberation portion of Legal Decision Lab 1.</p><div class="mvp-complete-actions"><button class="primary" id="mvpComplete" disabled>COMPLETE GROUP RUN</button><button id="mvpCopySummary">Copy Group Debrief</button></div>`;
   area.appendChild(box);
+
+  const lab=document.createElement('section');lab.id='mvpLabWrap';lab.className='mvp-lab-wrap';
+  const crisisOptions=FIXED_LAB_CRISES.map(id=>{const c=crisisBank.find(x=>x.id===id);return c?`<option value="${c.id}">${safe(c.title)}</option>`:''}).join('');
+  lab.innerHTML=`<div class="mvp-kicker">LEGAL DECISION LAB 1 · INDIVIDUAL SUBMISSION</div>
+    <h3>Individual legal decision memo</h3>
+    <p class="mvp-lab-intro">Complete this section <strong>individually</strong> after your group finishes the simulation. Choose one of the three standardized crises and demonstrate issue spotting, application of legal principles, stakeholder analysis, and a recommended course of action. Your group's simulation record is shared evidence; the writing below must be your own.</p>
+    <div class="mvp-lab-grid">
+      <label><span>First name</span><input id="labFirstName" maxlength="60" autocomplete="given-name" placeholder="First name"></label>
+      <label><span>Last name</span><input id="labLastName" maxlength="60" autocomplete="family-name" placeholder="Last name"></label>
+      <label><span>La Salle email</span><input id="labEmail" type="email" maxlength="120" autocomplete="email" placeholder="student@lasalle.edu"></label>
+      <label><span>Crisis you are analyzing</span><select id="labCrisis"><option value="">Select one crisis…</option>${crisisOptions}</select></label>
+      <label class="wide"><span>1 · Issue spotting <em>2 pts</em></span><textarea id="labIssue" maxlength="2000" placeholder="Identify the one or two legally significant issues raised by this crisis."></textarea></label>
+      <label class="wide"><span>2 · Legal principle + application <em>3 pts</em></span><textarea id="labLaw" maxlength="4000" placeholder="State the relevant legal principle, doctrine, contractual concept, or rule and apply it to the facts your group faced."></textarea></label>
+      <label class="wide"><span>3 · Stakeholder analysis <em>2 pts</em></span><textarea id="labStakeholder" maxlength="3000" placeholder="Which stakeholders' rights, power, risk, or interests matter most here, and why?"></textarea></label>
+      <label class="wide"><span>4 · Recommended course of action <em>3 pts</em></span><textarea id="labRecommendation" maxlength="4000" placeholder="What should management do next? Give a specific recommendation and defend it using the law and the tradeoffs revealed by the simulation."></textarea></label>
+    </div>
+    <div class="mvp-lab-rubric"><b>10-point rubric</b><span>Issue spotting 2</span><span>Legal application 3</span><span>Stakeholder analysis 2</span><span>Recommendation 3</span></div>
+    <div class="mvp-lab-note"><strong>Official submission:</strong> your name, La Salle email, group simulation record, and individual analysis will be saved securely for instructor grading. The public GitHub site does not display student submissions.</div>
+    <div class="mvp-complete-actions"><button class="primary" id="labSubmit" disabled>SUBMIT LEGAL DECISION LAB</button><button id="labDownload" disabled>DOWNLOAD BACKUP</button><button id="labClear">CLEAR FOR NEXT STUDENT</button></div>
+    <div id="labReady" class="mvp-lab-ready">Complete the group run and all individual fields to submit.</div>
+    <div id="labReceipt" class="mvp-lab-receipt hidden"></div>`;
+  area.appendChild(lab);
+
   document.getElementById('mvpComplete').onclick=completeRun;
-  document.getElementById('mvpExport').onclick=exportSession;
   document.getElementById('mvpCopySummary').onclick=()=>copyText(buildDebrief());
-  updateCompletionGate();
+  document.getElementById('labSubmit').onclick=submitLabOfficial;
+  document.getElementById('labDownload').onclick=downloadLabSubmission;
+  document.getElementById('labClear').onclick=clearLabSubmission;
+  ['labFirstName','labLastName','labEmail','labCrisis','labIssue','labLaw','labStakeholder','labRecommendation'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input',updateLabGate);
+    document.getElementById(id)?.addEventListener('change',updateLabGate);
+  });
+  updateCompletionGate();updateLabGate();
 }
 function updateCompletionGate(){const b=document.getElementById('mvpComplete');if(!b)return;const reason=(document.getElementById('yearReason')?.value||'').trim();b.disabled=!(state.yearDecision&&reason.length>=30)}
 function completeRun(){
   const reason=(document.getElementById('yearReason')?.value||'').trim();if(!state.yearDecision||reason.length<30)return;
-  state.mvp.completedAt=nowIso();state.mvp.yearReason=reason;journal('completion','Board defense completed',`${state.yearDecision} · ${reason}`);save();showCompletion();
+  state.mvp.completedAt=nowIso();state.mvp.yearReason=reason;journal('completion','Board defense completed',`${state.yearDecision} · ${reason}`);save();showCompletion();updateLabGate();
 }
 function showCompletion(){
   let modal=document.getElementById('mvpCompletion');if(!modal){modal=document.createElement('div');modal.id='mvpCompletion';modal.className='mvp-completion';document.body.appendChild(modal)}
   const leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]);
-  modal.innerHTML=`<div class="mvp-completion-card"><span class="seal">RUN COMPLETE</span><h2>${archetype()}</h2><p>${safe(state.team)} completed ${MODE_LABELS[state.mvp.mode]} in ${elapsed()}.</p><div class="mvp-completion-grid"><div><small>Architecture</small><b>${architectureName()}</b></div><div><small>Legal resilience</small><b>${state.metrics.resilience}/100</b></div><div><small>Salience leader</small><b>${leader.role}</b></div><div><small>Publisher dependency</small><b>${publisherDependency()}%</b></div><div><small>Concepts unlocked</small><b>${state.unlocked.length}</b></div><div><small>Session</small><b>${state.mvp.sessionId}</b></div></div><div class="mvp-complete-actions"><button class="primary" id="mvpModalCopy">COPY DEBRIEF</button><button id="mvpModalExport">DOWNLOAD JSON</button><button id="mvpModalClose">RETURN TO REPORT</button></div></div>`;
-  modal.classList.add('open');document.getElementById('mvpModalCopy').onclick=()=>copyText(buildDebrief());document.getElementById('mvpModalExport').onclick=exportSession;document.getElementById('mvpModalClose').onclick=()=>modal.classList.remove('open');
+  modal.innerHTML=`<div class="mvp-completion-card"><span class="seal">GROUP RUN COMPLETE</span><h2>${archetype()}</h2><p>${safe(state.team)} completed the standardized Legal Decision Lab run in ${elapsed()}.</p><div class="mvp-completion-grid"><div><small>Architecture</small><b>${architectureName()}</b></div><div><small>Legal resilience</small><b>${state.metrics.resilience}/100</b></div><div><small>Salience leader</small><b>${leader.role}</b></div><div><small>Publisher dependency</small><b>${publisherDependency()}%</b></div><div><small>Fixed crises</small><b>3 / 3 complete</b></div><div><small>Session</small><b>${state.mvp.sessionId}</b></div></div><div class="mvp-complete-actions"><button class="primary" id="mvpModalClose">CONTINUE TO INDIVIDUAL LAB</button><button id="mvpModalCopy">COPY GROUP DEBRIEF</button></div></div>`;
+  modal.classList.add('open');
+  document.getElementById('mvpModalCopy').onclick=()=>copyText(buildDebrief());
+  document.getElementById('mvpModalClose').onclick=()=>{modal.classList.remove('open');document.getElementById('mvpLabWrap')?.scrollIntoView({behavior:'smooth',block:'start'})};
 }
 function sessionPayload(){
   const leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]);
-  return {app:'Ecosystem Architect: Season One',version:APP_VERSION,sessionId:state.mvp.sessionId,team:state.team,mode:state.mvp.mode,startedAt:state.mvp.startedAt,completedAt:state.mvp.completedAt,architecture:state.architecture,priorities:state.priorities,revenue:state.revenue,contracts:state.contracts,metrics:state.metrics,publisherDependency:publisherDependency(),salienceLeader:leader?.role,crises:state.crises,crisisAnswers:state.crisisAnswers,conceptsUnlocked:state.unlocked,yearDecision:state.yearDecision,yearReason:state.mvp.yearReason||document.getElementById('yearReason')?.value||'',journal:state.mvp.journal,privacy:'Local browser export; no centralized submission in MVP.'};
+  return {app:'Ecosystem Architect: Season One',version:APP_VERSION,assessment:'SPM 370 Legal Decision Lab 1',sessionId:state.mvp.sessionId,team:state.team,mode:'standard',startedAt:state.mvp.startedAt,completedAt:state.mvp.completedAt,architecture:state.architecture,priorities:state.priorities,revenue:state.revenue,contracts:state.contracts,metrics:state.metrics,publisherDependency:publisherDependency(),salienceLeader:leader?.role,crises:state.crises,crisisAnswers:state.crisisAnswers,conceptsUnlocked:state.unlocked,yearDecision:state.yearDecision,yearReason:state.mvp.yearReason||document.getElementById('yearReason')?.value||'',journal:state.mvp.journal,privacy:'Student identity and individual analysis are stored only in the secure assessment backend, not in the public GitHub repository.'};
 }
 function exportSession(){const data=JSON.stringify(sessionPayload(),null,2),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ecosystem-architect-${state.mvp.sessionId}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+
+function labFormData(){
+  return {
+    first:(document.getElementById('labFirstName')?.value||'').trim(),
+    last:(document.getElementById('labLastName')?.value||'').trim(),
+    email:(document.getElementById('labEmail')?.value||'').trim().toLowerCase(),
+    crisisId:(document.getElementById('labCrisis')?.value||'').trim(),
+    issue:(document.getElementById('labIssue')?.value||'').trim(),
+    law:(document.getElementById('labLaw')?.value||'').trim(),
+    stakeholder:(document.getElementById('labStakeholder')?.value||'').trim(),
+    recommendation:(document.getElementById('labRecommendation')?.value||'').trim()
+  };
+}
+function labIsReady(d=labFormData()){
+  return !!(state.mvp?.completedAt&&d.first&&d.last&&/^[^\s@]+@lasalle\.edu$/i.test(d.email)&&FIXED_LAB_CRISES.includes(d.crisisId)&&d.issue.length>=20&&d.law.length>=40&&d.stakeholder.length>=20&&d.recommendation.length>=40);
+}
+function updateLabGate(){
+  const d=labFormData(),ready=labIsReady(d),submit=document.getElementById('labSubmit'),download=document.getElementById('labDownload'),status=document.getElementById('labReady');
+  if(submit)submit.disabled=!ready;if(download)download.disabled=!ready;
+  if(!status)return;
+  let msg='Complete the group run and all individual fields to submit.';
+  if(state.mvp?.completedAt&&!d.first)msg='Enter your first name.';
+  else if(state.mvp?.completedAt&&!d.last)msg='Enter your last name.';
+  else if(state.mvp?.completedAt&&d.email&&!/^[^\s@]+@lasalle\.edu$/i.test(d.email))msg='Use your La Salle email ending in @lasalle.edu.';
+  else if(state.mvp?.completedAt&&!d.email)msg='Enter your La Salle email.';
+  else if(state.mvp?.completedAt&&!d.crisisId)msg='Choose one of the three standardized crises.';
+  else if(state.mvp?.completedAt&&d.issue.length<20)msg='Complete the issue-spotting response.';
+  else if(state.mvp?.completedAt&&d.law.length<40)msg='Complete the legal principle and application response.';
+  else if(state.mvp?.completedAt&&d.stakeholder.length<20)msg='Complete the stakeholder analysis.';
+  else if(state.mvp?.completedAt&&d.recommendation.length<40)msg='Complete the recommended course of action.';
+  else if(ready)msg='Ready for official submission.';
+  status.textContent=msg;status.classList.toggle('ready',ready);
+}
+function buildLabSubmission(){
+  const d=labFormData();if(!labIsReady(d))return '';
+  const crisis=crisisBank.find(c=>c.id===d.crisisId),leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]);
+  const crisisTrail=(state.crises||[]).map(id=>{const c=crisisBank.find(x=>x.id===id),answer=state.crisisAnswers?.[id],opt=c&&answer!==undefined?c.options?.[answer]:null;return c?`- ${c.title}: ${opt?.label||'No recorded response'}`:''}).filter(Boolean).join('\n');
+  const priorities=(state.priorities||[]).map(stakeholderName).join(' · ')||'Not recorded';
+  const protections=(state.contracts||[]).map(id=>contractDefs.find(c=>c.id===id)?.name).filter(Boolean).join(' · ')||'Not recorded';
+  return `SPM 370 — LEGAL DECISION LAB 1
+ECOSYSTEM ARCHITECT: SEASON ONE
+
+STUDENT
+Name: ${d.first} ${d.last}
+Email: ${d.email}
+Session: ${state.mvp?.sessionId||'—'}
+Team: ${state.team||'—'}
+Completed: ${new Date().toLocaleString()}
+
+SHARED GROUP EVIDENCE
+Architecture: ${architectureName()}
+Board priorities: ${priorities}
+Legal protections selected: ${protections}
+Financial sustainability: ${state.metrics.financial}/100
+Competitive access: ${state.metrics.access}/100
+Publisher control: ${state.metrics.control}/100
+Legal resilience: ${state.metrics.resilience}/100
+Legitimacy: ${state.metrics.legitimacy}/100
+Publisher-linked revenue: ${publisherDependency()}%
+Salience leader: ${leader?.role||'—'}
+Group Year Two decision: ${state.yearDecision||'Not selected'}
+Group defense: ${state.mvp?.yearReason||document.getElementById('yearReason')?.value||'Not recorded'}
+
+CRISIS TRAIL
+${crisisTrail}
+
+INDIVIDUAL ANALYSIS
+Chosen crisis: ${crisis?.title||d.crisisId}
+Scenario: ${crisis?.text||''}
+
+1. ISSUE SPOTTING (0–2)
+${d.issue}
+
+2. LEGAL PRINCIPLE + APPLICATION (0–3)
+${d.law}
+
+3. STAKEHOLDER ANALYSIS (0–2)
+${d.stakeholder}
+
+4. RECOMMENDED COURSE OF ACTION (0–3)
+${d.recommendation}
+
+INSTRUCTOR SCORE
+Issue spotting: ____ / 2
+Legal principle + application: ____ / 3
+Stakeholder analysis: ____ / 2
+Recommended course of action: ____ / 3
+TOTAL: ____ / 10`;
+}
+async function submitLabOfficial(){
+  const d=labFormData();if(!labIsReady(d))return;
+  const submit=document.getElementById('labSubmit'),status=document.getElementById('labReady'),receiptBox=document.getElementById('labReceipt');
+  submit.disabled=true;submit.textContent='SUBMITTING SECURELY…';status.textContent='Saving your official submission…';status.classList.remove('ready');
+  try{
+    const payload={
+      firstName:d.first,lastName:d.last,email:d.email,chosenCrisis:d.crisisId,
+      issueSpotting:d.issue,legalApplication:d.law,stakeholderAnalysis:d.stakeholder,recommendation:d.recommendation,
+      teamName:state.team,sessionId:state.mvp.sessionId,version:APP_VERSION,
+      startedAt:state.mvp.startedAt,completedAt:state.mvp.completedAt,simulationPayload:sessionPayload()
+    };
+    const res=await fetch(SUBMISSION_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const result=await res.json().catch(()=>({}));
+    if(!res.ok){
+      const err=new Error(result.error||'Submission could not be saved.');err.code=result.code;err.receipt=result.receipt;throw err;
+    }
+    setLabFieldsDisabled(true);
+    submit.textContent='SUBMISSION SAVED';
+    status.textContent='Official submission saved for instructor grading.';
+    status.classList.add('ready');
+    if(receiptBox){receiptBox.classList.remove('hidden');receiptBox.innerHTML=`<strong>Submission receipt</strong><span>${safe(result.receipt)}</span><small>No file upload is required. Keep this receipt until your grade is posted.</small>`;}
+  }catch(e){
+    if(e.code==='ALREADY_SUBMITTED'){
+      submit.textContent='ALREADY SUBMITTED';
+      status.textContent='A Legal Decision Lab 1 submission already exists for this La Salle email.';
+      if(receiptBox&&e.receipt){receiptBox.classList.remove('hidden');receiptBox.innerHTML=`<strong>Existing receipt</strong><span>${safe(e.receipt)}</span><small>Notify your instructor if you believe you need a replacement submission.</small>`;}
+    }else{
+      submit.textContent='TRY SUBMISSION AGAIN';submit.disabled=false;
+      status.textContent=e.message||'Submission could not be saved. Download a backup and notify your instructor.';
+    }
+  }
+}
+function setLabFieldsDisabled(disabled){
+  ['labFirstName','labLastName','labEmail','labCrisis','labIssue','labLaw','labStakeholder','labRecommendation'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=disabled});
+  const download=document.getElementById('labDownload');if(download)download.disabled=false;
+}
+function downloadLabSubmission(){
+  const txt=buildLabSubmission();if(!txt)return;
+  const d=labFormData(),safeName=(d.first+'-'+d.last).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'student';
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`spm370-legal-decision-lab-1-${safeName}.txt`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function clearLabSubmission(){
+  ['labFirstName','labLastName','labEmail','labCrisis','labIssue','labLaw','labStakeholder','labRecommendation'].forEach(id=>{const el=document.getElementById(id);if(el){el.disabled=false;el.value=''}});
+  const submit=document.getElementById('labSubmit');if(submit){submit.textContent='SUBMIT LEGAL DECISION LAB';submit.disabled=true}
+  const receiptBox=document.getElementById('labReceipt');if(receiptBox){receiptBox.classList.add('hidden');receiptBox.innerHTML=''}
+  updateLabGate();document.getElementById('labFirstName')?.focus();
+}
+
 function installErrorBoundary(){
   const box=document.createElement('div');box.id='mvpError';box.className='mvp-error';box.innerHTML='<b>Simulation issue detected.</b> Your local progress is still saved. Reload the page to resume.';document.body.appendChild(box);
   window.addEventListener('error',e=>{console.error(e.error||e.message);box.classList.add('show')});window.addEventListener('unhandledrejection',e=>{console.error(e.reason);box.classList.add('show')});

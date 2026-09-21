@@ -79,28 +79,68 @@ Use for extended activity periods, review sessions, or a more formal decision ex
 
 ## What the scores mean
 
-The numerical indicators are **instructional diagnostics, not legal conclusions and not grades**.
+The numerical ecosystem indicators are **instructional diagnostics, not legal conclusions and not grades**.
 
-They exist to make tradeoffs visible. Students should be evaluated on the quality of their reasoning, not on maximizing a numerical score.
+Legal Decision Lab 1 is graded from the student's individual written analysis using the 10-point rubric below. Every group receives the same three crises in the same order: **The Pathway Disappears**, **The Sponsor Walks**, and **The Unlicensed Major**. This standardization keeps the legal fact patterns comparable across students while preserving different group architectures and strategic choices.
 
-## Suggested assessment rubric
+## Legal Decision Lab 1: graded use
 
-A short board-defense submission can be scored on four dimensions:
+The activity now includes an **individual Legal Decision Lab check-out** after the group simulation. This is the scorable artifact for the syllabus category.
 
-- **Issue identification** — identifies the important business/legal problem.
-- **Stakeholder reasoning** — recognizes who has power, legitimacy, and urgency.
-- **Tradeoff analysis** — explains what the chosen model gains and sacrifices.
-- **Recommendation quality** — proposes a defensible Year Two strategy tied to the evidence generated during play.
+The simulation itself supplies the small-group deliberation and shared factual record. Each student then chooses one crisis from the group's run and independently completes four prompts:
 
-A simple 4-point scale per category creates a 16-point exercise without turning the simulation itself into a quiz.
+1. **Issue spotting** — identify the legally significant issue or issues.
+2. **Legal principle + application** — state the relevant doctrine, contractual principle, rule, or legal concept and apply it to the facts.
+3. **Stakeholder analysis** — explain whose rights, power, risks, or interests matter most.
+4. **Recommended course of action** — give a specific management recommendation and defend it.
+
+### Recommended scoring: 10 points per lab
+
+- **Issue spotting — 0–2 points**
+  - 2: identifies the material legal issue(s) accurately and specifically.
+  - 1: identifies a relevant issue but incompletely or too generally.
+  - 0: misses the material legal issue.
+
+- **Legal principle + application — 0–3 points**
+  - 3: states an appropriate legal principle and applies it accurately to the scenario facts.
+  - 2: generally correct principle/application with a meaningful omission or imprecision.
+  - 1: names a relevant concept but offers little or flawed application.
+  - 0: no meaningful legal application.
+
+- **Stakeholder analysis — 0–2 points**
+  - 2: identifies the key stakeholders and explains the competing rights, leverage, risks, or interests.
+  - 1: identifies relevant stakeholders with limited analysis.
+  - 0: no meaningful stakeholder analysis.
+
+- **Recommended course of action — 0–3 points**
+  - 3: gives a specific, feasible recommendation tied to law, facts, and tradeoffs.
+  - 2: defensible recommendation with incomplete support.
+  - 1: recommendation is generic, weakly supported, or disconnected from the analysis.
+  - 0: no actionable recommendation.
+
+For the course's five Legal Decision Labs, record each lab out of 10. Drop the lowest score and average the best four. That percentage becomes the student's score for the **20% Legal Decision Labs** course category.
+
+Example: 8, 9, 7, 10, 6 → drop the 6 → best-four average = 8.5/10 = 85% → 17/20 course percentage points.
+
+### Collection workflow
+
+The GitHub Pages site now sends the completed **individual** Legal Decision Lab submission to the course's secure assessment backend. Students enter first name, last name, and a La Salle email address. The official record includes the group simulation evidence plus the student's four individual analysis responses.
+
+Because the GitHub repository is public, **student names, email addresses, and responses are not committed to GitHub**. They are stored in the private Supabase assessment table `spm370_ldl1_submissions`, using the same backend pattern as the course knowledge checks. The public repository contains only the application code.
+
+The backend records four nullable grading fields—issue spotting (0–2), legal application (0–3), stakeholder analysis (0–2), and recommendation (0–3)—and automatically calculates the total once all four scores are entered. A private grading view, `spm370_ldl1_grading_queue`, presents the submission text and rubric columns for instructor review.
+
+Students receive a unique receipt after successful submission. No LMS upload is required. A backup text download remains available in case of a connection problem. If one group shares a device, students can submit one at a time and use **Clear for Next Student** without resetting the group simulation.
+
+The ecosystem-health indicators remain **instructional diagnostics, not grades**. They are stored with the submission as evidence the student may use in the legal analysis.
 
 ## Privacy guidance
 
-The current MVP does not transmit student gameplay to a server. Progress stays in the browser unless students deliberately export their session JSON or copy the board report.
+Group gameplay progress remains local to the browser until the individual student submits the lab. The official submission sends only the information needed for assessment: student name, La Salle email, the group simulation record, and the student's individual legal analysis.
 
-Avoid asking students to enter student ID numbers, personal email addresses, or sensitive information as their team name.
+Identifiable student records are stored in the private assessment backend and are **not** written to the public GitHub repository. The submission table has row-level security enabled and no public read policy. The public Edge Function accepts submissions only from the approved course site origin and validates La Salle email addresses.
 
-If session collection is added later, use a dedicated backend with explicit access controls, retention rules, and minimal student-identifying information.
+Do not ask students to place student ID numbers or other sensitive information in the team-name field.
 
 ## Troubleshooting
 
