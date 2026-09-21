@@ -38,3 +38,9 @@ body.mvp-reduce-motion *,body.mvp-reduce-motion *:before,body.mvp-reduce-motion 
 .mvp-lab-ready{margin-top:10px;color:#9fb0c8;font-size:.78rem}.mvp-lab-ready.ready{color:#74e3ad;font-weight:700}
 @media(max-width:760px){.mvp-lab-grid{grid-template-columns:1fr}.mvp-lab-grid label.wide{grid-column:auto}.mvp-lab-rubric{grid-template-columns:1fr 1fr}}
 @media print{.mvp-lab-wrap{break-before:page;background:#fff!important;color:#111!important;border:1px solid #999}.mvp-lab-wrap input,.mvp-lab-wrap select,.mvp-lab-wrap textarea{color:#111!important;border:1px solid #aaa!important;background:#fff!important}.mvp-lab-intro,.mvp-lab-note,.mvp-lab-grid label>span,.mvp-lab-rubric span{color:#222!important}.mvp-complete-actions{display:none!important}}
+
+.mvp-mode-locked{cursor:default!important}
+.mvp-lab-receipt{margin-top:14px;padding:14px 16px;border-radius:12px;border:1px solid rgba(76,195,138,.4);background:rgba(76,195,138,.08);display:grid;gap:4px}
+.mvp-lab-receipt strong{color:#86e7b8;text-transform:uppercase;font-size:.72rem;letter-spacing:.08em}
+.mvp-lab-receipt span{font:700 1rem/1.3 var(--sans);color:#fff;word-break:break-all}
+.mvp-lab-receipt small{color:#c9d7e8}
