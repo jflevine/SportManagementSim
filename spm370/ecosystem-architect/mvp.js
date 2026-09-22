@@ -5,6 +5,7 @@ const APP_VERSION='Season One MVP 1.2 · Legal Decision Lab 1';
 const MODE_LABELS={standard:'Legal Decision Lab · 18–22 min · 3 fixed crises'};
 const FIXED_LAB_CRISES=['pathway','sponsor','license'];
 const SUBMISSION_ENDPOINT='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/submit-spm370-ldl1';
+const SESSION_ENDPOINT='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-ldl1-session';
 const nowIso=()=>new Date().toISOString();
 const safe=(v='')=>String(v).replace(/[<>]/g,'');
 const ensureMvp=()=>{
@@ -14,6 +15,7 @@ const ensureMvp=()=>{
   state.mvp.sessionId=state.mvp.sessionId||`NX-${Math.random().toString(36).slice(2,7).toUpperCase()}-${Date.now().toString(36).slice(-4).toUpperCase()}`;
   state.mvp.startedAt=state.mvp.startedAt||null;
   state.mvp.completedAt=state.mvp.completedAt||null;
+  state.mvp.joinCode=state.mvp.joinCode||null;
   state.mvp.journal=Array.isArray(state.mvp.journal)?state.mvp.journal:[];
   state.mvp.forcedCrisis=null;
   state.mvp.reduceMotion=!!state.mvp.reduceMotion;
