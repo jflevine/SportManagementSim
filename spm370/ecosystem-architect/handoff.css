@@ -1,0 +1,25 @@
+.mvp-handoff-wrap{border-top:4px solid #42d5e7}
+.handoff-grid{display:grid;grid-template-columns:minmax(220px,.9fr) 210px minmax(280px,1.2fr);gap:16px;align-items:stretch;margin-top:16px}
+.handoff-code-panel,.handoff-qr-panel,.handoff-next-panel{background:#081326;border:1px solid #263958;border-radius:14px;padding:18px;color:#eaf1ff}
+.handoff-code-panel>span,.handoff-next-panel>span{display:block;color:#e3b545;font-size:.72rem;font-weight:900;letter-spacing:.11em}
+.handoff-code-panel>strong{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:clamp(1.8rem,4vw,2.7rem);letter-spacing:.06em;margin:7px 0 5px;color:#fff}
+.handoff-code-panel p{color:#aebbd1;margin:0 0 14px}
+.handoff-actions{display:flex;gap:8px;flex-wrap:wrap}
+.handoff-actions button,.handoff-error button{border:1px solid #617696;background:#142746;color:#fff;border-radius:8px;padding:9px 11px;font-weight:800}
+.handoff-qr-panel{display:grid;place-items:center;background:#fff;color:#172033}
+.handoff-qr-panel canvas{display:block;max-width:100%;height:auto}
+.handoff-qr-panel small{margin-top:7px;text-align:center;color:#59667b;font-weight:700}
+.handoff-qr-fallback{padding:30px 12px;text-align:center;color:#5b6677}
+.handoff-next-panel h4{font-family:Georgia,"Times New Roman",serif;font-size:1.3rem;margin:7px 0 9px}
+.handoff-next-panel ol{margin:0 0 14px;padding-left:20px;color:#c3cee0;line-height:1.55}
+.handoff-open,.handoff-modal-open{display:inline-block;text-decoration:none;border-radius:8px;padding:10px 13px;font-weight:900}
+.handoff-open{background:#42d5e7;color:#071322}
+.handoff-error{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#30171a;border:1px solid #7f3d44;border-radius:11px;padding:12px 14px;margin-top:14px;color:#f9d9dd}
+.handoff-error span{flex:1;min-width:220px}
+.handoff-modal-code{margin:16px 0;background:#0a1a34;border:1px solid #3c557a;border-radius:12px;padding:14px;text-align:center}
+.handoff-modal-code small{display:block;color:#e3b545;font-weight:900;letter-spacing:.08em}
+.handoff-modal-code strong{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:2rem;margin:6px 0;color:#fff}
+.handoff-modal-code span{display:block;color:#bac7dc;font-size:.84rem}
+.mvp-complete-actions .handoff-modal-open.primary{background:#42d5e7;color:#071322}
+@media(max-width:900px){.handoff-grid{grid-template-columns:1fr 200px}.handoff-next-panel{grid-column:1/-1}}
+@media(max-width:600px){.handoff-grid{grid-template-columns:1fr}.handoff-next-panel{grid-column:auto}.handoff-qr-panel{justify-self:stretch}}
