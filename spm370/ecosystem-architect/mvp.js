@@ -155,51 +155,101 @@ function enhanceFinal(){
   box.innerHTML=`<h3>Complete the board defense</h3><p>Your group selects a Year Two decision and defends it in at least 30 characters. This completes the shared deliberation portion of Legal Decision Lab 1.</p><div class="mvp-complete-actions"><button class="primary" id="mvpComplete" disabled>COMPLETE GROUP RUN</button><button id="mvpCopySummary">Copy Group Debrief</button></div>`;
   area.appendChild(box);
 
-  const lab=document.createElement('section');lab.id='mvpLabWrap';lab.className='mvp-lab-wrap';
-  const crisisOptions=FIXED_LAB_CRISES.map(id=>{const c=crisisBank.find(x=>x.id===id);return c?`<option value="${c.id}">${safe(c.title)}</option>`:''}).join('');
-  lab.innerHTML=`<div class="mvp-kicker">LEGAL DECISION LAB 1 · INDIVIDUAL SUBMISSION</div>
-    <h3>Individual legal decision memo</h3>
-    <p class="mvp-lab-intro">Complete this section <strong>individually</strong> after your group finishes the simulation. Choose one of the three standardized crises and demonstrate issue spotting, application of legal principles, stakeholder analysis, and a recommended course of action. Your group's simulation record is shared evidence; the writing below must be your own.</p>
-    <div class="mvp-lab-grid">
-      <label><span>First name</span><input id="labFirstName" maxlength="60" autocomplete="given-name" placeholder="First name"></label>
-      <label><span>Last name</span><input id="labLastName" maxlength="60" autocomplete="family-name" placeholder="Last name"></label>
-      <label><span>La Salle email</span><input id="labEmail" type="email" maxlength="120" autocomplete="email" placeholder="student@lasalle.edu"></label>
-      <label><span>Crisis you are analyzing</span><select id="labCrisis"><option value="">Select one crisis…</option>${crisisOptions}</select></label>
-      <label class="wide"><span>1 · Issue spotting <em>2 pts</em></span><textarea id="labIssue" maxlength="2000" placeholder="Identify the one or two legally significant issues raised by this crisis."></textarea></label>
-      <label class="wide"><span>2 · Legal principle + application <em>3 pts</em></span><textarea id="labLaw" maxlength="4000" placeholder="State the relevant legal principle, doctrine, contractual concept, or rule and apply it to the facts your group faced."></textarea></label>
-      <label class="wide"><span>3 · Stakeholder analysis <em>2 pts</em></span><textarea id="labStakeholder" maxlength="3000" placeholder="Which stakeholders' rights, power, risk, or interests matter most here, and why?"></textarea></label>
-      <label class="wide"><span>4 · Recommended course of action <em>3 pts</em></span><textarea id="labRecommendation" maxlength="4000" placeholder="What should management do next? Give a specific recommendation and defend it using the law and the tradeoffs revealed by the simulation."></textarea></label>
-    </div>
-    <div class="mvp-lab-rubric"><b>10-point rubric</b><span>Issue spotting 2</span><span>Legal application 3</span><span>Stakeholder analysis 2</span><span>Recommendation 3</span></div>
-    <div class="mvp-lab-note"><strong>Official submission:</strong> your name, La Salle email, group simulation record, and individual analysis will be saved securely for instructor grading. The public GitHub site does not display student submissions.</div>
-    <div class="mvp-complete-actions"><button class="primary" id="labSubmit" disabled>SUBMIT LEGAL DECISION LAB</button><button id="labDownload" disabled>DOWNLOAD BACKUP</button><button id="labClear">CLEAR FOR NEXT STUDENT</button></div>
-    <div id="labReady" class="mvp-lab-ready">Complete the group run and all individual fields to submit.</div>
-    <div id="labReceipt" class="mvp-lab-receipt hidden"></div>`;
+  const lab=document.createElement('section');lab.id='mvpLabWrap';lab.className='mvp-lab-wrap mvp-handoff-wrap';
+  lab.innerHTML=`<div class="mvp-kicker">LEGAL DECISION LAB 1 · INDIVIDUAL HANDOFF</div>
+    <h3>Finish the group run, then move to individual devices.</h3>
+    <p class="mvp-lab-intro">After your group completes the Board Defense, this screen will save the shared simulation record and generate a short pod code, QR code, and direct link. Each student then completes the graded legal memo independently on their own device.</p>
+    <div id="handoffStatus" class="mvp-lab-ready">Complete the Year Two decision and defense to generate your pod handoff.</div>
+    <div id="handoffContent"></div>`;
   area.appendChild(lab);
 
   document.getElementById('mvpComplete').onclick=completeRun;
   document.getElementById('mvpCopySummary').onclick=()=>copyText(buildDebrief());
-  document.getElementById('labSubmit').onclick=submitLabOfficial;
-  document.getElementById('labDownload').onclick=downloadLabSubmission;
-  document.getElementById('labClear').onclick=clearLabSubmission;
-  ['labFirstName','labLastName','labEmail','labCrisis','labIssue','labLaw','labStakeholder','labRecommendation'].forEach(id=>{
-    document.getElementById(id)?.addEventListener('input',updateLabGate);
-    document.getElementById(id)?.addEventListener('change',updateLabGate);
-  });
-  updateCompletionGate();updateLabGate();
+  updateCompletionGate();
+  if(state.mvp?.joinCode)renderHandoff();
+
 }
 function updateCompletionGate(){const b=document.getElementById('mvpComplete');if(!b)return;const reason=(document.getElementById('yearReason')?.value||'').trim();b.disabled=!(state.yearDecision&&reason.length>=30)}
-function completeRun(){
+function individualUrl(code){
+  const u=new URL('./individual/',location.href);
+  u.search='';u.hash='';u.searchParams.set('code',code);
+  return u.toString();
+}
+async function saveGroupSession(){
+  const status=document.getElementById('handoffStatus');
+  if(status){status.textContent='Saving the completed pod run…';status.classList.remove('ready');}
+  const res=await fetch(SESSION_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    sessionId:state.mvp.sessionId,teamName:state.team,startedAt:state.mvp.startedAt,completedAt:state.mvp.completedAt,simulationPayload:sessionPayload()
+  })});
+  const result=await res.json().catch(()=>({}));
+  if(!res.ok)throw new Error(result.error||'The pod handoff could not be created.');
+  state.mvp.joinCode=result.joinCode;
+  save();
+  renderHandoff();
+  return result.joinCode;
+}
+function drawHandoffQr(url){
+  const canvas=document.getElementById('handoffQr');if(!canvas)return;
+  if(window.QRCode&&typeof window.QRCode.toCanvas==='function'){
+    window.QRCode.toCanvas(canvas,url,{width:190,margin:1,errorCorrectionLevel:'M'},err=>{
+      if(err){canvas.replaceWith(Object.assign(document.createElement('div'),{className:'handoff-qr-fallback',textContent:'QR unavailable — use the pod code or direct link.'}));}
+    });
+  }else{
+    canvas.replaceWith(Object.assign(document.createElement('div'),{className:'handoff-qr-fallback',textContent:'QR unavailable — use the pod code or direct link.'}));
+  }
+}
+function renderHandoff(errorMessage=''){
+  const host=document.getElementById('handoffContent'),status=document.getElementById('handoffStatus');if(!host)return;
+  const code=state.mvp?.joinCode;
+  if(!code){
+    host.innerHTML=`<div class="handoff-error"><b>Pod handoff not ready.</b><span>${safe(errorMessage||'Try saving the completed group run again.')}</span><button type="button" id="handoffRetry">TRY AGAIN</button></div>`;
+    if(status){status.textContent='Your group decisions are still saved on this device.';status.classList.remove('ready');}
+    const retry=document.getElementById('handoffRetry');if(retry)retry.onclick=async()=>{retry.disabled=true;try{await saveGroupSession();showCompletion()}catch(e){renderHandoff(e.message)}};
+    return;
+  }
+  const url=individualUrl(code);
+  if(status){status.textContent='✓ Group run saved. Everyone may now switch to an individual device.';status.classList.add('ready');}
+  host.innerHTML=`<div class="handoff-grid">
+    <div class="handoff-code-panel">
+      <span>POD CODE</span><strong>${safe(code)}</strong>
+      <p>Every member of this pod uses the same code.</p>
+      <div class="handoff-actions"><button type="button" id="handoffCopyCode">COPY CODE</button><button type="button" id="handoffCopyLink">COPY LINK</button></div>
+    </div>
+    <div class="handoff-qr-panel"><canvas id="handoffQr" width="190" height="190" aria-label="QR code for the individual Legal Decision Lab"></canvas><small>Scan to open the individual assessment</small></div>
+    <div class="handoff-next-panel">
+      <span>INDIVIDUAL PHASE</span>
+      <h4>Students now use their own devices.</h4>
+      <ol><li>Scan the QR, open the link, or enter <b>${safe(code)}</b>.</li><li>Confirm this pod's group record.</li><li>Complete and submit the 10-point memo independently.</li></ol>
+      <a class="handoff-open" href="${safe(url)}" target="_blank" rel="noopener">OPEN INDIVIDUAL ASSESSMENT ↗</a>
+    </div>
+  </div>`;
+  document.getElementById('handoffCopyCode').onclick=()=>copyText(code);
+  document.getElementById('handoffCopyLink').onclick=()=>copyText(url);
+  drawHandoffQr(url);
+}
+async function completeRun(){
   const reason=(document.getElementById('yearReason')?.value||'').trim();if(!state.yearDecision||reason.length<30)return;
-  state.mvp.completedAt=nowIso();state.mvp.yearReason=reason;journal('completion','Board defense completed',`${state.yearDecision} · ${reason}`);save();showCompletion();updateLabGate();
+  const btn=document.getElementById('mvpComplete');if(btn){btn.disabled=true;btn.textContent='SAVING GROUP RUN…';}
+  state.mvp.completedAt=state.mvp.completedAt||nowIso();
+  state.mvp.yearReason=reason;
+  journal('completion','Board defense completed',`${state.yearDecision} · ${reason}`);
+  save();
+  try{
+    await saveGroupSession();
+    if(btn)btn.textContent='GROUP RUN COMPLETE';
+    showCompletion();
+  }catch(e){
+    if(btn){btn.disabled=false;btn.textContent='RETRY GROUP HANDOFF';}
+    renderHandoff(e.message||'The pod handoff could not be created.');
+  }
 }
 function showCompletion(){
   let modal=document.getElementById('mvpCompletion');if(!modal){modal=document.createElement('div');modal.id='mvpCompletion';modal.className='mvp-completion';document.body.appendChild(modal)}
-  const leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]);
-  modal.innerHTML=`<div class="mvp-completion-card"><span class="seal">GROUP RUN COMPLETE</span><h2>${archetype()}</h2><p>${safe(state.team)} completed the standardized Legal Decision Lab run in ${elapsed()}.</p><div class="mvp-completion-grid"><div><small>Architecture</small><b>${architectureName()}</b></div><div><small>Legal resilience</small><b>${state.metrics.resilience}/100</b></div><div><small>Salience leader</small><b>${leader.role}</b></div><div><small>Publisher dependency</small><b>${publisherDependency()}%</b></div><div><small>Fixed crises</small><b>3 / 3 complete</b></div><div><small>Session</small><b>${state.mvp.sessionId}</b></div></div><div class="mvp-complete-actions"><button class="primary" id="mvpModalClose">CONTINUE TO INDIVIDUAL LAB</button><button id="mvpModalCopy">COPY GROUP DEBRIEF</button></div></div>`;
+  const leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]),code=state.mvp?.joinCode,url=code?individualUrl(code):'';
+  modal.innerHTML=`<div class="mvp-completion-card"><span class="seal">GROUP RUN COMPLETE</span><h2>${archetype()}</h2><p>${safe(state.team)} completed the standardized Legal Decision Lab run in ${elapsed()}.</p><div class="mvp-completion-grid"><div><small>Architecture</small><b>${architectureName()}</b></div><div><small>Legal resilience</small><b>${state.metrics.resilience}/100</b></div><div><small>Salience leader</small><b>${leader.role}</b></div><div><small>Publisher dependency</small><b>${publisherDependency()}%</b></div><div><small>Fixed crises</small><b>3 / 3 complete</b></div><div><small>Pod code</small><b>${safe(code||'Saving…')}</b></div></div>${code?`<div class="handoff-modal-code"><small>EVERY STUDENT NOW MOVES TO AN INDIVIDUAL DEVICE</small><strong>${safe(code)}</strong><span>Scan the QR or enter this code on the individual assessment page.</span></div>`:''}<div class="mvp-complete-actions">${code?`<a class="primary handoff-modal-open" href="${safe(url)}" target="_blank" rel="noopener">OPEN INDIVIDUAL ASSESSMENT ↗</a>`:''}<button id="mvpModalClose">SHOW HANDOFF SCREEN</button><button id="mvpModalCopy">COPY GROUP DEBRIEF</button></div></div>`;
   modal.classList.add('open');
   document.getElementById('mvpModalCopy').onclick=()=>copyText(buildDebrief());
-  document.getElementById('mvpModalClose').onclick=()=>{modal.classList.remove('open');document.getElementById('mvpLabWrap')?.scrollIntoView({behavior:'smooth',block:'start'})};
+  document.getElementById('mvpModalClose').onclick=()=>{modal.classList.remove('open');renderHandoff();document.getElementById('mvpLabWrap')?.scrollIntoView({behavior:'smooth',block:'start'})};
 }
 function sessionPayload(){
   const leader=stakeholderDefs.find(s=>s.id===salienceLeader()[0]);
