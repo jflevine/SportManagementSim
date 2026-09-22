@@ -1,0 +1,51 @@
+// Integration exercise against the deployed service, using fictional identities only.
+// Run: ARENA_KEY_FILE=/private/path.json node tests/classroom.mjs
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {BRANDS,OPTIONS,RUBRIC,marketResults,scoreCampaign,validateCampaign,budget} from '../model.mjs';
+import {randomBytes} from 'node:crypto';
+const adminKey=JSON.parse(fs.readFileSync(process.env.ARENA_KEY_FILE)).key;
+const endpoint='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm343-marketing-arena';
+let code='',checks=0;
+async function call(action,body={},auth={adminKey},fail=false){const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,code,...auth,...body})});let d=await r.json();if(fail){assert.ok(d.error,`${action} should fail`);checks++;return d;}assert.ok(r.ok&&!d.error,`${action}: ${d.error}`);return d;}
+const room=await call('create',{label:'REHEARSAL · 24 fictional students'});code=room.code;console.log('Created rehearsal',code);
+fs.writeFileSync(process.env.ARENA_TEST_STATE||'/tmp/arena-test-state.json',JSON.stringify({code,adminKey}));
+const students=BRANDS.flatMap((b,i)=>Array.from({length:4},(_,j)=>({name:`Test ${i+1}-${j+1}`,email:`arena-test-${i+1}-${j+1}@example.invalid`,team:b.id,token:randomBytes(32).toString('hex')})));
+await Promise.all(students.map(async s=>{const d=await call('join',s,{token:s.token});s.id=d.me.id;assert.equal(d.me.team,s.team);checks++;}));
+console.log('24 concurrent joins persisted');
+let state=await call('state');assert.equal(state.students.length,24);checks++;
+let publicView=await call('state',{},{});assert.ok(!JSON.stringify(publicView).includes('@example.invalid'));assert.ok(!publicView.students&&!publicView.privateTeams);checks+=2;
+await call('advance');
+await call('advance',{},undefined,true);
+await call('grade',{level:'group',target:'pulse',scores:{}},{token:students[0].token},true);
+await call('initial',{position:{audience:'players',objective:'awareness',text:'I would prioritize a useful experience for players because their social and competitive motivations connect with this brand. I would make the campaign participatory and preserve resources for a change in conditions.'}},{token:students[0].token});
+let early=await call('state',{}, {token:students[0].token});assert.ok(!early.peers&&!early.team);checks++;
+await Promise.all(students.slice(1).map(s=>call('initial',{position:{audience:'players',objective:BRANDS.find(b=>b.id===s.team).objective,text:'I would prioritize an audience that benefits from the offering and explain why this supports the board objective. A useful contribution and a credible creator should connect the brand to a reason to participate beyond a one-time discount.'}},{token:s.token})));
+await call('advance');
+let one=await call('state',{}, {token:students[0].token});assert.equal(one.peers.length,4);assert.ok(one.peers.every(p=>!p.email&&!p.tokenHash));assert.ok(!JSON.stringify(one).includes('Test 2-'));assert.equal(one.intel.length,2);checks+=4;
+await call('advance');
+const base={audience:'players',objective:'awareness',tone:'bold',product:'competition',price:'free',place:'website',promotion:'challenge',pr:'listen',channel:'twitch',creator:'community',before:'invite',during:'participate',after:'return',strategy:'We will use esports to build awareness among players by supporting a participatory competition with a useful brand contribution.',behavior:'Register for the competition and return to a follow-up community event.',audienceReason:'Players value socialization and competition. These motivations support an offering that connects our brand to a shared activity.',mixReason:'Free entry lowers the barrier to our competition. Website registration gives a clear distribution route, while a participatory challenge and listening session make the Five Ps support one another.',activationReason:'The creator understands players and invites participation on Twitch before the event, then supports a follow-up community program.',authReason:'We provide actual participation and publish our response to feedback. We avoid assuming all gamers want the same things.',riskReason:'We sacrifice broad paid reach for participation. The board wants awareness, but communities want value; transparent objectives and follow-up help reconcile that tension.',marketingType:'This primarily markets through esports to support a consumer brand, while the funded competition also markets an esports experience.'};
+let campaigns=BRANDS.map((b,i)=>({...base,objective:b.objective,audience:b.audiences[0],tone:b.tone,product:b.products[0],place:b.places[0],creator:['community','analyst','lifestyle','emerging','community','lifestyle'][i],channel:['twitch','youtube','short','discord','twitch','youtube'][i]}));
+for(const c of campaigns){validateCampaign(c);assert.ok(budget(c)<=100);checks++;}
+await Promise.all(BRANDS.map(async(b,i)=>{let t=state.privateTeams.find(t=>t.id===b.id);let s=students.find(s=>s.id===t.editor);let v=await call('state',{}, {token:s.token});await call('draft',{campaign:campaigns[i],draftVersion:v.team.draftVersion},{token:s.token});v=await call('state',{}, {token:s.token});let teammate=students.find(x=>x.team===b.id&&x.id!==s.id);await call('campaign',{campaign:campaigns[i],draftVersion:v.team.draftVersion},{token:teammate.token},true);await call('campaign',{campaign:campaigns[i],draftVersion:v.team.draftVersion-1},{token:s.token},true);await call('campaign',{campaign:campaigns[i],draftVersion:v.team.draftVersion},{token:s.token});}));
+console.log('Six campaigns locked; recorder and stale-write checks passed');
+state=await call('state');assert.equal(state.results.length,6);assert.ok(state.results.every(r=>r.power>=0&&r.power<=100));assert.ok(state.results.every((r,i,rs)=>i===0||r.power<=rs[i-1].power));checks+=3;
+const solo=scoreCampaign(campaigns[0],BRANDS[0],[campaigns[0]]),crowded=scoreCampaign(campaigns[0],BRANDS[0],[campaigns[0],{...campaigns[0]},{...campaigns[0]}]);assert.ok(crowded.metrics.Reach<solo.metrics.Reach);checks++;
+await call('advance');state=await call('state');assert.equal(state.initialResults.length,6);checks++;
+await call('advance');
+state=await call('state');
+await Promise.all(BRANDS.map(async(b,i)=>{const t=state.privateTeams.find(t=>t.id===b.id),s=students.find(s=>s.id===t.editor);const final={...campaigns[i],response:'stay',adaptationReason:'The new information makes credibility more valuable, but our original contribution already serves the audience. We preserve the strategy and accept lower reach because abandoning the relationship would sacrifice authenticity. We monitor engagement and the board objective.'};await call('campaign',{campaign:final,draftVersion:t.draftVersion},{token:s.token});}));
+await call('advance');state=await call('state');assert.equal(state.phase,6);assert.equal(state.privateTeams.filter(t=>t.final).length,6);checks+=2;
+await call('reveal');publicView=await call('state',{},{});assert.equal(publicView.choices.length,6);assert.ok(!JSON.stringify(publicView).includes(base.strategy));assert.ok(!JSON.stringify(publicView).includes('@example.invalid'));checks+=3;
+await call('advance');
+await Promise.all(students.map(s=>call('defense',{text:'I would keep the coherent connection between our audience motivation and the participation we offered. The result suggests that trust supported engagement, but the simulation cannot establish real sales. I would change the primary channel if the crowding evidence continued, while preserving the distribution route and the board objective. This trades broad reach for a more sustained relationship.'},{token:s.token})));
+await call('advance');
+await Promise.all(BRANDS.map(b=>call('grade',{level:'group',target:b.id,scores:Object.fromEntries(RUBRIC.filter(r=>r.level==='group').map(r=>[r.id,r.max])),comment:'Synthetic test: all group rubric categories scored.'})));
+await Promise.all(students.map(s=>call('grade',{level:'individual',target:s.id,scores:{initial:8,defense:12},comment:'Synthetic test: independent evidence assessed.'})));
+state=await call('state');assert.equal(state.students.filter(s=>s.defense).length,24);assert.ok(state.students.every(s=>s.grades.initial===8&&s.grades.defense===12));checks+=2;
+await call('grade',{level:'individual',target:students[0].id,scores:{initial:11,defense:12}},undefined,true);
+await call('state',{}, {token:randomBytes(32).toString('hex')},true);
+await call('state',{}, {adminKey:'wrong-key'},true);
+publicView=await call('state',{},{});assert.ok(!JSON.stringify(publicView).includes('tokenHash'));assert.ok(!JSON.stringify(publicView).includes('@example.invalid'));assert.ok(!JSON.stringify(state).includes('tokenHash'));checks+=3;
+fs.writeFileSync(process.env.ARENA_TEST_STATE||'/tmp/arena-test-state.json',JSON.stringify({code,students,state},null,2));
+console.log(JSON.stringify({passed:true,checks,room:code,students:24,teams:6,phase:state.phase,marketPowers:state.results.map(x=>({brand:x.brand,power:x.power})),academicTotal:95}));
