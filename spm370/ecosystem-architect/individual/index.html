@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1730">
+<title>SPM 370 · Legal Decision Lab 1 · Individual Assessment</title>
+<meta name="description" content="Individual assessment for SPM 370 Legal Decision Lab 1.">
+<link rel="stylesheet" href="individual.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <span class="course">SPM 370 · ESPORTS, VIDEO GAMES, AND THE LAW</span>
+    <h1>Legal Decision Lab 1</h1>
+    <p>Individual legal decision memo</p>
+  </div>
+  <span class="phase">INDIVIDUAL PHASE</span>
+</header>
+
+<main>
+  <section id="joinView" class="join-card">
+    <div class="step">1</div>
+    <div class="join-copy">
+      <span class="eyebrow">JOIN YOUR POD RUN</span>
+      <h2>Enter the code from your group's completed simulation.</h2>
+      <p>This connects your individual analysis to the decisions your pod made in Ecosystem Architect. The group record is read-only.</p>
+      <form id="joinForm">
+        <label for="podCode">Pod code</label>
+        <div class="join-row">
+          <input id="podCode" name="podCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="FALCON-7KM" required>
+          <button id="joinBtn" class="primary" type="submit">Load Group Run</button>
+        </div>
+        <div id="joinStatus" class="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="assessmentView" hidden>
+    <section class="group-banner">
+      <div>
+        <span class="eyebrow">GROUP RUN LOADED</span>
+        <h2 id="loadedTeam">—</h2>
+        <p>Pod code <strong id="loadedCode">—</strong> · Session <span id="loadedSession">—</span></p>
+      </div>
+      <button id="changePodBtn" class="secondary" type="button">Change Pod</button>
+    </section>
+
+    <section class="group-summary">
+      <div><span>Architecture</span><strong id="summaryArchitecture">—</strong></div>
+      <div><span>Board priorities</span><strong id="summaryPriorities">—</strong></div>
+      <div><span>Publisher-linked revenue</span><strong id="summaryDependency">—</strong></div>
+      <div><span>Year Two decision</span><strong id="summaryYear">—</strong></div>
+    </section>
+
+    <section class="instructions">
+      <span class="step">2</span>
+      <div>
+        <span class="eyebrow">YOUR WORK STARTS HERE</span>
+        <h2>Complete this section independently.</h2>
+        <p>Your pod's simulation provides the shared factual record. Your grade comes from your own issue spotting, legal application, stakeholder analysis, and recommendation.</p>
+      </div>
+    </section>
+
+    <form id="assessmentForm">
+      <section class="identity card">
+        <div class="section-head">
+          <div><span class="eyebrow">STUDENT</span><h3>Identify your submission</h3></div>
+          <span class="points">Required</span>
+        </div>
+        <div class="identity-grid">
+          <label><span>First name</span><input id="firstName" maxlength="60" autocomplete="given-name" required></label>
+          <label><span>Last name</span><input id="lastName" maxlength="60" autocomplete="family-name" required></label>
+          <label class="wide"><span>La Salle email</span><input id="email" type="email" maxlength="120" autocomplete="email" placeholder="student@lasalle.edu" required></label>
+        </div>
+      </section>
+
+      <section class="case-card card">
+        <div class="section-head">
+          <div><span class="eyebrow">SELECT YOUR CRISIS</span><h3>Choose one crisis from your pod's run</h3></div>
+        </div>
+        <div id="crisisChoices" class="crisis-choices"></div>
+        <div id="crisisBrief" class="crisis-brief" hidden></div>
+      </section>
+
+      <section class="response-card card">
+        <div class="section-head">
+          <div><span class="eyebrow">1 · ISSUE SPOTTING</span><h3>What is legally significant here?</h3></div>
+          <span class="points">2 pts</span>
+        </div>
+        <p class="prompt">Identify the one or two legally significant issues raised by this crisis. Be specific rather than simply naming a broad area of law.</p>
+        <textarea id="issueSpotting" maxlength="2000" placeholder="Identify the legal issue(s)…" required></textarea>
+        <div class="counter" data-count-for="issueSpotting">0 characters · minimum 20</div>
+      </section>
+
+      <section class="response-card card">
+        <div class="section-head">
+          <div><span class="eyebrow">2 · LEGAL PRINCIPLE + APPLICATION</span><h3>Apply the law or legal framework to these facts.</h3></div>
+          <span class="points">3 pts</span>
+        </div>
+        <p class="prompt">State the relevant legal principle, doctrine, contractual concept, or rule and explain how it applies to the facts your group faced.</p>
+        <textarea id="legalApplication" maxlength="4000" placeholder="State the principle and apply it to the facts…" required></textarea>
+        <div class="counter" data-count-for="legalApplication">0 characters · minimum 40</div>
+      </section>
+
+      <section class="response-card card">
+        <div class="section-head">
+          <div><span class="eyebrow">3 · STAKEHOLDER ANALYSIS</span><h3>Whose rights, leverage, and risks matter?</h3></div>
+          <span class="points">2 pts</span>
+        </div>
+        <p class="prompt">Identify the stakeholders who matter most and explain the rights, power, risks, or interests that make them important.</p>
+        <textarea id="stakeholderAnalysis" maxlength="3000" placeholder="Analyze the relevant stakeholders…" required></textarea>
+        <div class="counter" data-count-for="stakeholderAnalysis">0 characters · minimum 20</div>
+      </section>
+
+      <section class="response-card card">
+        <div class="section-head">
+          <div><span class="eyebrow">4 · RECOMMENDED COURSE OF ACTION</span><h3>What should management do next?</h3></div>
+          <span class="points">3 pts</span>
+        </div>
+        <p class="prompt">Give a specific recommendation and defend it using the legal analysis and the tradeoffs revealed by the simulation.</p>
+        <textarea id="recommendation" maxlength="4000" placeholder="Recommend a course of action and defend it…" required></textarea>
+        <div class="counter" data-count-for="recommendation">0 characters · minimum 40</div>
+      </section>
+
+      <section class="submit-card">
+        <div>
+          <strong>10-point Legal Decision Lab</strong>
+          <span>Issue spotting 2 · Legal application 3 · Stakeholder analysis 2 · Recommendation 3</span>
+        </div>
+        <button id="submitBtn" class="primary" type="submit" disabled>Submit Legal Decision Lab</button>
+      </section>
+      <div id="formStatus" class="status submit-status" aria-live="polite">Complete all required fields to submit.</div>
+    </form>
+  </section>
+
+  <section id="receiptView" class="receipt-card" hidden>
+    <span class="eyebrow">SUBMISSION SAVED</span>
+    <h2>Your Legal Decision Lab has been submitted.</h2>
+    <p id="receiptStudent"></p>
+    <div class="receipt-box"><span>RECEIPT</span><strong id="receiptCode"></strong></div>
+    <p>Keep this receipt until your grade is posted. No LMS upload is required.</p>
+  </section>
+</main>
+<script src="individual.js"></script>
+</body>
+</html>
