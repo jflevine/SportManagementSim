@@ -329,7 +329,7 @@ function renderGrader(s){
   els.studentName.textContent=(s.first_name||"")+" "+(s.last_name||"");
   els.studentIdentity.textContent=(s.email||"")+" · Receipt "+(s.receipt||"—");
   els.chosenCrisis.textContent=CRISIS[s.chosen_crisis]||s.chosen_crisis||"—";
-  els.teamName.textContent=s.team_name||"—";
+  els.teamName.textContent=(s.team_name||"—")+(s.join_code?" · "+s.join_code:"");
   els.submittedAt.textContent=formatDate(s.submitted_at);
   els.duration.textContent=s.duration_minutes===null||s.duration_minutes===undefined?"—":Number(s.duration_minutes).toFixed(1)+" min";
   els.graderNotes.value=state.draft.grader_notes||"";
@@ -561,12 +561,12 @@ function csvCell(value){
 }
 function exportCsv(){
   const rows=[[
-    "Last Name","First Name","Email","Team","Chosen Crisis",
+    "Last Name","First Name","Email","Team","Pod Code","Chosen Crisis",
     "Issue Spotting /2","Legal Application /3","Stakeholder Analysis /2","Recommendation /3",
     "Total /10","Grader Notes","Graded At","Submitted At","Receipt"
   ]];
   state.submissions.forEach(s=>rows.push([
-    s.last_name,s.first_name,s.email,s.team_name,CRISIS[s.chosen_crisis]||s.chosen_crisis,
+    s.last_name,s.first_name,s.email,s.team_name,s.join_code,CRISIS[s.chosen_crisis]||s.chosen_crisis,
     s.issue_spotting_score,s.legal_application_score,s.stakeholder_analysis_score,s.recommendation_score,
     s.total_score,s.grader_notes,s.graded_at,s.submitted_at,s.receipt
   ]));
