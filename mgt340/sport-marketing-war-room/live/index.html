@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07172d">
+<title>Jersey Patch War Room · Live Class Board</title>
+<style>
+:root{--navy:#07172d;--navy2:#0c2340;--ink:#15233a;--muted:#6c788b;--paper:#f4f2eb;--white:#fff;--gold:#e4b84d;--gold2:#f5d77f;--line:#dce2ea;--soft:#eef2f7;--teal:#2c8f7b;--red:#a64b48;--shadow:0 18px 46px rgba(7,23,45,.12);--radius:20px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(180deg,#f8f9fb,#eef1f5);min-height:100vh}button,input{font:inherit}button{cursor:pointer}.top{background:var(--navy);color:#fff;border-bottom:5px solid var(--gold);position:sticky;top:0;z-index:10}.top-inner{max-width:1500px;margin:auto;padding:18px 28px;display:flex;gap:24px;align-items:center;justify-content:space-between}.brand small{display:block;text-transform:uppercase;letter-spacing:.13em;color:var(--gold2);font-weight:900;font-size:.68rem}.brand h1{font-family:Georgia,"Times New Roman",serif;margin:3px 0 0;font-size:clamp(1.7rem,3vw,2.7rem);letter-spacing:-.025em}.status{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.pill{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);padding:7px 10px;border-radius:999px;font-size:.76rem;font-weight:750}.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#5ad0a8;margin-right:6px;box-shadow:0 0 0 4px rgba(90,208,168,.12)}main{max-width:1500px;margin:auto;padding:24px 28px 60px}.controls{background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 8px 22px rgba(7,23,45,.05);display:grid;grid-template-columns:minmax(220px,.75fr) auto 1fr auto;gap:10px;align-items:center}.field{display:flex;align-items:center;gap:8px}.field label{text-transform:uppercase;letter-spacing:.08em;font-size:.65rem;font-weight:900;color:#657188}.input{width:100%;border:1px solid #cfd7e2;border-radius:10px;padding:10px 12px;min-height:42px;font-weight:800;text-transform:uppercase}.btn{border:0;border-radius:10px;min-height:42px;padding:9px 13px;font-weight:850}.btn-gold{background:var(--gold);color:#10223a}.btn-dark{background:var(--navy);color:#fff}.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}.tabs{display:flex;justify-content:flex-end;gap:6px}.tab{border:1px solid var(--line);background:#f7f9fb;padding:9px 12px;border-radius:9px;font-size:.78rem;font-weight:850;color:#58677a}.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px 17px}.stat small{text-transform:uppercase;letter-spacing:.1em;color:#748195;font-size:.62rem;font-weight:900}.stat strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:2rem;margin-top:4px}.stat span{font-size:.75rem;color:var(--muted)}.empty{background:#fff;border:1px dashed #bdc8d6;border-radius:22px;min-height:400px;display:grid;place-items:center;text-align:center;padding:40px;color:var(--muted)}.empty h2{font-family:Georgia,"Times New Roman",serif;color:var(--ink);font-size:2rem;margin:0 0 8px}.view{display:none}.view.active{display:block}.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:15px}.podium-card{background:var(--navy);color:#fff;border-radius:19px;padding:19px;position:relative;overflow:hidden;box-shadow:var(--shadow);min-height:175px}.podium-card:after{content:attr(data-rank);position:absolute;right:13px;bottom:-22px;font-family:Georgia,"Times New Roman",serif;font-weight:900;font-size:8rem;color:rgba(255,255,255,.06)}.podium-card:nth-child(1){border-top:5px solid var(--gold)}.podium-card small{text-transform:uppercase;letter-spacing:.1em;color:#aebfd4;font-size:.64rem;font-weight:900}.podium-card h3{font-family:Georgia,"Times New Roman",serif;margin:7px 0 4px;font-size:1.7rem}.podium-card .score{font-family:Georgia,"Times New Roman",serif;font-size:3rem;color:var(--gold2);line-height:1}.podium-card p{font-size:.78rem;color:#d7e0ed;margin:10px 0 0;line-height:1.4}.table{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden}.row{display:grid;grid-template-columns:64px 1.3fr 100px 1.2fr 1.2fr 115px;gap:12px;align-items:center;padding:13px 16px;border-bottom:1px solid #e8edf3}.row:last-child{border-bottom:0}.row.head{background:#f3f6f9;text-transform:uppercase;letter-spacing:.08em;font-size:.62rem;font-weight:900;color:#6e7b8e}.rank{font-family:Georgia,"Times New Roman",serif;font-size:1.35rem;font-weight:900}.pod b{display:block}.pod span,.muted{font-size:.72rem;color:var(--muted)}.score-badge{display:inline-flex;align-items:baseline;gap:2px;font-family:Georgia,"Times New Roman",serif;font-size:1.8rem;font-weight:900}.score-badge small{font-family:Inter,sans-serif;font-size:.66rem;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 6px 17px rgba(7,23,45,.05)}.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.card h3{font-family:Georgia,"Times New Roman",serif;font-size:1.4rem;margin:0}.card .dept{font-size:.74rem;color:var(--muted);margin-top:3px}.card-score{background:var(--navy);color:var(--gold2);font-family:Georgia,"Times New Roman",serif;font-weight:900;font-size:1.7rem;border-radius:12px;padding:7px 10px}.pair{display:grid;grid-template-columns:100px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid #edf0f4;font-size:.77rem;line-height:1.35}.pair:last-child{border-bottom:0}.pair small{text-transform:uppercase;letter-spacing:.07em;font-size:.59rem;font-weight:900;color:#758196}.pair b{font-weight:750}.fourps{margin-top:12px;border-top:3px solid var(--gold);padding-top:7px}.boardroom{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.board-card{background:#fff;border:1px solid var(--line);border-radius:19px;overflow:hidden}.board-head{background:var(--navy);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;gap:12px}.board-head h3{font-family:Georgia,"Times New Roman",serif;margin:0;font-size:1.5rem}.board-head p{margin:3px 0 0;color:#c9d5e3;font-size:.72rem}.board-head .big-score{font-family:Georgia,"Times New Roman",serif;color:var(--gold2);font-size:2.6rem;line-height:1}.board-body{padding:15px 18px}.shock{margin-top:10px;padding:11px 12px;background:#fff7f6;border-left:4px solid var(--red);border-radius:0 9px 9px 0;font-size:.76rem;line-height:1.45}.footer-note{text-align:center;color:#7b8797;font-size:.68rem;margin-top:18px}.pulse{animation:pulse .65s ease}@keyframes pulse{50%{transform:scale(1.015)}}@media(max-width:1000px){.controls{grid-template-columns:1fr 1fr}.tabs{justify-content:flex-start}.summary{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.boardroom{grid-template-columns:1fr}.row{grid-template-columns:50px 1fr 80px 1fr}.row>*:nth-child(5),.row>*:nth-child(6){display:none}}@media(max-width:650px){.top-inner{align-items:flex-start;flex-direction:column}.status{justify-content:flex-start}.controls{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.summary,.podium,.cards{grid-template-columns:1fr}.row{grid-template-columns:40px 1fr 70px}.row>*:nth-child(4){display:none}main{padding-left:14px;padding-right:14px}}@media print{.controls,.status{display:none}.top{position:static}.view{display:block!important}.podium-card,.board-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="brand"><small>MGT 340 · Instructor Display</small><h1>Jersey Patch War Room · Live Class Board</h1></div><div class="status"><span class="pill"><span class="live-dot"></span><span id="connectionText">Live</span></span><span class="pill" id="sessionPill">Session —</span><span class="pill" id="podCount">0 pods</span><span class="pill" id="refreshTime">Waiting for submissions</span></div></div></header>
+<main>
+<section class="controls">
+  <div class="field"><label for="sessionInput">Session</label><input id="sessionInput" class="input" maxlength="32" autocomplete="off"></div>
+  <button id="loadBtn" class="btn btn-gold">Load Session</button>
+  <div class="tabs" role="tablist"><button class="tab active" data-view="leaderboard">Leaderboard</button><button class="tab" data-view="strategies">Strategy View</button><button class="tab" data-view="boardroom">Boardroom View</button></div>
+  <button id="copyBtn" class="btn btn-ghost">Copy Student Link</button>
+</section>
+<section class="summary">
+  <div class="stat"><small>Pods submitted</small><strong id="statPods">0</strong><span>latest submission per pod</span></div>
+  <div class="stat"><small>Class average</small><strong id="statAvg">—</strong><span>marketing coherence score</span></div>
+  <div class="stat"><small>Most common target</small><strong id="statTarget" style="font-size:1.3rem">—</strong><span>across current pod strategies</span></div>
+  <div class="stat"><small>Most common KPI</small><strong id="statKpi" style="font-size:1.08rem">—</strong><span>what teams chose to prove success</span></div>
+</section>
+<div id="empty" class="empty"><div><h2>Waiting for the first pod</h2><p>Keep this page on the projector. New submissions appear automatically.</p></div></div>
+<section id="leaderboard" class="view active"><div id="podium" class="podium"></div><div id="leaderTable" class="table"></div></section>
+<section id="strategies" class="view"><div id="strategyCards" class="cards"></div></section>
+<section id="boardroom" class="view"><div id="boardCards" class="boardroom"></div></section>
+<p class="footer-note">Displays pod-level classroom decisions only. No student names or email addresses are collected.</p>
+</main>
+<script>
+(()=>{'use strict';
+const SUPABASE_URL='https://havsvkhddvdbzbsmhqbr.supabase.co';
+const SUPABASE_KEY='sb_publishable_zHiGA-f5me-QLryF2P27IQ_S1XQsX5V';
+const TABLE='mgt340_marketing_war_room_submissions';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const normalize=v=>(v||'').toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,32);
+const today=()=>{const d=new Date(),mm=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return 'MGT340-'+mm+dd};
+let session=normalize(new URLSearchParams(location.search).get('session'))||today(),lastSignature='',pollTimer=null;
+$('#sessionInput').value=session;
+function countMode(rows,key){const m=new Map();rows.forEach(r=>m.set(r[key],(m.get(r[key])||0)+1));return [...m.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'}
+function latestPods(rows){const m=new Map();for(const r of rows){const k=(r.pod_name||'').trim().toLowerCase();if(k&&!m.has(k))m.set(k,r)}return [...m.values()].sort((a,b)=>b.score-a.score||new Date(a.submitted_at)-new Date(b.submitted_at))}
+function studentUrl(){const u=new URL('../',location.href);u.searchParams.set('session',session);return u.href}
+async function load(){
+  try{
+    $('#connectionText').textContent='Live';
+    const u=new URL(SUPABASE_URL+'/rest/v1/'+TABLE);
+    u.searchParams.set('session_code','eq.'+session);
+    u.searchParams.set('select','*');
+    u.searchParams.set('order','submitted_at.desc');
+    u.searchParams.set('limit','200');
+    const res=await fetch(u,{headers:{apikey:SUPABASE_KEY}});
+    if(!res.ok)throw new Error(await res.text());
+    const rows=await res.json(),pods=latestPods(rows);
+    const sig=pods.map(x=>x.id).join('|');
+    if(sig!==lastSignature){render(pods);lastSignature=sig;document.querySelector('main').classList.remove('pulse');void document.querySelector('main').offsetWidth;document.querySelector('main').classList.add('pulse')}
+    $('#refreshTime').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'});
+  }catch(err){console.error(err);$('#connectionText').textContent='Connection issue';$('#refreshTime').textContent='Retrying…'}
+}
+function render(pods){
+  $('#sessionPill').textContent='Session '+session;$('#podCount').textContent=pods.length+' pod'+(pods.length===1?'':'s');$('#statPods').textContent=pods.length;
+  $('#empty').style.display=pods.length?'none':'grid';
+  document.querySelectorAll('.view').forEach(v=>{if(pods.length)v.style.removeProperty('display')});
+  if(!pods.length){$('#statAvg').textContent='—';$('#statTarget').textContent='—';$('#statKpi').textContent='—';$('#podium').innerHTML='';$('#leaderTable').innerHTML='';$('#strategyCards').innerHTML='';$('#boardCards').innerHTML='';return}
+  const avg=Math.round(pods.reduce((a,r)=>a+r.score,0)/pods.length);$('#statAvg').textContent=avg;$('#statTarget').textContent=countMode(pods,'target_market');$('#statKpi').textContent=countMode(pods,'kpi');
+  $('#podium').innerHTML=pods.slice(0,3).map((r,i)=>`<article class="podium-card" data-rank="${i+1}"><small>#${i+1} · ${esc(r.athletic_department)}</small><h3>${esc(r.pod_name)}</h3><div class="score">${r.score}<span style="font:700 .75rem Inter;color:#aebfd4"> / 100</span></div><p><b>${esc(r.target_market)}</b><br>${esc(r.sponsor)}</p></article>`).join('');
+  $('#leaderTable').innerHTML=`<div class="row head"><span>Rank</span><span>Pod / Property</span><span>Score</span><span>Target</span><span>Sponsor</span><span>Submitted</span></div>`+pods.map((r,i)=>`<div class="row"><span class="rank">#${i+1}</span><span class="pod"><b>${esc(r.pod_name)}</b><span>${esc(r.athletic_department)} · ${esc(r.program)}</span></span><span class="score-badge">${r.score}<small>/100</small></span><span>${esc(r.target_market)}</span><span>${esc(r.sponsor)}</span><span class="muted">${new Date(r.submitted_at).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</span></div>`).join('');
+  $('#strategyCards').innerHTML=pods.map(r=>`<article class="card"><div class="card-top"><div><h3>${esc(r.pod_name)}</h3><div class="dept">${esc(r.athletic_department)} · ${esc(r.program)}</div></div><div class="card-score">${r.score}</div></div><div class="pair"><small>Target</small><b>${esc(r.target_market)}</b></div><div class="pair"><small>Need</small><b>${esc(r.consumer_need)}</b></div><div class="pair"><small>Sponsor</small><b>${esc(r.sponsor)} · ${esc(r.sponsor_goal)}</b></div><div class="fourps"><div class="pair"><small>Product</small><b>${esc(r.product)}</b></div><div class="pair"><small>Price</small><b>${esc(r.price)}</b></div><div class="pair"><small>Place</small><b>${esc(r.place)}</b></div><div class="pair"><small>Promotion</small><b>${esc(r.promotion)}</b></div></div><div class="pair"><small>KPI</small><b>${esc(r.kpi)}</b></div></article>`).join('');
+  $('#boardCards').innerHTML=pods.map((r,i)=>`<article class="board-card"><div class="board-head"><div><h3>#${i+1} · ${esc(r.pod_name)}</h3><p>${esc(r.athletic_department)} · ${esc(r.program)} · ${esc(r.sponsor)}</p></div><div class="big-score">${r.score}</div></div><div class="board-body"><div class="pair"><small>Target</small><b>${esc(r.target_market)}</b></div><div class="pair"><small>Consumer need</small><b>${esc(r.consumer_need)}</b></div><div class="pair"><small>Product</small><b>${esc(r.product)}</b></div><div class="pair"><small>Price</small><b>${esc(r.price)}</b></div><div class="pair"><small>Place</small><b>${esc(r.place)}</b></div><div class="pair"><small>Promotion</small><b>${esc(r.promotion)}</b></div><div class="pair"><small>KPI</small><b>${esc(r.kpi)}</b></div><div class="shock"><b>MARKET SHOCK · ${esc(r.shock_title)}</b><br><b>${esc(r.shock_response_p)}:</b> ${esc(r.shock_response)}</div>${r.rationale?`<div class="pair"><small>Rationale</small><b>${esc(r.rationale)}</b></div>`:''}</div></article>`).join('');
+}
+function useSession(){
+  const n=normalize($('#sessionInput').value);if(n.length<3)return;
+  session=n;$('#sessionInput').value=session;lastSignature='';const u=new URL(location.href);u.searchParams.set('session',session);history.replaceState(null,'',u);load();
+}
+$('#loadBtn').addEventListener('click',useSession);$('#sessionInput').addEventListener('keydown',e=>{if(e.key==='Enter')useSession()});
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('#'+t.dataset.view).classList.add('active')}));
+$('#copyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(studentUrl());const b=$('#copyBtn'),old=b.textContent;b.textContent='Student Link Copied ✓';setTimeout(()=>b.textContent=old,1600)}catch{prompt('Copy this student link:',studentUrl())}});
+load();pollTimer=setInterval(load,2000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+})();
+</script>
+</body>
+</html>
