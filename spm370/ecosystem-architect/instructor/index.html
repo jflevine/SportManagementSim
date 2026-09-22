@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10223f">
+<title>SPM 370 · Legal Decision Lab 1 Grader</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="grader.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <span class="eyebrow">SPM 370 · INSTRUCTOR ONLY</span>
+    <h1>Legal Decision Lab 1 Grader</h1>
+    <p>Ecosystem Architect · individual legal decision memo</p>
+  </div>
+  <div class="top-actions">
+    <button id="refreshBtn" class="secondary" type="button" hidden>Refresh</button>
+    <button id="exportBtn" class="secondary" type="button" hidden>Export Gradebook CSV</button>
+    <button id="lockBtn" class="secondary" type="button" hidden>Lock Dashboard</button>
+  </div>
+</header>
+
+<main>
+  <section id="loginView" class="login-card">
+    <div>
+      <span class="eyebrow">SECURE INSTRUCTOR ACCESS</span>
+      <h2>Open the grading queue</h2>
+      <p>Student submissions are stored in the private assessment database. Enter the instructor access key to load them.</p>
+    </div>
+    <form id="loginForm">
+      <label for="accessKey">Instructor access key</label>
+      <div class="key-row">
+        <input id="accessKey" name="accessKey" type="password" autocomplete="current-password" required>
+        <button class="primary" type="submit">Open Dashboard</button>
+      </div>
+      <div id="loginStatus" class="status-line" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <section id="dashboardView" hidden>
+    <section class="stats" aria-label="Grading summary">
+      <article><span>SUBMISSIONS</span><strong id="statTotal">0</strong></article>
+      <article><span>UNGRADED</span><strong id="statUngraded">0</strong></article>
+      <article><span>GRADED</span><strong id="statGraded">0</strong></article>
+      <article><span>CLASS AVERAGE</span><strong id="statAverage">—</strong></article>
+    </section>
+
+    <section class="toolbar">
+      <label class="search-wrap">
+        <span>Search</span>
+        <input id="searchInput" type="search" placeholder="Student, email, or team">
+      </label>
+      <label>
+        <span>Status</span>
+        <select id="statusFilter">
+          <option value="all">All submissions</option>
+          <option value="ungraded">Ungraded</option>
+          <option value="graded">Graded</option>
+        </select>
+      </label>
+      <label>
+        <span>Crisis</span>
+        <select id="crisisFilter">
+          <option value="all">All crises</option>
+          <option value="pathway">The Pathway Disappears</option>
+          <option value="sponsor">The Sponsor Walks</option>
+          <option value="license">The Unlicensed Major</option>
+        </select>
+      </label>
+      <div class="queue-count"><span>QUEUE</span><strong id="queueCount">0</strong></div>
+    </section>
+
+    <section class="workspace">
+      <aside class="roster-panel">
+        <div class="panel-head">
+          <div><span class="eyebrow">GRADING QUEUE</span><h2>Students</h2></div>
+          <div id="gradedProgress" class="progress-label">0 / 0</div>
+        </div>
+        <div class="progress-track"><i id="progressFill"></i></div>
+        <div id="rosterList" class="roster-list"></div>
+      </aside>
+
+      <section class="grader-panel">
+        <div id="emptyState" class="empty-state">
+          <span class="empty-mark">370</span>
+          <h2>Select a student to begin grading.</h2>
+          <p>Responses, rubric anchors, group simulation evidence, and grading controls will appear here.</p>
+        </div>
+
+        <div id="graderView" hidden>
+          <header class="student-head">
+            <div>
+              <span id="studentStatus" class="status-pill">UNGRADED</span>
+              <h2 id="studentName"></h2>
+              <p id="studentIdentity"></p>
+            </div>
+            <div class="score-box">
+              <span>TOTAL</span>
+              <strong id="totalScore">— / 10</strong>
+              <small id="scorePercent"></small>
+            </div>
+          </header>
+
+          <div class="meta-grid">
+            <div><span>Chosen crisis</span><strong id="chosenCrisis"></strong></div>
+            <div><span>Team</span><strong id="teamName"></strong></div>
+            <div><span>Submitted</span><strong id="submittedAt"></strong></div>
+            <div><span>Duration</span><strong id="duration"></strong></div>
+          </div>
+
+          <div id="rubricContainer" class="rubric-stack"></div>
+
+          <details class="evidence" id="groupEvidence">
+            <summary>
+              <div><span class="eyebrow">SHARED GROUP EVIDENCE</span><strong>Open simulation record</strong></div>
+              <span>Architecture, revenue, protections, crises, Year Two decision</span>
+            </summary>
+            <div id="evidenceBody" class="evidence-body"></div>
+          </details>
+
+          <section class="notes-card">
+            <label for="graderNotes"><span>Instructor notes</span><small>Optional · saved with the grade</small></label>
+            <textarea id="graderNotes" maxlength="5000" placeholder="Feedback, grading rationale, or follow-up note…"></textarea>
+          </section>
+
+          <div id="saveStatus" class="save-status" aria-live="polite"></div>
+
+          <div class="grade-actions">
+            <button id="clearGradeBtn" type="button" class="danger-quiet">Clear Scores</button>
+            <div>
+              <button id="saveBtn" type="button" class="secondary">Save Grade</button>
+              <button id="saveNextBtn" type="button" class="primary">Save &amp; Next Student</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="grader.js"></script>
+</body>
+</html>
