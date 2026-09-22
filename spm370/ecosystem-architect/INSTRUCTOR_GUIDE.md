@@ -149,13 +149,29 @@ The access key is distributed privately and is not stored in the public GitHub r
 
 Grades are written back to the private `spm370_ldl1_submissions` table. The total score is generated automatically after all four rubric scores are entered.
 
-Students receive a unique receipt after successful submission. No LMS upload is required. A backup text download remains available in case of a connection problem. If one group shares a device, students can submit one at a time and use **Clear for Next Student** without resetting the group simulation.
+Students receive a unique receipt after successful submission. No LMS upload is required.
+
+### Cross-device pod handoff
+
+The graded workflow now separates the shared simulation from the individual assessment:
+
+1. Each pod completes the simulation on one shared device.
+2. After the Year Two decision and Board Defense, the game saves the completed group run to the private assessment backend.
+3. The final screen generates a short human-readable **pod code** (for example, `FALCON-7KM`), a QR code, and a direct link.
+4. Each student switches to an individual device and opens:
+   `https://jflevine.github.io/SportManagementSim/spm370/ecosystem-architect/individual/`
+5. The student scans the QR, follows the direct link, or enters the pod code manually.
+6. The individual page loads the pod's completed group record as read-only evidence.
+7. The student enters their own name and La Salle email, selects one of the three standardized crises, and independently completes the four-part legal memo.
+8. The individual submission is stored separately but remains linked to the pod's group session.
+
+This structure preserves the syllabus design: **small-group deliberation followed by an independently assessable legal position/analysis**.
 
 The ecosystem-health indicators remain **instructional diagnostics, not grades**. They are stored with the submission as evidence the student may use in the legal analysis.
 
 ## Privacy guidance
 
-Group gameplay progress remains local to the browser until the individual student submits the lab. The official submission sends only the information needed for assessment: student name, La Salle email, the group simulation record, and the student's individual legal analysis.
+Group gameplay progress remains local to the pod browser while students are playing. When the pod completes the Board Defense, the shared group run is saved to the private backend so it can be retrieved by the pod code. The pod record contains the simulation decisions but no student names or email addresses. Individual student identity and written analysis are added only when each student submits the individual assessment.
 
 Identifiable student records are stored in the private assessment backend and are **not** written to the public GitHub repository. The submission table has row-level security enabled and no public read policy. The public Edge Function accepts submissions only from the approved course site origin and validates La Salle email addresses.
 
