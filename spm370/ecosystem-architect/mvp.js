@@ -1,7 +1,7 @@
 /* Ecosystem Architect: Season One — MVP classroom layer */
 (()=>{
 'use strict';
-const APP_VERSION='Season One MVP 1.2 · Legal Decision Lab 1';
+const APP_VERSION='Season One MVP 1.3 · Legal Decision Lab 1';
 const MODE_LABELS={standard:'Legal Decision Lab · 18–22 min · 3 fixed crises'};
 const FIXED_LAB_CRISES=['pathway','sponsor','license'];
 const SUBMISSION_ENDPOINT='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/submit-spm370-ldl1';
@@ -45,7 +45,7 @@ function appendMissionMode(){
   wrap.innerHTML=`<div class="mvp-mode-head"><b>LEGAL DECISION LAB 1</b><span>Graded standardized run</span></div>
   <div class="mvp-modes"><div class="mvp-mode selected mvp-mode-locked"><strong>STANDARDIZED LAB</strong><em>18–22 MIN · 3 FIXED CRISES</em><small>Every group receives the same three legal fact patterns in the same order so grading is comparable across the class.</small></div></div>
   <div class="mvp-session-chip">SESSION <b id="mvpSessionId"></b> · <span id="mvpModeLabel"></span></div>
-  <div class="mvp-privacy">Group gameplay is saved locally. Each student's final individual legal analysis is submitted securely to the instructor record system using their La Salle email.</div>`;
+  <div class="mvp-privacy">Group gameplay stays on this device while you play. When the pod finishes, the completed group record is saved securely and a short code, QR code, and link are generated so each student can complete the graded analysis on an individual device.</div>`;
   const teamEntry=brief.querySelector('.team-entry');
   brief.insertBefore(wrap,teamEntry);
   renderMode();
