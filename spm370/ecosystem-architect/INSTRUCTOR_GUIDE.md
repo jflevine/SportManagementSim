@@ -128,7 +128,26 @@ The GitHub Pages site now sends the completed **individual** Legal Decision Lab 
 
 Because the GitHub repository is public, **student names, email addresses, and responses are not committed to GitHub**. They are stored in the private Supabase assessment table `spm370_ldl1_submissions`, using the same backend pattern as the course knowledge checks. The public repository contains only the application code.
 
-The backend records four nullable grading fields—issue spotting (0–2), legal application (0–3), stakeholder analysis (0–2), and recommendation (0–3)—and automatically calculates the total once all four scores are entered. A private grading view, `spm370_ldl1_grading_queue`, presents the submission text and rubric columns for instructor review.
+The backend records four nullable grading fields—issue spotting (0–2), legal application (0–3), stakeholder analysis (0–2), and recommendation (0–3)—and automatically calculates the total once all four scores are entered.
+
+### Instructor grading dashboard
+
+Use the protected dashboard at:
+
+`https://jflevine.github.io/SportManagementSim/spm370/ecosystem-architect/instructor/`
+
+The access key is distributed privately and is not stored in the public GitHub repository. The dashboard provides:
+
+- a live roster of submitted students with graded/ungraded status;
+- filters by status, crisis, student, email, or team;
+- the student's four individual responses beside concise rubric anchors;
+- one-click rubric scoring for 2/3/2/3 points with an automatic 10-point total;
+- the group's simulation evidence (architecture, priorities, revenue mix, legal protections, crisis decisions, and Year Two defense);
+- instructor notes saved with the grade;
+- **Save & Next Student** for rapid grading; and
+- a gradebook CSV export.
+
+Grades are written back to the private `spm370_ldl1_submissions` table. The total score is generated automatically after all four rubric scores are entered.
 
 Students receive a unique receipt after successful submission. No LMS upload is required. A backup text download remains available in case of a connection problem. If one group shares a device, students can submit one at a time and use **Clear for Next Student** without resetting the group simulation.
 
