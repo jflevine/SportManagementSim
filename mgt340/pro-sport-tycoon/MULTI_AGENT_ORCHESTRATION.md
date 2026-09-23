@@ -6,7 +6,7 @@
 **Module:** Week 4 — Financial & Economic Principles Applied to Sport Management  
 **Primary classroom use:** Introductory undergraduate students; solo or pods of 4–6  
 **Core design principle:** **You cannot maximize everything at once.**  
-**Core learning loop:** **Proposal → Evidence → Advice → Decision → Uncertainty → Results → Review**
+**Core learning loop:** **Read → Compare → Choose → Fund → Explain → Reveal**
 
 ---
 

@@ -10,7 +10,7 @@ Students serve as the franchise President / Managing Partner. They receive a boa
 
 Core loop:
 
-**Proposal → Evidence → Advice → Decision → Uncertainty → Results → Review**
+**Read → Compare → Choose → Fund → Explain → Reveal**
 
 ## What changed from the prior version
 
@@ -23,7 +23,7 @@ Core loop:
   - CFO Workbook
   - Executive Team advice
   - Scenario Model
-  - Department File
+  - proposal description
 - Added forecast ranges (downside / base / upside) and confidence levels.
 - Added portfolio selection: students can fund one or two proposals per cycle and choose cash vs. debt for eligible capital projects.
 - Added mandatory Board Rationale before the result is known.
@@ -61,3 +61,29 @@ Recommended debrief:
 Static HTML / CSS / JavaScript modules; no build step or backend required.
 
 The economics are fictional and intentionally simplified for instruction. They are not a forecast, CBA model, accounting system, or representation of a specific professional league or club.
+## Classroom refinement — September 23, 2026
+
+Use Class Mode, Growth-Market Challenger and seed `MGT340` for the first run. Assign The Turnaround or The Contender to each pod. Compare numerical scores only within the same market and mandate. Allow 2 minutes setup, 7 minutes Cycle 1, 6 each for Cycles 2 and 3, and 4 minutes Board Review. Debrief afterward.
+
+- Choose zero, one or two investments. Holding cash requires a rationale too.
+- Cash uses existing club funds; the model does not issue equity or dilute shares.
+- Debt pays equal principal each year plus interest on the remaining balance. Project forecasts and cash close use the same schedule. The debt can outlast an investment's modeled operating term.
+- Operating profit excludes interest. Ending cash subtracts interest, upfront cash used and principal payments. Taxes, depreciation and working-capital timing are omitted.
+- Base annual net is direct project cash contribution after recurring costs and first-year debt service, excluding wider effects on wins, fans and the club's revenue. The forecast/actual table is this project measure; the external event also affects the club as a whole.
+- ROI is before financing. Capital projects use upfront cost as denominator; commercial/player commitments use upfront plus first-year recurring cost. It is a simple teaching comparison, not a full investment valuation.
+- The Executive Team shows CFO, one relevant specialist and Board Strategy. All advice uses the selected funding option.
+- Same seed produces the same external events and proposal-specific draws, independent of click order. Investments still change outcomes and later opportunity availability.
+- Board score describes outcomes; it does not grade rationales. Competitive progress measures improvement from the starting roster, and asset growth includes facility improvement. The Contender puts 50% weight on competitive progress.
+- Keep the tab open. There is no save/resume backend; refreshing starts over. Copy Board Report at completion to retain decisions, risks and results.
+
+### Verification
+
+```sh
+node --check app.js
+node --check model.js
+node --test tests/model.test.mjs
+# For DOM interaction tests: install jsdom in a disposable directory, then:
+JSDOM_PATH=/absolute/path/to/node_modules/jsdom node --test tests/interface.test.mjs
+```
+
+No build step is required. Serve this folder using any static HTTP server. DOM tests exercise real handlers and markup but do not verify browser layout. Read `CLASSROOM_REVIEW.md` for results and limitations.

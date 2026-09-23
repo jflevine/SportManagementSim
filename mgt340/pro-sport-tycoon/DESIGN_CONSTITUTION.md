@@ -10,7 +10,7 @@ President / Managing Partner.
 Build a franchise that can **compete, grow, and survive** while balancing operating performance, liquidity, competitive credibility, fan/brand strength, asset value, and future flexibility.
 
 ## Core loop
-**Proposal → Evidence → Advice → Decision → Uncertainty → Results → Review**
+**Read → Compare → Choose → Fund → Explain → Reveal**
 
 ## Non-negotiables
 - Scarcity is real.
@@ -41,7 +41,7 @@ Students can inspect:
 - CFO Workbook
 - Executive Team recommendations
 - Scenario Model
-- Department File
+- proposal description
 
 ## Classroom modes
 **Class Mode:** 3 strategic cycles; target 20–25 minutes.  
