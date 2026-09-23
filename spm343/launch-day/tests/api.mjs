@@ -1,0 +1,33 @@
+// Run against a disposable session; keep credentials and answer bank outside this repository.
+import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import assert from 'node:assert/strict';
+import {randomBytes} from 'node:crypto';
+const endpoint=process.env.LAUNCH_API||'https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm343-launch-day';
+const adminKey=fs.readFileSync(process.env.LAUNCH_KEY_FILE,'utf8').trim();
+const bank=JSON.parse(fs.readFileSync(process.env.LAUNCH_BANK_FILE,'utf8'));
+const code='TESTKC22', token=randomBytes(32).toString('hex');
+const email='qa.launch.'+token.slice(0,8)+'@lasalle.edu';
+async function call(body,status=200){const raw=execFileSync('curl',['--max-time','25','-sS','-w','\n%{http_code}','-X','POST','-H','Content-Type: application/json','--data-binary','@-',endpoint],{input:JSON.stringify(body),encoding:'utf8'});const split=raw.lastIndexOf('\n');const d=JSON.parse(raw.slice(0,split));assert.equal(Number(raw.slice(split+1)),status,JSON.stringify(d));return d}
+const a=(action,extra={})=>({action,code,token,...extra});
+await call({action:'results',code,adminKey:'wrong-key-that-is-at-least-20-characters'},401);
+const list=await call({action:'list',adminKey});assert(list.sessions.some(s=>s.code===code));
+await call({action:'configure',adminKey,code,isOpen:true,release:false});
+let d=await call(a('join',{name:'QA API Student',email:email}));
+assert.equal(d.questions.length,12);assert(!JSON.stringify(d).includes('answer_key'));
+await call(a('submit',{answers:{1:'A'},version:0,score:12}),400);
+d=await call(a('save',{answers:{1:'A'},version:0}));assert.equal(d.attempt.version,1);
+await call(a('save',{answers:{1:'B'},version:0}),409);
+await call(a('join',{token:randomBytes(32).toString('hex'),name:'Duplicate',email:email}),409);
+await call({action:'configure',adminKey,code,isOpen:false});
+await call(a('submit',{answers:bank.answer_key,version:1}),403);
+await call({action:'configure',adminKey,code,isOpen:true});
+const submits=await Promise.all([call(a('submit',{answers:bank.answer_key,version:1,score:0})),call(a('submit',{answers:bank.answer_key,version:1,score:0}))]);
+assert.equal(submits[0].attempt.receipt,submits[1].attempt.receipt);assert.equal(submits[0].attempt.score,null);
+let results=await call({action:'results',adminKey,code});let row=results.attempts.find(x=>x.email===email);assert.equal(row.score,12);assert.deepEqual(row.round_scores,[3,5,4]);
+await call(a('submit',{answers:Object.fromEntries(Array.from({length:12},(_,i)=>[i+1,'A'])),version:2}));
+results=await call({action:'results',adminKey,code});assert.equal(results.attempts.find(x=>x.id===row.id).score,12);
+await call({action:'configure',adminKey,code,release:true});d=await call(a('resume'));assert.equal(d.attempt.score,12);
+const newToken=randomBytes(32).toString('hex');await call({action:'recover',adminKey,code,id:row.id,token:newToken});await call(a('resume'),401);d=await call(a('resume',{token:newToken}));assert.equal(d.attempt.score,12);
+await call({action:'configure',adminKey,code,release:false});
+console.log('PASS: instructor auth, private question bank, validation, draft versions, duplicate prevention, session gate, concurrent idempotent submission, server scoring, immutable grade, score release, access recovery');
