@@ -1,3 +1,9 @@
+# 30-minute update — 23 September 2026
+
+- Deployed-service rehearsal: **71 checks passed**, 24 fictional students across six brands through all rounds and grading. Includes shorter individual responses, consolidated campaign reasoning, and automatically started phase timers.
+- Model suite: **6 tests passed**. The suggested schedule totals 30 minutes; concise campaign evidence remains valid; all marketing choices, response costs and scoring constraints remain in place.
+- Timing is an instructor-led plan, not a measured student completion time. It assumes the marketing concepts have already been taught, prompt transitions, and grading after class. Five minutes are reserved for the debrief.
+
 # Verification — 22 September 2026
 
 - Deployed-service rehearsal: **70 checks passed**, 24 fictional students, six brands, concurrent joins and submissions, all rounds through completion, group and individual grades retained.
