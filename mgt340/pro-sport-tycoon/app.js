@@ -49,7 +49,7 @@ $$('[data-mode]').forEach(b => b.onclick = () => {
   b.classList.add('selected');
   mode = b.dataset.mode;
 });
-$('#launchBtn').onclick = () => { state = createState(marketId, mandateId, seed(), mode); beginCycle(); };
+$('#launchBtn').onclick = () => { state = createState(marketId, mandateId, seed(), mode); $('#copyReport').textContent = 'Copy board report'; beginCycle(); };
 $('#resetBtn').onclick = () => { state = null; selections = []; activeProposal = null; show('welcome'); };
 $('#howBtn').onclick = () => $('#howDialog').showModal();
 $('#closeHow').onclick = () => $('#howDialog').close();
@@ -109,14 +109,10 @@ function renderProposalDetail() {
   $('#proposalType').textContent = p.type.toUpperCase();
   $('#proposalTitle').textContent = p.name;
   $('#proposalSubtitle').textContent = p.subtitle;
-  $('#proposalDetail').textContent = p.detail;
-  $('#forecastDown').textContent = money(scenario.downsideNet);
+  $('#proposalDetail').textContent = `${p.detail} ${proposalContext(p)}`;
   $('#forecastBase').textContent = money(scenario.baseNet);
-  $('#forecastUp').textContent = money(scenario.upsideNet);
   $('#forecastConfidence').textContent = p.confidence;
   $('#proposalCost').textContent = money(p.upfront);
-  $('#proposalAnnual').textContent = money(p.annualRevenue || 0);
-  $('#proposalOpex').textContent = money(p.annualCost || 0);
   $('#proposalTerm').textContent = `${p.term} yrs`;
 
   $('#fundingWrap').classList.toggle('hidden', !p.debtEligible);
@@ -155,20 +151,19 @@ function removeProposal(id) {
 function renderDocuments(p, debtPct) {
   const impact = estimateProposalImpact(state, p, debtPct);
   const scenario = getScenarioModel(state, p, debtPct);
-  const views = advisorViews(state, p);
-  const roiLabel = p.type === 'capital' ? 'Direct project ROI' : 'Year-1 direct cash ROI';
+  const allViews = advisorViews(state, p, debtPct);
+  const specialist = p.type === 'player' ? 'General Manager' : p.type === 'capital' ? 'COO / Facilities' : 'Chief Revenue Officer';
+  const views = { CFO: allViews.CFO, [specialist]: allViews[specialist], 'Board Strategy': allViews['Board Strategy'] };
+  const roiLabel = p.type === 'capital' ? 'Direct project ROI' : 'Year-1 direct return';
 
   $('#docWorkbook').innerHTML = `<div class="sheet"><table><tbody>
-    <tr><th>Initial commitment</th><td>${money(p.upfront)}</td></tr>
     <tr><th>Cash required now</th><td>${money(impact.cashNeed)}</td></tr>
     <tr><th>New debt</th><td>${money(impact.debtAmount)}</td></tr>
-    <tr><th>Base annual gross benefit</th><td>${money(p.annualRevenue || 0)}</td></tr>
+    <tr><th>Annual gross benefit</th><td>${money(p.annualRevenue || 0)}</td></tr>
     <tr><th>Annual recurring cost</th><td>${money(p.annualCost || 0)}</td></tr>
-    <tr><th>Estimated annual debt service</th><td>${money(impact.annualDebtService)}</td></tr>
-    <tr class="strong"><th>Base annual cash contribution</th><td>${money(scenario.baseNet)}</td></tr>
+    <tr><th>First-year principal + interest</th><td>${money(impact.annualDebtService)}</td></tr>
     <tr class="strong"><th>${roiLabel}</th><td>${impact.directROI.toFixed(1)}%</td></tr>
-    <tr><th>Approx. break-even</th><td>${impact.breakEvenYears ? `${impact.breakEvenYears.toFixed(1)} years` : 'No direct-cash break-even in base case'}</td></tr>
-  </tbody></table><p class="sheet-note">Direct ROI captures modeled cash economics only. Player wins, brand value, fan effects, and strategic flexibility are shown separately because they are not guaranteed cash receipts.</p></div>`;
+  </tbody></table><p class="sheet-note">Return = annual benefit minus recurring cost, divided by ${p.type === 'capital' ? 'upfront project cost' : 'upfront cost plus first-year recurring cost'}, before financing. Base annual net also subtracts first-year debt payments. No new shares are issued; “Cash” uses club funds.</p></div>`;
 
   const maxAbs = Math.max(1, Math.abs(scenario.downsideNet), Math.abs(scenario.baseNet), Math.abs(scenario.upsideNet));
   const bar = v => Math.max(10, Math.round(Math.abs(v) / maxAbs * 95));
@@ -181,7 +176,6 @@ function renderDocuments(p, debtPct) {
   $('#docAdvisors').innerHTML = Object.entries(views).map(([name, text]) =>
     `<article class="advisor"><span>${name}</span><p>${text}</p></article>`
   ).join('');
-  $('#docMemo').innerHTML = departmentMemo(p);
 
   $$('.doc-tab').forEach(b => b.onclick = () => {
     const id = b.dataset.doc;
@@ -190,33 +184,15 @@ function renderDocuments(p, debtPct) {
   });
 }
 
-function departmentMemo(p) {
+function proposalContext(p) {
   if (p.type === 'player') {
-    return `<div class="memo"><h4>PLAYER / SCOUTING REPORT</h4>
-      <p><b>Competitive contribution:</b> ${(p.wins * 100).toFixed(1)} expected win-percentage points before uncertainty.</p>
-      <p><b>Commercial effect:</b> ${p.brand >= 4 ? 'High star / brand potential' : 'Moderate or limited star effect'}.</p>
-      <p><b>Contract burden:</b> ${money(p.annualCost || 0)} per year for ${p.term} years, plus ${money(p.upfront)} upfront.</p>
-      <p><b>Risk lens:</b> Direct cash ROI may be negative even when the competitive case is strong. Availability and performance can move realized value materially.</p>
-      <p><b>Exit flexibility:</b> ${p.term >= 4 ? 'Long commitment; later years matter.' : 'Shorter commitment; easier to reset.'}</p>
-    </div>`;
+    return `Management lens: competitive upside comes with ${money(p.annualCost || 0)} in annual contract cost and performance risk.`;
   }
   if (p.type === 'capital') {
-    return `<div class="memo"><h4>FACILITY / OPERATIONS MEMO</h4>
-      <p><b>Planning horizon:</b> ${p.term} years in this teaching model.</p>
-      <p><b>Facility benefit:</b> +${p.facility || 0} long-run facility points before annual depreciation.</p>
-      <p><b>Lifecycle cost:</b> ${money(p.annualCost || 0)} recurring annual operating cost.</p>
-      <p><b>Financing choice:</b> Debt preserves cash today but creates fixed annual debt service and reduces future flexibility.</p>
-      <p><b>Key risk:</b> ${p.risk > .28 ? 'High construction / adoption uncertainty.' : 'Moderate project and demand uncertainty.'}</p>
-    </div>`;
+    return `Management lens: this can strengthen the asset base, but upfront funding can reduce liquidity or add fixed debt obligations.`;
   }
-  return `<div class="memo"><h4>REVENUE / FAN MEMO</h4>
-    <p><b>Primary engine:</b> ${p.stream || 'commercial operations'}.</p>
-    <p><b>Expected annual gross contribution:</b> ${money(p.annualRevenue || 0)} before recurring program cost.</p>
-    <p><b>Fan effect:</b> ${p.fan >= 2 ? 'Meaningful relationship benefit.' : 'Limited direct fan effect.'}</p>
-    <p><b>Watch:</b> Marginal return can decline as the local market saturates.</p>
-  </div>`;
+  return `Management lens: the direct case depends on incremental ${p.stream || 'commercial'} revenue after recurring cost; local demand can saturate.`;
 }
-
 function renderPortfolio() {
   const forecast = forecastCycle(state, selections);
   $('#portfolioList').innerHTML = selections.length
@@ -224,11 +200,11 @@ function renderPortfolio() {
         const i = estimateProposalImpact(state, s.proposal, s.debtPct);
         return `<div class="portfolio-item"><b>${s.proposal.name}</b><span>${money(i.cashNeed)} cash + ${money(i.debtAmount)} debt</span></div>`;
       }).join('')
-    : '<p class="empty-copy">Select one or two proposals. You are not expected to fund everything.</p>';
+    : '<p class="empty-copy">Choose up to two proposals. Holding cash is also a decision; explain the opportunity you are passing up.</p>';
 
   $('#portCash').textContent = money(forecast.upfrontCash);
   $('#portDebt').textContent = money(forecast.newDebt);
-  $('#portProfit').textContent = money(forecast.profit);
+  $('#portProfit').textContent = money(forecast.operatingProfit);
   $('#portEndCash').textContent = money(forecast.projectedEndingCash);
 
   $('#portfolioWarning').textContent =
@@ -238,19 +214,20 @@ function renderPortfolio() {
         ? 'This portfolio leaves very little projected liquidity. That may be defensible—but it is a real risk.'
         : 'The portfolio is fundable under the current projection.';
 
-  $('#commitBtn').disabled = !selections.length || forecast.upfrontCash > state.cash;
+  $('#commitBtn').disabled = selections.length > 0 && forecast.upfrontCash > state.cash;
+  $('#commitBtn').textContent = selections.length ? 'Explain this decision →' : 'Hold cash & explain →';
 }
 
 $('#commitBtn').onclick = () => {
-  if (!selections.length) return;
   renderRationale();
   show('rationaleScreen');
 };
 function renderRationale() {
-  $('#rationalePortfolio').innerHTML = selections.map(s => `<li>${s.proposal.name}</li>`).join('');
+  $('#rationalePortfolio').innerHTML = selections.length ? selections.map(s => `<li>${s.proposal.name}</li>`).join('') : '<li>Hold cash — no new investment this cycle</li>';
   $('#rationaleText').value = '';
   $('#riskChoice').value = '';
 }
+$('#backBtn').onclick = () => show('decisionCenter');
 $('#runCycleBtn').onclick = () => {
   const text = $('#rationaleText').value.trim();
   const risk = $('#riskChoice').value;
@@ -258,7 +235,7 @@ $('#runCycleBtn').onclick = () => {
     flash('Add a short board rationale and identify the risk you are accepting.');
     return;
   }
-  const rationale = { text, risk, portfolio: selections.map(s => s.proposal.name) };
+  const rationale = { text, risk, portfolio: selections.length ? selections.map(s => s.proposal.name) : ['Hold cash'] };
   const result = runCycle(state, selections, rationale);
   state = result.next;
   renderResults(result);
@@ -271,7 +248,7 @@ function renderResults({ record, event, distress }) {
   $('#resultEventText').textContent = event.desc;
   $('#resWins').textContent = pct(record.wins);
   $('#resRevenue').textContent = money(record.revTotal);
-  $('#resProfit').textContent = money(record.profit);
+  $('#resProfit').textContent = money(record.operatingProfit);
   $('#resCash').textContent = money(record.cash);
   $('#resDebt').textContent = money(record.debt);
 
@@ -280,13 +257,7 @@ function renderResults({ record, event, distress }) {
     : '<tr><td colspan="4">No new proposal results.</td></tr>';
 
   $('#originalRationale').textContent = `“${record.rationale.text}” Risk accepted: ${record.rationale.risk}.`;
-  $('#diagnosis').textContent =
-    record.cashChange < record.profit - 10
-      ? 'Operating profit and cash diverged because upfront investment and principal repayment consumed liquidity.'
-      : record.profit < 0
-        ? 'The core operating result was negative this cycle. Look first at recurring costs and demand—not merely the event shock.'
-        : 'Operating performance translated reasonably well into cash this cycle, but persistent commitments still shape the next decision.';
-
+  $('#diagnosis').textContent = `Opening cash ${money(record.openingCash)} + operating profit ${money(record.operatingProfit)} − interest ${money(record.expenses.interest)} − cash invested ${money(record.upfrontCash)} − principal repaid ${money(record.principalPaid)} = ending cash ${money(record.cash)}. Borrowing funds part of a purchase; it is not revenue.`;
   $('#distress').classList.toggle('hidden', !distress);
   $('#advanceBtn').textContent = state.cycle > state.maxCycles ? 'Go to board review →' : 'Next capital committee →';
 }
@@ -298,24 +269,24 @@ function renderFinal() {
   $('#finalMandate').textContent = s.mandate.name;
   $('#finalScore').textContent = s.total;
   $('#finalVerdict').textContent =
-    s.total >= 82 ? 'Board confidence: the strategy matched the mandate while preserving resilience.'
-    : s.total >= 68 ? 'Board approval with conditions: the model works, but one or two exposures deserve attention.'
+    s.total >= 82 ? 'Strong outcome across the board’s priorities. Use your rationale to explain the decisions behind it.'
+    : s.total >= 68 ? 'Solid outcome with tradeoffs to discuss. Which board priority needed more attention?'
     : s.total >= 52 ? 'Fragile outcome: the franchise survived, but flexibility or mandate execution is thin.'
     : 'Board intervention: financial or strategic pressure became unsustainable.';
 
   const vals = [
-    ['Financial health', s.financial],
-    ['Fan + brand', s.fan],
-    ['Competitive', s.competitive],
-    ['Asset growth', s.asset],
-    ['Flexibility', s.flexibility]
+    ['Financial health', s.financial, 'financial'],
+    ['Fan + brand', s.fan, 'fan'],
+    ['Competitive progress', s.competitive, 'competitive'],
+    ['Asset growth', s.asset, 'asset'],
+    ['Flexibility', s.flexibility, 'flexibility']
   ];
-  $('#scorecards').innerHTML = vals.map(([n, v]) =>
-    `<div><span>${n}</span><b>${v}</b><i style="width:${v}%"></i></div>`
+  $('#scorecards').innerHTML = vals.map(([n, v, key]) =>
+    `<div><span>${n}</span><b>${v}</b><small>${Math.round(s.mandate.weights[key]*100)}% of board score</small><i style="width:${v}%"></i></div>`
   ).join('');
 
   $('#history').innerHTML = state.history.map(h =>
-    `<tr><td>${h.cycle}</td><td>${pct(h.wins)}</td><td>${money(h.revTotal)}</td><td>${money(h.profit)}</td><td>${money(h.cash)}</td><td>${money(h.debt)}</td><td>${h.event.title}</td></tr>`
+    `<tr><td>${h.cycle}</td><td>${pct(h.wins)}</td><td>${money(h.revTotal)}</td><td>${money(h.operatingProfit)}</td><td>${money(h.cash)}</td><td>${money(h.debt)}</td><td>${h.event.title}</td></tr>`
   ).join('');
 
   $('#rationaleHistory').innerHTML = state.history.map(h =>
@@ -331,7 +302,10 @@ $('#copyReport').onclick = async () => {
   const txt = `${team()} | PRO SPORT TYCOON
 Mandate: ${s.mandate.name}
 Board score: ${s.total}/100
-Cash: ${money(state.cash)} | Debt: ${money(getDebtSummary(state).principal)} | Value: $${state.franchiseValue.toFixed(1)}B`;
+Cash: ${money(state.cash)} | Debt: ${money(getDebtSummary(state).principal)} | Value: $${state.franchiseValue.toFixed(1)}B
+Market: ${MARKETS[state.marketId].name} | Seed: ${state.seed}
+Outcome score only; written reasoning is not automatically graded.
+${state.history.map(h => `Cycle ${h.cycle}: ${h.rationale.portfolio.join(' + ')}\nReason: ${h.rationale.text}\nRisk: ${h.rationale.risk}\nEvent: ${h.event.title} | Operating profit: ${money(h.operatingProfit)} | Cash: ${money(h.cash)} | Debt: ${money(h.debt)}`).join('\n\n')}`;
   try {
     await navigator.clipboard.writeText(txt);
     $('#copyReport').textContent = 'Copied ✓';
