@@ -1,4 +1,4 @@
-import { BRANDS, PHASES, OPTIONS, AUDIENCES, OBJECTIVES, RUBRIC, SHOCK, makeRoom, marketResults, marketSignals, validateCampaign, roleFor, roleIntel, totalGrade, clone } from './model.mjs';
+import { BRANDS, PHASES, ROUND_MINUTES, OPTIONS, AUDIENCES, OBJECTIVES, RUBRIC, SHOCK, makeRoom, marketResults, marketSignals, validateCampaign, roleFor, roleIntel, totalGrade, clone } from './model.mjs';
 const URL=Deno.env.get('SUPABASE_URL')!,KEY=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'content-type','Access-Control-Allow-Methods':'POST, OPTIONS'};
 const reply=(data:any,status=200)=>new Response(JSON.stringify(data),{status,headers});
@@ -40,7 +40,7 @@ function mutate(r:any,b:any,admin:boolean,hash:string){
    if(r.phase===3)need(r.teams.filter((x:any)=>r.students.some((s:any)=>s.team===x.id&&!s.excused)).every((x:any)=>x.initial),'Some active teams have not locked a campaign.');
    if(r.phase===5)need(r.teams.filter((x:any)=>x.initial).every((x:any)=>x.final),'Some teams have not locked a shock response.');
    if(r.phase===7)need(r.students.every((x:any)=>x.defense||x.excused),'Some individual defenses are missing. Complete them or excuse the student.');
-   r.phase++;r.paused=false;r.timer=null;
+   r.phase++;r.paused=false;r.timer={end:Date.now()+ROUND_MINUTES[r.phase]*60000,remaining:ROUND_MINUTES[r.phase]*60000};
    if(r.phase===4)r.initialResults=marketResults(r.teams,false);
    if(r.phase===5)r.teams.forEach((t:any)=>{const p=r.students.filter((x:any)=>x.team===t.id&&!x.excused);if(p.length)t.editor=p[1%p.length].id;t.draft=clone(t.initial);t.draftVersion++;});
    if(r.phase===6)r.finalResults=marketResults(r.teams,true);event('phase',{phase:r.phase});return;
@@ -63,7 +63,7 @@ function mutate(r:any,b:any,admin:boolean,hash:string){
  need(s,'Your access key is not recognized. Rejoin with your saved recovery key.');need(!r.paused,'The instructor has paused the activity. Your draft is retained.');need(!s.excused,'This record is marked excused. Ask your instructor to reactivate it.');
  if(b.action==='initial'){
   need(r.phase>=1&&r.phase<=3,'The individual-position round is not open.');if(s.initial)return;
-  need(AUDIENCES[b.position?.audience]&&OBJECTIVES[b.position?.objective],'Choose an audience and objective.');s.initial={audience:b.position.audience,objective:b.position.objective,text:text(b.position.text,120,1800),at:now};event('initial');return;
+  need(AUDIENCES[b.position?.audience]&&OBJECTIVES[b.position?.objective],'Choose an audience and objective.');s.initial={audience:b.position.audience,objective:b.position.objective,text:text(b.position.text,80,1800),at:now};event('initial');return;
  }
  if(b.action==='personalDraft'){need((r.phase<=3&&!s.initial)||(r.phase===7&&!s.defense),'This response is already locked.');s[r.phase===7?'defenseDraft':'personalDraft']=typeof b.text==='string'?b.text.slice(0,2500):'';return;}
  if(b.action==='draft'||b.action==='campaign'){
@@ -72,7 +72,7 @@ function mutate(r:any,b:any,admin:boolean,hash:string){
   const c=cleanCampaign(b.campaign);if(b.action==='campaign'){validateCampaign(c,final?t.initial:null);if(!final)need(r.students.filter((x:any)=>x.team===t.id&&!x.excused).every((x:any)=>x.initial),'Every present teammate must lock an individual position first.');t[final?'final':'initial']={...c,at:now,submittedBy:s.id};event(final?'adaptation':'campaign',{team:t.id});}
   t.draft=c;t.draftVersion++;return;
  }
- if(b.action==='defense'){need(r.phase===7,'The individual-defense round is not open.');need(s.initial&&t.final,'Complete the earlier decisions first.');if(s.defense)return;s.defense={text:text(b.text,200,2500),at:now};event('defense');return;}
+ if(b.action==='defense'){need(r.phase===7,'The individual-defense round is not open.');need(s.initial&&t.final,'Complete the earlier decisions first.');if(s.defense)return;s.defense={text:text(b.text,140,2500),at:now};event('defense');return;}
  throw Error('Unknown action.');
 }
 Deno.serve(async(req:Request)=>{

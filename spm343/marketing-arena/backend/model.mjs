@@ -1,6 +1,9 @@
 // Classroom model v1.0. Fictional, deterministic indices; not empirical forecasts.
 export const METRICS = ['Reach','Engagement','Conversion','Authenticity','Brand Fit'];
 export const PHASES = ['Lobby','Individual position','Team briefing','Campaign build','Market reveal','Adaptation','Final reveal','Individual defense','Complete'];
+// Thirty-minute facilitated schedule; timers guide pacing without auto-submission.
+export const ROUND_MINUTES = [2,2,2,8,2,5,1,3,5];
+export const MARKETING_TYPES = {of:'Marketing of esports',through:'Marketing through esports',both:'Both of and through esports'};
 export const ROLES = ['Brand Director','Audience Strategist','Activation Director','Community & Risk Lead','Budget Director'];
 export const AUDIENCES = {players:'Players · competition & social play',spectators:'Spectators · learning & entertainment',fans:'Fans · belonging & team attachment',creators:'Creator communities · personality & interaction'};
 export const OBJECTIVES = {awareness:'Build awareness',trial:'Drive trial / acquisition',culture:'Earn cultural relevance',loyalty:'Build repeat engagement'};
@@ -36,11 +39,11 @@ export const INTEL=[
 ];
 export const RUBRIC=[
 {id:'initial',label:'Initial individual position',max:10,level:'individual',evidence:'Independent recommendation: clear audience, objective and reasoned strategic direction.'},
-{id:'audience',label:'Audience & objective fit',max:15,level:'group',evidence:'Audience motivation, desired behavior and board objective are connected with a specific explanation.'},
+{id:'audience',label:'Audience & objective fit',max:15,level:'group',evidence:'Audience motivation, desired behavior and board objective are connected with a specific explanation in the strategy and desired behavior.'},
 {id:'mix',label:'Five Ps integration',max:20,level:'group',evidence:'Product, Price, Place, Promotion and Public relations form a coherent offering; costs and distribution are addressed.'},
 {id:'activation',label:'Digital, creator & activation strategy',max:15,level:'group',evidence:'Creator and channel choices fit the audience; before/during/after activity builds a relationship.'},
 {id:'authenticity',label:'Authenticity & brand fit',max:10,level:'group',evidence:'Explains concrete value, credible voice and stakeholder concerns without stereotypes.'},
-{id:'risk',label:'Tradeoff & risk analysis',max:5,level:'group',evidence:'Names a sacrificed benefit, meaningful risk, stakeholder tension and feasible mitigation.'},
+{id:'risk',label:'Tradeoff & risk analysis',max:5,level:'group',evidence:'Names a sacrificed benefit, meaningful risk, stakeholder tension and feasible mitigation in the combined credibility and risk memo (or earlier separate risk response).'},
 {id:'adaptation',label:'Adaptation to new information',max:10,level:'group',evidence:'Uses the shock and market evidence to defend changing or preserving the plan under its budget.'},
 {id:'defense',label:'Final individual defense',max:15,level:'individual',evidence:'Independently evaluates one decision to keep and one to change using module concepts and the results.'}
 ];
@@ -57,7 +60,8 @@ export function validateCampaign(c,initial=null){
  for(const k of Object.keys(OPTIONS))if(!choice(k,c[k]))throw Error('Choose '+LABELS[k]+'.');
  if(!AUDIENCES[c.audience]||!OBJECTIVES[c.objective]||!TONES[c.tone])throw Error('Choose your audience, objective and voice.');
  for(const k of Object.keys(JOURNEY))if(!JOURNEY[k][c[k]])throw Error('Complete the before, during and after plan.');
- for(const [k,min] of [['strategy',40],['behavior',10],['audienceReason',35],['mixReason',60],['activationReason',40],['authReason',40],['riskReason',40],['marketingType',25]])if(typeof c[k]!=='string'||c[k].trim().length<min||c[k].length>2500)throw Error('Add a substantive answer for '+k+' (at least '+min+' characters).');
+ for(const [k,min] of [['strategy',40],['behavior',10],['mixReason',40],['activationReason',40],['authReason',typeof c.riskReason==='string'&&c.riskReason.trim().length>=40?40:60]])if(typeof c[k]!=='string'||c[k].trim().length<min||c[k].length>2500)throw Error('Add a substantive answer for '+k+' (at least '+min+' characters).');
+ if(!MARKETING_TYPES[c.marketingType] && !(typeof c.marketingType==='string'&&c.marketingType.trim().length>=25))throw Error('Identify marketing of esports, through esports, or both.');
  if(initial){
   if(!['stay','pivot','double'].includes(c.response))throw Error('Choose your response to the shock.');
   if(typeof c.adaptationReason!=='string'||c.adaptationReason.trim().length<80||c.adaptationReason.length>2500)throw Error('Explain your response, the new information, tradeoff and metric (at least 80 characters).');

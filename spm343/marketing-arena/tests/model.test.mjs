@@ -7,3 +7,15 @@ test('authenticity and category fit matter; largest creator is not always best',
 test('all role responsibilities covered for 1–6 students',()=>{for(let n=1;n<=6;n++){const r=makeRoom('ABCDEFGH','test');r.phase=2;r.students=Array.from({length:n},(_,i)=>({id:String(i),team:'pulse'}));const intel=r.students.flatMap(s=>roleIntel(r,s));assert.equal(new Set(intel.map(i=>i.role)).size,5);assert.ok(r.students.every(s=>roleIntel(r,s).length));}});
 test('blank rubric scores remain ungraded; game rank does not create grades',()=>{const r=makeRoom('ABCDEFGH','test'),s={team:'pulse',grades:{initial:10,defense:15}};assert.equal(totalGrade(r,s),null);r.teams[0].grades=Object.fromEntries(RUBRIC.filter(x=>x.level==='group').map(x=>[x.id,x.max]));assert.equal(totalGrade(r,s),100);});
 test('deterministic scores, bounded metrics, and ties share rank',()=>{assert.deepEqual(scoreCampaign(c,BRANDS[0],[c]),scoreCampaign(c,BRANDS[0],[c]));let seed=13;const rnd=n=>{seed=(seed*1664525+1013904223)>>>0;return seed%n;};for(let n=0;n<1000;n++){const x={...c};for(const [k,v]of Object.entries(OPTIONS))x[k]=v[rnd(v.length)].id;for(const b of BRANDS){const r=scoreCampaign(x,b,[x],n%2===0);assert.ok(r.power>=0&&r.power<=100);assert.ok(Object.values(r.metrics).every(v=>v>=0&&v<=100));}}const r=marketResults([{id:'a',brand:'pulse',initial:{...c}},{id:'b',brand:'pulse',initial:{...c}}]);assert.equal(r[0].rank,r[1].rank);});
+
+test('30-minute format preserves a complete campaign with consolidated reasoning',async()=>{
+ const {ROUND_MINUTES}=await import('../model.mjs');
+ assert.equal(ROUND_MINUTES.reduce((a,b)=>a+b,0),30);
+ const concise={...c,marketingType:'through',strategy:'We target players seeking social competition to build brand awareness with a useful clinic.',behavior:'Join the clinic',mixReason:'A free clinic on our site uses referrals and transparent public relations to market our brand through esports.',activationReason:'Our community creator invites players on Twitch, runs the clinic, then shares a useful recap.',authReason:'The clinic earns trust through useful coaching. We give up reach, risk board impatience, and publish participation evidence to defend the choice.'};
+ delete concise.audienceReason;delete concise.riskReason;
+ assert.equal(validateCampaign(concise),true);
+ assert.throws(()=>validateCampaign({...concise,authReason:''}));
+ assert.throws(()=>validateCampaign({...concise,marketingType:''}));
+ assert.throws(()=>validateCampaign({...concise,place:''}));
+ const expanded={...concise,audienceReason:'Extra prose',riskReason:'Extra prose'};assert.deepEqual(scoreCampaign(concise,BRANDS[0],[concise]),scoreCampaign(expanded,BRANDS[0],[expanded]));
+});

@@ -10,6 +10,27 @@ A multiplayer classroom simulation for Jeffrey Levine's September 2026 esports-m
 
 Instructor access is a private 256-bit key delivered outside the repository. The student and projector links never contain that key. Keep the instructor console on the private monitor and project only the separate feed.
 
+## 30-minute classroom format
+
+| Phase | Minutes |
+| --- | ---: |
+| Join / lobby | 2 |
+| Independent position | 2 |
+| Role briefing | 2 |
+| Campaign build | 8 |
+| Initial market reveal | 2 |
+| Shock and adaptation | 5 |
+| Final reveal | 1 |
+| Individual defense | 3 |
+| Debrief | 5 |
+| **Total** | **30** |
+
+Use after teaching the marketing concepts. Assign brands and share the link before explaining the exercise. Each transition starts its recommended timer; instructors can pause, reset or hide it. Zero never auto-submits or advances. Human discussion and joining speed can vary; the 30 minutes is a facilitation target, not a forced cutoff.
+
+Initial positions require 2–3 sentences and final defenses 3–4 sentences. Group writing is four short explanations: strategy with audience motivation, Five Ps integration, creator/channel/journey, and combined credibility/tradeoff/stakeholder risk/mitigation. The consumer action is a short phrase; the of/through distinction is selected and explained in the mix memo. Separate legacy audience/risk answers remain readable. The shock opens a focused response screen with the campaign already loaded; teams edit tactics only if needed.
+
+All Five Ps, audience choice, creator/channel choice, event journey, 100-credit budget, shared market, authenticity, private role intelligence, rotation, adaptation, and the 100-point rubric remain intact. Academic scores still reflect reasoning rather than market rank. Grading/export takes place after the exercise.
+
 ## What this implements
 
 - Six brands with distinct mandates, profiles and metric weights; fixed 100-credit budgets.
@@ -38,7 +59,7 @@ Based on the supplied `26-9-21-Marketing Slides.pptx` (23 slides) and the curren
 | Slide 22: consumption before/during/after events | Three-part activation journey and a written relationship explanation |
 | Syllabus: independent position before deliberation | Server-gated peer disclosure; locked individual recommendation |
 | Syllabus: incomplete information, stakeholder tensions, change | Private role briefs, shared market signals, risk memo and common shock |
-| Syllabus: individual assessment | Initial position (10) and final defense (15), separate from shared reasoning (75) |
+| Syllabus: individual assessment | Concise initial position (10) and final defense (15), separate from shared reasoning (75) |
 
 Gender is not used as a deterministic audience variable. The classroom model does not generalize the slide 12 study into stereotypes.
 
