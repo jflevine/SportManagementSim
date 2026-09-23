@@ -1,4 +1,4 @@
-import {BRANDS,PHASES,ROUND_MINUTES,MARKETING_TYPES,ROLES,METRICS,AUDIENCES,OBJECTIVES,OPTIONS,LABELS,JOURNEY,TONES,SHOCK,RUBRIC,brand,choice,budget,campaignCost,validateCampaign,totalGrade,clone} from './model.mjs';
+import {BRANDS,PHASES,ROUND_MINUTES,MARKETING_TYPES,ROLES,METRICS,AUDIENCES,OBJECTIVES,OPTIONS,LABELS,JOURNEY,TONES,SHOCK,RUBRIC,brand,choice,budget,campaignCost,validateCampaign,totalGrade,clone} from './model.mjs?v=30min-1';
 const API='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm343-marketing-arena';
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search);let mode=params.get('view')||'student',code=(params.get('room')||'').toUpperCase();
