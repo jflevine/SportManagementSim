@@ -109,14 +109,10 @@ function renderProposalDetail() {
   $('#proposalType').textContent = p.type.toUpperCase();
   $('#proposalTitle').textContent = p.name;
   $('#proposalSubtitle').textContent = p.subtitle;
-  $('#proposalDetail').textContent = p.detail;
-  $('#forecastDown').textContent = money(scenario.downsideNet);
+  $('#proposalDetail').textContent = `${p.detail} ${proposalContext(p)}`;
   $('#forecastBase').textContent = money(scenario.baseNet);
-  $('#forecastUp').textContent = money(scenario.upsideNet);
   $('#forecastConfidence').textContent = p.confidence;
   $('#proposalCost').textContent = money(p.upfront);
-  $('#proposalAnnual').textContent = money(p.annualRevenue || 0);
-  $('#proposalOpex').textContent = money(p.annualCost || 0);
   $('#proposalTerm').textContent = `${p.term} yrs`;
 
   $('#fundingWrap').classList.toggle('hidden', !p.debtEligible);
@@ -159,16 +155,14 @@ function renderDocuments(p, debtPct) {
   const roiLabel = p.type === 'capital' ? 'Direct project ROI' : 'Year-1 direct cash ROI';
 
   $('#docWorkbook').innerHTML = `<div class="sheet"><table><tbody>
-    <tr><th>Initial commitment</th><td>${money(p.upfront)}</td></tr>
     <tr><th>Cash required now</th><td>${money(impact.cashNeed)}</td></tr>
     <tr><th>New debt</th><td>${money(impact.debtAmount)}</td></tr>
-    <tr><th>Base annual gross benefit</th><td>${money(p.annualRevenue || 0)}</td></tr>
+    <tr><th>Annual gross benefit</th><td>${money(p.annualRevenue || 0)}</td></tr>
     <tr><th>Annual recurring cost</th><td>${money(p.annualCost || 0)}</td></tr>
     <tr><th>Estimated annual debt service</th><td>${money(impact.annualDebtService)}</td></tr>
-    <tr class="strong"><th>Base annual cash contribution</th><td>${money(scenario.baseNet)}</td></tr>
     <tr class="strong"><th>${roiLabel}</th><td>${impact.directROI.toFixed(1)}%</td></tr>
     <tr><th>Approx. break-even</th><td>${impact.breakEvenYears ? `${impact.breakEvenYears.toFixed(1)} years` : 'No direct-cash break-even in base case'}</td></tr>
-  </tbody></table><p class="sheet-note">Direct ROI captures modeled cash economics only. Player wins, brand value, fan effects, and strategic flexibility are shown separately because they are not guaranteed cash receipts.</p></div>`;
+  </tbody></table><p class="sheet-note">Direct ROI captures modeled cash economics only. Competitive, brand, fan, and flexibility effects remain strategic—not guaranteed cash receipts.</p></div>`;
 
   const maxAbs = Math.max(1, Math.abs(scenario.downsideNet), Math.abs(scenario.baseNet), Math.abs(scenario.upsideNet));
   const bar = v => Math.max(10, Math.round(Math.abs(v) / maxAbs * 95));
@@ -181,42 +175,23 @@ function renderDocuments(p, debtPct) {
   $('#docAdvisors').innerHTML = Object.entries(views).map(([name, text]) =>
     `<article class="advisor"><span>${name}</span><p>${text}</p></article>`
   ).join('');
-  $('#docMemo').innerHTML = departmentMemo(p);
 
-  $$('.doc-tab').forEach(b => b.onclick = () => {
+  $('.doc-tab').forEach(b => b.onclick = () => {
     const id = b.dataset.doc;
     $$('.doc-tab').forEach(x => x.classList.toggle('selected', x === b));
     $$('.doc-panel').forEach(x => x.classList.toggle('active', x.id === id));
   });
 }
 
-function departmentMemo(p) {
+function proposalContext(p) {
   if (p.type === 'player') {
-    return `<div class="memo"><h4>PLAYER / SCOUTING REPORT</h4>
-      <p><b>Competitive contribution:</b> ${(p.wins * 100).toFixed(1)} expected win-percentage points before uncertainty.</p>
-      <p><b>Commercial effect:</b> ${p.brand >= 4 ? 'High star / brand potential' : 'Moderate or limited star effect'}.</p>
-      <p><b>Contract burden:</b> ${money(p.annualCost || 0)} per year for ${p.term} years, plus ${money(p.upfront)} upfront.</p>
-      <p><b>Risk lens:</b> Direct cash ROI may be negative even when the competitive case is strong. Availability and performance can move realized value materially.</p>
-      <p><b>Exit flexibility:</b> ${p.term >= 4 ? 'Long commitment; later years matter.' : 'Shorter commitment; easier to reset.'}</p>
-    </div>`;
+    return `Management lens: competitive upside comes with ${money(p.annualCost || 0)} in annual contract cost and performance risk.`;
   }
   if (p.type === 'capital') {
-    return `<div class="memo"><h4>FACILITY / OPERATIONS MEMO</h4>
-      <p><b>Planning horizon:</b> ${p.term} years in this teaching model.</p>
-      <p><b>Facility benefit:</b> +${p.facility || 0} long-run facility points before annual depreciation.</p>
-      <p><b>Lifecycle cost:</b> ${money(p.annualCost || 0)} recurring annual operating cost.</p>
-      <p><b>Financing choice:</b> Debt preserves cash today but creates fixed annual debt service and reduces future flexibility.</p>
-      <p><b>Key risk:</b> ${p.risk > .28 ? 'High construction / adoption uncertainty.' : 'Moderate project and demand uncertainty.'}</p>
-    </div>`;
+    return `Management lens: this can strengthen the asset base, but upfront funding can reduce liquidity or add fixed debt obligations.`;
   }
-  return `<div class="memo"><h4>REVENUE / FAN MEMO</h4>
-    <p><b>Primary engine:</b> ${p.stream || 'commercial operations'}.</p>
-    <p><b>Expected annual gross contribution:</b> ${money(p.annualRevenue || 0)} before recurring program cost.</p>
-    <p><b>Fan effect:</b> ${p.fan >= 2 ? 'Meaningful relationship benefit.' : 'Limited direct fan effect.'}</p>
-    <p><b>Watch:</b> Marginal return can decline as the local market saturates.</p>
-  </div>`;
+  return `Management lens: the direct case depends on incremental ${p.stream || 'commercial'} revenue after recurring cost; local demand can saturate.`;
 }
-
 function renderPortfolio() {
   const forecast = forecastCycle(state, selections);
   $('#portfolioList').innerHTML = selections.length
