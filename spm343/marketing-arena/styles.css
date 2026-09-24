@@ -20,3 +20,14 @@ select:focus{
   background:#ffffff;
   color:#111b28;
 }
+
+
+/* Hotfix 2026-09-24b: use visible radio-card choices for the individual round */
+.choice-group{border:0;padding:0;margin:0 0 20px}
+.choice-group legend{font-size:1rem;font-weight:700;margin:14px 0 10px}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice-card{display:flex;align-items:center;gap:10px;margin:0;padding:13px 14px;background:#0d1622;border:1px solid #576a80;border-radius:5px;cursor:pointer;font-weight:600}
+.choice-card:hover{border-color:#83c8f4}
+.choice-card input{width:18px;height:18px;min-height:0;flex:0 0 auto;accent-color:#f3c65b}
+.choice-card:has(input:checked){border-color:#f3c65b;background:#293126}
+@media(max-width:750px){.choice-grid{grid-template-columns:1fr}}
