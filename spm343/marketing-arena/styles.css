@@ -2,3 +2,21 @@
 
 /* Keep a six-brand live board readable on classroom projectors. */
 .projector-mode header{height:66px}.projector-mode main{padding-top:20px}.projector-mode .session-head h2{font-size:1.2rem}.projector-mode .eyebrow{margin-bottom:8px}.projector-mode .phasebar{margin:14px 0 20px}.projector-mode .phasebar span{padding:7px 9px}.projector-mode .projector h1{font-size:2.5rem;margin:6px 0 16px}.projector-mode .projector .leader-table td{padding:11px 14px;font-size:1.15rem}.projector-mode .projector .leader-table td.power{font-size:1.8rem}.projector-mode .projector .leader-table th{padding:12px 14px}.projector-mode .signal-grid{margin:14px 0}.projector-mode .signal{padding:10px 12px}.projector-mode .signal p{font-size:.8rem}.market-move{animation:market-flash 2.2s ease-out}@keyframes market-flash{0%{background:#4d4325}100%{background:transparent}}@media(prefers-reduced-motion:reduce){.market-move{animation:none}}
+
+
+/* Hotfix 2026-09-24: make native dropdown choices visible across Firefox/Chrome/macOS */
+select{
+  color-scheme:light;
+  background-color:#ffffff;
+  color:#111b28;
+  border:2px solid #83c8f4;
+  font-weight:600;
+}
+select option{
+  background:#ffffff;
+  color:#111b28;
+}
+select:focus{
+  background:#ffffff;
+  color:#111b28;
+}
