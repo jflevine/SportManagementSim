@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPM 370 Legal Literacy Check 2 — Copyright Trail</title>
+<style>
+:root{
+  --ink:#2a2117;--muted:#6f6251;--paper:#f5ead0;--paper2:#fff8e7;--line:#b89c6a;
+  --brown:#5b3822;--brown2:#7b5133;--gold:#d5a53d;--green:#486744;--blue:#4a6d83;--red:#9b4c3e;
+  --shadow:0 18px 48px rgba(58,38,20,.17);--r:18px;
+}
+*{box-sizing:border-box}
+html{background:#d8c8a5}
+body{margin:0;color:var(--ink);background:
+linear-gradient(rgba(255,255,255,.11),rgba(255,255,255,.11)),
+repeating-linear-gradient(0deg,#ddcfad 0,#ddcfad 2px,#d6c6a3 2px,#d6c6a3 4px);
+min-height:100vh;font-family:Georgia,"Times New Roman",serif}
+button,input{font:inherit}.shell{max-width:1120px;margin:auto;padding:22px 18px 54px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:11px}.badge{width:48px;height:48px;display:grid;place-items:center;background:#3e2a1b;color:#f7e5b6;border:3px double #d6ad59;border-radius:8px;font-family:"Courier New",monospace;font-weight:900}
+.brand strong{display:block}.brand span{display:block;color:var(--muted);font-size:.84rem;margin-top:2px}.pill{border:1px solid #8f744c;background:#f8edcf;padding:8px 11px;border-radius:6px;font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.hero{position:relative;overflow:hidden;background:#2f241b;color:#fff0c6;border:4px double #b99354;border-radius:16px;padding:30px;box-shadow:var(--shadow)}
+.hero:before{content:"";position:absolute;inset:0;opacity:.1;background-image:linear-gradient(90deg,#fff 1px,transparent 1px),linear-gradient(#fff 1px,transparent 1px);background-size:8px 8px}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+.eyebrow{font-family:"Courier New",monospace;text-transform:uppercase;letter-spacing:.12em;color:#e6bd63;font-size:.75rem;font-weight:900;margin-bottom:10px}
+h1{font-family:"Courier New",monospace;font-size:clamp(2.7rem,6vw,5.2rem);line-height:.9;margin:0 0 12px;letter-spacing:-.04em;text-shadow:3px 3px 0 #68472d}
+.sub{font-family:"Courier New",monospace;font-size:1.25rem;font-weight:900;color:#f1cd7a;margin-bottom:13px}
+.hero p{font-size:1.02rem;line-height:1.62;color:#f4ead7;margin:0;max-width:680px}
+.preview{background:#c9d7c1;border:3px solid #d7b66e;border-radius:9px;overflow:hidden;box-shadow:inset 0 0 0 3px #40301f;min-height:250px;position:relative}
+.preview-sky{height:118px;background:linear-gradient(#8bb5c8,#d7ded1);position:relative}.sun{position:absolute;width:34px;height:34px;border-radius:50%;background:#eed06b;right:35px;top:24px;box-shadow:0 0 0 4px rgba(255,236,149,.25)}
+.mountain{position:absolute;bottom:0;width:0;height:0;border-left:74px solid transparent;border-right:74px solid transparent;border-bottom:82px solid #6e826c}.m1{left:5px}.m2{left:95px;transform:scale(.8);transform-origin:bottom}.m3{right:-18px;transform:scale(.9)}
+.preview-ground{height:132px;background:linear-gradient(#8da15d 0 24%,#c7a46c 24% 100%);position:relative}.trail-line{position:absolute;left:4%;right:4%;top:72px;border-top:5px dashed #6f5030}
+.preview .wagon{left:17%;top:30px;transform:scale(.95)}
+.rules{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.rule{background:rgba(255,248,225,.09);border:1px solid rgba(242,209,137,.35);border-radius:9px;padding:12px;font-size:.87rem;line-height:1.42}.rule strong{display:block;color:#ffd986;margin-bottom:3px}
+.identity{position:relative;z-index:1;margin-top:18px;padding:18px;border:1px solid rgba(242,209,137,.4);background:rgba(0,0,0,.14);border-radius:10px}.identity h3{font-family:"Courier New",monospace;margin:0 0 12px}.igrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field span{display:block;font-size:.78rem;color:#f0dfbd;margin-bottom:5px}.field input{width:100%;padding:11px 12px;border:2px solid #b89a62;background:#fff8e7;border-radius:6px;color:#2c241d;outline:none}.field input:focus{border-color:#e4bf68;box-shadow:0 0 0 3px rgba(228,191,104,.18)}.field.full{grid-column:1/-1}.honor{display:flex;gap:9px;margin-top:12px;font-size:.84rem;color:#eadcc2;line-height:1.45}.honor input{margin-top:3px}.validation{min-height:1.1em;color:#ffd483;font-size:.82rem;margin-top:7px}.cta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:13px}.note{font-size:.78rem;color:#d6c9b2}
+button{border:2px solid #4f341f;background:#f3d98e;color:#312216;padding:10px 15px;border-radius:7px;font-weight:900;cursor:pointer;box-shadow:3px 3px 0 #4b3424;transition:transform .12s ease,box-shadow .12s ease}
+button:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 #4b3424}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#f7efd7}.danger{background:#e5c0a4}
+.app{display:none;margin-top:17px}.statusbar{background:#fff7e2;border:2px solid #947348;border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr auto auto;gap:13px;align-items:center;position:sticky;top:7px;z-index:10}.statusbar strong{font-family:"Courier New",monospace}.stat-chip{background:#ead8ac;border:1px solid #a7834f;padding:7px 10px;border-radius:5px;font-family:"Courier New",monospace;font-size:.75rem;font-weight:900}
+.route-card{margin-top:14px;background:#c8d3b4;border:3px solid #6e5639;border-radius:13px;overflow:hidden;box-shadow:var(--shadow);position:relative}.sky{height:128px;background:linear-gradient(#8db9cf,#dbe2d7);position:relative;overflow:hidden}.cloud{position:absolute;background:#f2efe2;width:58px;height:17px;border-radius:20px;opacity:.75}.cloud:before,.cloud:after{content:"";position:absolute;border-radius:50%;background:inherit}.cloud:before{width:24px;height:24px;left:8px;top:-10px}.cloud:after{width:31px;height:31px;right:8px;top:-14px}.c1{left:12%;top:35px}.c2{left:61%;top:18px;transform:scale(.8)}.c3{right:7%;top:48px;transform:scale(.6)}
+.land{height:154px;background:linear-gradient(#8ca15a 0 22%,#b98f59 22% 100%);position:relative}.route{position:absolute;left:4%;right:4%;top:88px;height:10px;background:#dbc093;border-top:3px solid #80603a;border-bottom:3px solid #80603a}.route:after{content:"";position:absolute;inset:2px 0;border-top:2px dashed #745333}
+.landmark{position:absolute;top:47px;transform:translateX(-50%);font-family:"Courier New",monospace;font-size:.62rem;font-weight:900;color:#3e2a1b;text-align:center}.landmark i{display:block;font-style:normal;font-size:1.6rem;line-height:1}.l1{left:28%}.l2{left:51%}.l3{left:74%}.l4{left:94%}
+.wagon{position:absolute;width:86px;height:56px;z-index:4;left:4%;top:58px;transition:left .8s cubic-bezier(.2,.85,.2,1)}
+.cover{position:absolute;left:18px;top:0;width:51px;height:32px;background:#efe4c4;border:3px solid #4b3522;border-radius:26px 26px 4px 4px}.bed{position:absolute;left:14px;top:27px;width:59px;height:17px;background:#7d4e2a;border:3px solid #3c291c}.wheel{position:absolute;top:38px;width:20px;height:20px;border-radius:50%;border:4px solid #3a2b20;background:#c69b5f}.wheel:after{content:"";position:absolute;left:6px;top:-3px;height:18px;border-left:2px solid #3a2b20;transform:rotate(45deg)}.w1{left:17px}.w2{right:9px}.tongue{position:absolute;left:70px;top:35px;width:22px;border-top:3px solid #3b291b}.wagon.roll .wheel{animation:spin .5s linear 2}.wagon.bump{animation:bump .55s ease}.dust{position:absolute;width:11px;height:11px;border-radius:50%;background:#e1c89a;left:18px;top:112px;opacity:0}.dust.go{animation:dust 1s ease}
+.route-caption{position:absolute;right:12px;top:10px;background:rgba(255,248,223,.82);border:1px solid #80603a;border-radius:5px;padding:5px 7px;font-family:"Courier New",monospace;font-size:.64rem;font-weight:900}
+.content{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.65fr);gap:17px;margin-top:15px}.card{background:#fff8e7;border:2px solid #9f7f50;border-radius:13px;box-shadow:var(--shadow)}.question-card{padding:24px}.qmeta{display:flex;justify-content:space-between;gap:10px;align-items:center;font-family:"Courier New",monospace;color:#7f5f35;font-size:.72rem;font-weight:900;text-transform:uppercase}.question-card h2{font-family:"Courier New",monospace;font-size:1.55rem;line-height:1.15;margin:10px 0 12px}.scenario{background:#f0e2bd;border-left:5px solid #7f5636;padding:13px 14px;border-radius:7px;line-height:1.55;margin:0 0 17px}.question{font-size:1.05rem;line-height:1.5;font-weight:700;margin-bottom:12px}.option{display:flex;gap:11px;border:2px solid #c2a87a;background:#fffdf5;border-radius:8px;padding:12px 13px;margin:8px 0;cursor:pointer;transition:.12s}.option:hover{border-color:#815f36}.option.selected{border-color:#4c633d;background:#edf1df;box-shadow:inset 0 0 0 2px #8ba271}.letter{width:29px;height:29px;flex:0 0 29px;border-radius:5px;background:#60452e;color:#f9e8b6;display:grid;place-items:center;font-family:"Courier New",monospace;font-weight:900}.otext{line-height:1.42;padding-top:3px}.actions{display:flex;justify-content:space-between;gap:11px;align-items:center;margin-top:15px}.locked{color:var(--muted);font-size:.82rem}.feedback{display:none;margin-top:16px;border:2px solid #aa8b57;background:#f0e3c3;border-radius:8px;padding:13px}.feedback.good{border-color:#5d784f;background:#e6efd9}.feedback.neutral{border-color:#a57b56;background:#f3e0c8}.feedback strong{font-family:"Courier New",monospace;display:block;margin-bottom:3px}.feedback p{margin:0;line-height:1.43;font-size:.9rem}.nextwrap{text-align:right;margin-top:12px}
+.side{padding:18px;height:max-content;position:sticky;top:88px}.side h3{font-family:"Courier New",monospace;font-size:.9rem;margin:0 0 10px;text-transform:uppercase}.student{background:#ead8ad;border:1px solid #ae8b55;border-radius:7px;padding:10px;margin-bottom:12px;font-size:.82rem;line-height:1.35}.guide{display:grid;gap:8px}.guide div{border:1px solid #cdb789;background:#fffdf5;border-radius:7px;padding:10px}.guide strong{display:block;font-family:"Courier New",monospace;font-size:.72rem;margin-bottom:3px;color:#4c3524}.guide span{font-size:.78rem;line-height:1.38;color:#5f5549}.side .mini{font-size:.75rem;line-height:1.45;color:var(--muted);border-top:1px solid #cfb98d;margin-top:12px;padding-top:10px}
+.finish{display:none;margin-top:16px;background:#fff8e7;border:3px double #8f6c3f;border-radius:14px;padding:34px;text-align:center;box-shadow:var(--shadow)}.finish h2{font-family:"Courier New",monospace;font-size:2.2rem;margin:0;color:#4f3826}.score{font-family:"Courier New",monospace;font-size:4.5rem;font-weight:900;color:#405c3c;line-height:1;margin:17px 0 3px}.out{color:var(--muted)}.bands{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:760px;margin:20px auto}.band{text-align:left;background:#f0e2bd;border:1px solid #b69866;border-radius:8px;padding:11px}.band strong{display:block;font-family:"Courier New",monospace;font-size:.72rem;margin-bottom:4px}.receipt{max-width:700px;margin:18px auto;padding:14px;border:2px dashed #9a784b;background:#f5e7c4;border-radius:8px;text-align:left}.receipt small{display:block;text-transform:uppercase;letter-spacing:.09em;color:#7c6648;font-weight:900;margin-bottom:5px}.receipt code{font-family:"Courier New",monospace;font-weight:900;word-break:break-all}.success{max-width:760px;margin:13px auto;background:#e7efd9;border:1px solid #76905f;padding:12px;border-radius:8px;color:#3e5837;line-height:1.45}.warn{max-width:760px;margin:10px auto;color:#6a5841;font-size:.84rem}
+.resume-note{display:none;margin:0 0 14px;background:#f2dfaa;border:2px solid #9c7440;border-radius:8px;padding:12px;font-size:.88rem}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes bump{0%,100%{transform:translateY(0)}35%{transform:translateY(-9px)}60%{transform:translateY(2px)}}@keyframes dust{0%{opacity:0;transform:scale(.5) translate(0,0)}25%{opacity:.8}100%{opacity:0;transform:scale(2.4) translate(-32px,-15px)}}
+@media(max-width:860px){.hero-grid,.content{grid-template-columns:1fr}.rules,.bands{grid-template-columns:1fr}.side{position:static}.preview{min-height:220px}.pill{display:none}}
+@media(max-width:580px){.shell{padding:12px 9px 34px}.hero{padding:22px 15px}.igrid{grid-template-columns:1fr}.field.full{grid-column:auto}.statusbar{grid-template-columns:1fr 1fr}.statusbar>strong{grid-column:1/-1}.question-card{padding:18px 14px}.actions{align-items:flex-start;flex-direction:column}.actions button{width:100%}.landmark{font-size:.52rem}.landmark i{font-size:1.25rem}.wagon{transform:scale(.82);transform-origin:left bottom}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="top">
+  <div class="brand"><div class="badge">370</div><div><strong>SPM 370 · Esports, Video Games, and the Law</strong><span>Legal Literacy Check 2 · Copyright</span></div></div>
+  <div class="pill">Graded In-Class Check</div>
+</div>
+
+<div id="resumeNote" class="resume-note">A saved attempt was found on this device. Reopening your trail…</div>
+
+<section class="hero" id="intro">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">Legal Literacy Check 2</div>
+      <h1>COPYRIGHT TRAIL</h1>
+      <div class="sub">Eight checkpoints to the championship stream</div>
+      <p>Your production wagon is headed to the collegiate esports finals. At each checkpoint, make one copyright call. Correct answers earn trail mileage and move the wagon forward. A missed checkpoint costs no extra penalty—you still answer every question and finish the assessment.</p>
+    </div>
+    <div class="preview" aria-hidden="true">
+      <div class="preview-sky"><div class="sun"></div><div class="mountain m1"></div><div class="mountain m2"></div><div class="mountain m3"></div></div>
+      <div class="preview-ground"><div class="trail-line"></div><div class="wagon"><div class="cover"></div><div class="bed"></div><div class="wheel w1"></div><div class="wheel w2"></div><div class="tongue"></div></div></div>
+    </div>
+  </div>
+  <div class="rules">
+    <div class="rule"><strong>8 checkpoints · 8 points</strong>One clear multiple-choice question at each stop</div>
+    <div class="rule"><strong>Fair grading</strong>Everyone receives all eight questions regardless of mistakes</div>
+    <div class="rule"><strong>Secure scoring</strong>The answer key stays on the server, not in the public webpage</div>
+  </div>
+  <div class="identity">
+    <h3>TRAVELER LOG</h3>
+    <div class="igrid">
+      <label class="field"><span>First name</span><input id="firstName" maxlength="60" autocomplete="given-name"></label>
+      <label class="field"><span>Last name</span><input id="lastName" maxlength="60" autocomplete="family-name"></label>
+      <label class="field full"><span>La Salle email</span><input id="email" type="email" placeholder="student@lasalle.edu" maxlength="120" autocomplete="email"></label>
+    </div>
+    <label class="honor"><input type="checkbox" id="honor"><span>I confirm that I am completing this graded Legal Literacy Check individually without notes, outside resources, collaboration, or generative AI.</span></label>
+    <div class="validation" id="validation"></div>
+    <div class="cta"><button id="startBtn" disabled>Begin the Trail</button><span class="note">One completed submission is permitted per La Salle email.</span></div>
+  </div>
+</section>
+
+<div class="app" id="app">
+  <div class="statusbar">
+    <strong id="checkpointLabel">Checkpoint 1 of 8</strong>
+    <div class="stat-chip" id="answeredChip">ANSWERED 0/8</div>
+    <div class="stat-chip" id="milesChip">MILES 0/8</div>
+  </div>
+
+  <div class="route-card">
+    <div class="sky"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
+    <div class="land">
+      <div class="route"></div>
+      <div class="landmark l1"><i>≈</i>RIVER</div>
+      <div class="landmark l2"><i>▣</i>FORT</div>
+      <div class="landmark l3"><i>▲</i>PASS</div>
+      <div class="landmark l4"><i>★</i>FINALS</div>
+      <div class="wagon" id="wagon"><div class="cover"></div><div class="bed"></div><div class="wheel w1"></div><div class="wheel w2"></div><div class="tongue"></div></div>
+      <div class="dust" id="dust"></div>
+      <div class="route-caption">WAGON MOVES ONLY FOR CORRECT ANSWERS</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <main class="card question-card">
+      <div class="qmeta"><span id="topic"></span><span id="qnum">1 / 8</span></div>
+      <h2 id="title"></h2>
+      <div class="scenario" id="scenario"></div>
+      <div class="question" id="question"></div>
+      <div id="options"></div>
+      <div class="actions"><span class="locked" id="locked">Select one answer.</span><button id="lockBtn" disabled>Lock Answer</button></div>
+      <div class="feedback" id="feedback"><strong id="feedbackTitle"></strong><p id="feedbackText"></p><div class="nextwrap"><button class="secondary" id="nextBtn">Continue</button></div></div>
+    </main>
+
+    <aside class="card side">
+      <h3>Trail Guide</h3>
+      <div class="student" id="student"></div>
+      <div class="guide">
+        <div><strong>1 · Name the work</strong><span>Game code, artwork, music, footage, or another expressive work?</span></div>
+        <div><strong>2 · Name the right</strong><span>Copying, adaptation, distribution, performance, or display?</span></div>
+        <div><strong>3 · Check permission</strong><span>What license, policy, agreement, or defense matters?</span></div>
+        <div><strong>4 · Keep issues separate</strong><span>Copyright, contract, platform rules, and DMCA procedures are not identical.</span></div>
+      </div>
+      <div class="mini">The trail animation is only a score visualization. It never blocks you from finishing the assessment.</div>
+    </aside>
+  </div>
+</div>
+
+<section class="finish" id="finish">
+  <div class="eyebrow" style="color:#7c5d32">Trail complete</div>
+  <h2>Your copyright file has been submitted.</h2>
+  <div id="finishName" style="color:var(--muted);margin-top:7px"></div>
+  <div class="score" id="score">0</div><div class="out">out of 8</div>
+  <div class="bands">
+    <div class="band"><strong>FOUNDATIONS</strong><span id="foundationBand">—</span></div>
+    <div class="band"><strong>RIGHTS + PERMISSION</strong><span id="rightsBand">—</span></div>
+    <div class="band"><strong>DMCA + FAIR USE</strong><span id="dmcaBand">—</span></div>
+  </div>
+  <div class="receipt"><small>Secure completion receipt</small><code id="receipt"></code></div>
+  <button class="secondary" id="copyReceipt">Copy Receipt</button>
+  <div class="success"><strong>Official score saved.</strong> Your name, La Salle email, responses, score, and timing are stored for your instructor.</div>
+  <div class="warn">Keep this screen available until your instructor says you may close it.</div>
+</section>
+</div>
+
+<script>
+(function(){
+const ENDPOINT="https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-llc2";
+const STORAGE="spm370_llc2_attempt_v1";
+const qs=[
+ {topic:"Copyright Basics",title:"Checkpoint 1 · The Saved Poster",scenario:"A student designer creates an original tournament poster and saves the file to her laptop.",q:"When does copyright protection generally begin?",opts:["Only after the work is registered with the U.S. Copyright Office","When the original work is fixed in the saved file","Only after the poster is sold or publicly displayed","Only after the creator places a copyright notice on it"]},
+ {topic:"Ideas vs. Expression",title:"Checkpoint 2 · The Shared Mechanic",scenario:"Two competitive games both use teams fighting to capture control points.",q:"What would copyright most clearly protect?",opts:["The general idea of teams capturing control points","The concept of assigning players different strategic roles","Specific character artwork, animations, music, and code","The basic rules needed to play the game"]},
+ {topic:"Ownership",title:"Checkpoint 3 · The Highlight Designer",scenario:"A team employee creates new highlight graphics as part of her assigned job duties.",q:"Who generally owns that employee-created expression?",opts:["The employer under the work-made-for-hire rule","The employee in every situation because she physically created it","The players shown in the highlights","The streaming platform that later hosts the graphics"]},
+ {topic:"Exclusive Rights",title:"Checkpoint 4 · The Live Match",scenario:"A tournament streams moving gameplay live to an online audience.",q:"Which exclusive copyright right is most directly implicated by showing the moving gameplay?",opts:["Distribution","Public display","Public performance","Digital audio performance of sound recordings"]},
+ {topic:"Licensing",title:"Checkpoint 5 · The Walk-On Song",scenario:"A publisher permits the tournament to stream its game. The production team wants to add a popular commercial song to the broadcast.",q:"What should the organizer assume?",opts:["Permission to stream the game automatically includes any commercial music","The game-stream permission does not automatically clear third-party music","Music never raises copyright issues when used during esports","Buying a personal music subscription automatically clears broadcast use"]},
+ {topic:"DMCA Notice + Takedown",title:"Checkpoint 6 · The Removed VOD",scenario:"A platform removes a creator's archived match video after receiving a copyright notice.",q:"What does the platform's removal itself establish?",opts:["A court has conclusively found the creator liable for infringement","The creator has automatically lost all fair-use arguments","The copyright owner has automatically won statutory damages","It is a platform action under the notice-and-takedown process, not a court judgment"]},
+ {topic:"DMCA Anti-Circumvention",title:"Checkpoint 7 · The Locked Gate",scenario:"A modding tool bypasses an effective technological access control on a game.",q:"Which DMCA issue is most directly raised?",opts:["Anti-circumvention under Section 1201","The first-sale doctrine","Copyright registration timing","Public-domain status"]},
+ {topic:"Fair Use",title:"Checkpoint 8 · The Highlight Market",scenario:"A sponsored analysis show uses match clips. You are specifically concerned viewers may use the show instead of obtaining the publisher's official highlights.",q:"Which fair-use factor does that concern most directly address?",opts:["Purpose and character of the use","Nature of the copyrighted work","Effect on the market for the original or relevant licensing market","Amount and substantiality used"]}
+];
+
+let state={token:"",first:"",last:"",email:"",answered:0,score:0,responses:[],complete:false,receipt:null,foundation:0,rights:0,dmca:0,duration:null};
+let selected=null,locked=false;
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function save(){localStorage.setItem(STORAGE,JSON.stringify({token:state.token,first:state.first,last:state.last,email:state.email}))}
+function clearSaved(){localStorage.removeItem(STORAGE)}
+function validate(){
+ const f=$("firstName").value.trim(),l=$("lastName").value.trim(),e=$("email").value.trim().toLowerCase(),h=$("honor").checked;
+ let m=""; if(!f||!l||!e)m="Enter your first name, last name, and La Salle email.";
+ else if(!/^[^\s@]+@lasalle\.edu$/i.test(e))m="Use your La Salle email ending in @lasalle.edu.";
+ else if(!h)m="Confirm the individual-work statement before beginning.";
+ $("validation").textContent=m;$("startBtn").disabled=!!m;return !m;
+}
+["firstName","lastName","email"].forEach(id=>$(id).addEventListener("input",validate));$("honor").addEventListener("change",validate);
+function moveWagon(animate){
+ const pct=4+(state.score/8)*90;
+ $("wagon").style.left=pct+"%";
+ $("milesChip").textContent="MILES "+state.score+"/8";
+ $("answeredChip").textContent="ANSWERED "+state.answered+"/8";
+ if(animate){$("wagon").classList.remove("roll","bump");void $("wagon").offsetWidth;$("wagon").classList.add("roll","bump");$("dust").classList.remove("go");void $("dust").offsetWidth;$("dust").classList.add("go")}
+}
+function studentLabel(){ $("student").innerHTML="<strong>"+esc(state.first+" "+state.last)+"</strong><br>"+esc(state.email) }
+function enterApp(){
+ $("intro").style.display="none";$("resumeNote").style.display="none";$("app").style.display=state.complete?"none":"block";studentLabel();moveWagon(false);
+ if(state.complete)showFinish(); else render();
+}
+function render(){
+ selected=null;locked=false;const i=state.answered,item=qs[i];
+ $("checkpointLabel").textContent="Checkpoint "+(i+1)+" of 8";$("qnum").textContent=(i+1)+" / 8";$("topic").textContent=item.topic;$("title").textContent=item.title;$("scenario").textContent=item.scenario;$("question").textContent=item.q;$("options").innerHTML="";
+ item.opts.forEach((t,idx)=>{const el=document.createElement("div");el.className="option";el.tabIndex=0;el.setAttribute("role","radio");el.setAttribute("aria-checked","false");el.innerHTML='<div class="letter">'+String.fromCharCode(65+idx)+'</div><div class="otext">'+esc(t)+'</div>';
+  const choose=()=>{if(locked)return;selected=idx;document.querySelectorAll(".option").forEach(x=>{x.classList.remove("selected");x.setAttribute("aria-checked","false")});el.classList.add("selected");el.setAttribute("aria-checked","true");$("lockBtn").disabled=false;$("locked").textContent="Ready to lock this answer."};
+  el.addEventListener("click",choose);el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();choose()}});$("options").appendChild(el);
+ });
+ $("lockBtn").disabled=true;$("lockBtn").style.display="";$("locked").textContent="Select one answer.";$("feedback").style.display="none";moveWagon(false);window.scrollTo({top:0,behavior:"smooth"});
+}
+async function api(payload){
+ const r=await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+ let d={};try{d=await r.json()}catch(e){}
+ if(!r.ok){const er=new Error(d.error||"Request failed");er.code=d.code;er.data=d;throw er}return d;
+}
+$("startBtn").addEventListener("click",async()=>{
+ if(!validate())return;const b=$("startBtn");b.disabled=true;b.textContent="Preparing wagon…";
+ try{
+  const d=await api({action:"start",firstName:$("firstName").value.trim(),lastName:$("lastName").value.trim(),email:$("email").value.trim().toLowerCase()});
+  state.token=d.attemptToken;state.first=d.firstName;state.last=d.lastName;state.email=d.email;state.answered=0;state.score=0;state.responses=[];save();enterApp();
+ }catch(e){b.disabled=false;b.textContent="Begin the Trail";$("validation").textContent=e.code==="ALREADY_SUBMITTED"?"A completed submission already exists for this La Salle email.":(e.message||"Could not begin the check.");}
+});
+$("lockBtn").addEventListener("click",async()=>{
+ if(selected===null||locked)return;locked=true;$("lockBtn").disabled=true;$("lockBtn").textContent="Checking marker…";document.querySelectorAll(".option").forEach(x=>x.style.pointerEvents="none");
+ try{
+  const qn=state.answered+1;const d=await api({action:"answer",attemptToken:state.token,questionNumber:qn,answerIndex:selected});
+  state.responses.push({question:qn,answerIndex:selected,correct:d.correct});state.answered=d.answered;state.score=d.score;state.foundation=d.foundationsScore||0;state.rights=d.rightsPermissionsScore||0;state.dmca=d.dmcaFairUseScore||0;state.complete=!!d.complete;state.receipt=d.receipt||null;state.duration=d.durationMinutes;
+  const fb=$("feedback");fb.className="feedback "+(d.correct?"good":"neutral");$("feedbackTitle").textContent=d.correct?"Trail marker cleared — wagon advances!":"Checkpoint logged — keep moving.";$("feedbackText").textContent=d.correct?"You earned one point and one trail segment.":"No point at this checkpoint, but there is no extra penalty and the next question is still available.";
+  $("nextBtn").textContent=d.complete?"See Final Score":"Continue to Next Checkpoint";$("lockBtn").style.display="none";$("locked").textContent="Answer locked.";fb.style.display="block";moveWagon(!!d.correct);
+ }catch(e){locked=false;$("lockBtn").disabled=false;$("lockBtn").textContent="Lock Answer";document.querySelectorAll(".option").forEach(x=>x.style.pointerEvents="");alert("This answer was not saved. Keep the page open and try again.");}
+});
+$("nextBtn").addEventListener("click",()=>{if(state.complete){showFinish()}else render()});
+function showFinish(){
+ $("app").style.display="none";$("intro").style.display="none";$("finish").style.display="block";$("finishName").textContent=state.first+" "+state.last+" · "+state.email;$("score").textContent=state.score;$("foundationBand").textContent=(state.foundation||0)+" / 3";$("rightsBand").textContent=(state.rights||0)+" / 2";$("dmcaBand").textContent=(state.dmca||0)+" / 3";$("receipt").textContent=state.receipt||"Saved";clearSaved();window.scrollTo({top:0,behavior:"smooth"});
+}
+$("copyReceipt").addEventListener("click",async()=>{const t="SPM 370 Legal Literacy Check 2 — "+state.first+" "+state.last+" — Score: "+state.score+"/8 — Receipt: "+(state.receipt||"");try{await navigator.clipboard.writeText(t);$("copyReceipt").textContent="Copied"}catch(e){$("copyReceipt").textContent="Copy receipt manually"}});
+
+(async function resume(){
+ let saved=null;try{saved=JSON.parse(localStorage.getItem(STORAGE)||"null")}catch(e){}
+ if(!saved?.token)return;$("resumeNote").style.display="block";
+ try{
+   const d=await api({action:"resume",attemptToken:saved.token});
+   state.token=saved.token;state.first=d.firstName;state.last=d.lastName;state.email=d.email;state.responses=d.responses||[];state.answered=d.answered||0;state.score=d.score||0;state.complete=!!d.complete;state.receipt=d.receipt||null;state.duration=d.durationMinutes;state.foundation=d.foundationsScore||0;state.rights=d.rightsPermissionsScore||0;state.dmca=d.dmcaFairUseScore||0;
+   if(state.complete){clearSaved();showFinish()}else enterApp();
+ }catch(e){clearSaved();$("resumeNote").style.display="none";}
+})();
+})();
+</script>
+</body>
+</html>
