@@ -61,3 +61,38 @@ Recommended debrief:
 Static HTML / CSS / JavaScript modules; no build step or backend required.
 
 The economics are fictional and intentionally simplified for instruction. They are not a forecast, CBA model, accounting system, or representation of a specific professional league or club.
+## September 2026 decision replay and Day 2 extension
+
+Results now include a short animated replay built entirely from the recorded cycle:
+club cash and borrowing, each funded proposal, the club's season, shared league
+revenue, and the profit-to-cash reconciliation. The venue highlights selected and
+continuing investments; occupied seats reflect recorded attendance. The replay
+runs for 12–18 seconds and supports pause, previous/next, skip, replay and a full
+text recap. Reduced-motion preferences disable autoplay and motion. Replay does
+not rerun chance, change outcomes, or delay access to the results and next cycle.
+
+The optional **Day 2 lens** shows shared revenue as a proportion of club revenue
+and lets students inspect a 20% reduction in that cycle's league distribution.
+It is a one-cycle sensitivity with all other inputs held fixed, not a forecast of
+owner behavior or a new scored game mode. This supports Day 2 slides 2, 7, 9,
+12, 14 and 22: joint production, growth costs, resource distribution and the
+limits of sharing. There is no added league-policy selection, draft, cap, tax,
+NIL system or rival league. Existing three/five-cycle modes remain intact.
+
+Finance reconciliation for the replay:
+- Operating profit excludes interest; cash then subtracts interest, cash invested
+  and principal repaid. Financing is not revenue.
+- Debt forecasts use the same equal-principal schedule as actual debt payments.
+- Direct ROI is before financing; direct cash contribution includes first-year
+  debt service. Interest falls as the outstanding balance declines.
+- Proposal-specific uncertainty is stable across selection order for the same seed.
+- The existing board financial/value calculations retain their after-interest
+  basis; the optional league comparison never alters the score.
+- Holding cash is available, requires a rationale, and retains existing obligations.
+
+Run the model tests with Node 22 or newer:
+`node --test mgt340/pro-sport-tycoon/tests/model.test.mjs`
+
+The game runs in the current browser tab. It has no student login, server-side
+grade capture or save/resume. Copy Board Report now includes each cycle's
+original rationale, accepted risk and financial result.

@@ -134,13 +134,13 @@ export function estimateProposalImpact(state,proposal,debtPct=0){
   const cashNeed=proposal.upfront-debtAmount;
   const rate=.058;
   const term=proposal.type==='capital'?10:6;
-  const annualDebtService=debtAmount?debtAmount*(rate/(1-Math.pow(1+rate,-term))):0;
+  const annualDebtService=debtAmount ? debtAmount/term + debtAmount*rate : 0;
   const directNet=(proposal.annualRevenue||0)-(proposal.annualCost||0);
   const afterDebtNet=directNet-annualDebtService;
   const year1Commitment=proposal.type==='capital'?Math.max(1,proposal.upfront):Math.max(1,proposal.upfront+(proposal.annualCost||0));
-  const directROI=afterDebtNet/year1Commitment*100;
+  const directROI=directNet/year1Commitment*100;
   const cashOnCashROI=cashNeed>0?afterDebtNet/cashNeed*100:0;
-  const breakEvenYears=afterDebtNet>0?proposal.upfront/afterDebtNet:null;
+  const breakEvenYears=directNet>0?proposal.upfront/directNet:null;
   return {
     debtPct:debtAllowed,debtAmount:round(debtAmount),cashNeed:round(cashNeed),annualDebtService:round(annualDebtService),
     directNet:round(directNet),afterDebtNet:round(afterDebtNet),year1Commitment:round(year1Commitment),
@@ -156,7 +156,7 @@ export function getScenarioModel(state,p,debtPct=0){
   const downMult=clamp(1-spread*1.35,.42,.94);
   const upMult=1+spread*1.55;
   const netFor=mult=>(p.annualRevenue||0)*mult-(p.annualCost||0)-impact.annualDebtService;
-  const roiFor=net=>net/impact.year1Commitment*100;
+  const roiFor=net=>(net+impact.annualDebtService)/impact.year1Commitment*100;
   const downsideNet=netFor(downMult),baseNet=netFor(1),upsideNet=netFor(upMult);
   return {
     downsideNet:round(downsideNet),baseNet:round(baseNet),upsideNet:round(upsideNet),
@@ -204,7 +204,7 @@ export function advisorViews(state,p){
 }
 
 function proposalRealization(state,p,debtPct,index){
-  const r=rngFor(state.seed,state.cycle,`proposal-${p.id}-${index}`);
+  const r=rngFor(state.seed,state.cycle,`proposal-${p.id}`);
   const scenario=getScenarioModel(state,p,debtPct);
   const movement=(r()-.5)*2;
   const mult=movement<0?1+movement*(1-scenario.downMult):1+movement*(scenario.upMult-1);
@@ -216,7 +216,7 @@ function applyProposalToState(state,p,debtPct,index){
   const realizedMultiplier=proposalRealization(state,p,debtPct,index);
   const realizedRevenue=Math.max(0,(p.annualRevenue||0)*realizedMultiplier);
   const actualNet=realizedRevenue-(p.annualCost||0)-impact.annualDebtService;
-  const actualROI=actualNet/impact.year1Commitment*100;
+  const actualROI=(realizedRevenue-(p.annualCost||0))/impact.year1Commitment*100;
   const inv={...p,annualRevenue:realizedRevenue,remaining:p.term,forecastNet:impact.afterDebtNet,actualNet:round(actualNet),actualROI:round(actualROI),debtPct:impact.debtPct};
   const debts=[...state.debtTranches];
   if(impact.debtAmount>0){debts.push({id:`${p.id}-${state.cycle}`,name:p.name,principal:impact.debtAmount,rate:.058,remaining:impact.term,original:impact.debtAmount,originalTerm:impact.term});}
@@ -249,10 +249,11 @@ export function forecastCycle(state,selections=[]){
   const revenue=shared+tickets+premium+sponsor+merch+digital+other+active.annualRevenue+annualNewRevenue;
   const rosterBase=(state.marketId==='small'?196:state.marketId==='large'?236:216);
   const activePlayerCost=state.activeInvestments.filter(x=>x.type==='player'&&x.remaining>0).reduce((a,b)=>a+(b.annualCost||0),0);
-  const expenses=m.operatingBase+rosterBase+activePlayerCost+active.annualCost+annualNewCost+debt.interest+newInterest;
+  const expenses=m.operatingBase+rosterBase+activePlayerCost+active.annualCost+annualNewCost;
   const profit=revenue-expenses;
-  const projectedEndingCash=state.cash+profit-upfrontCash-debt.principalDue-newPrincipalDue;
-  return {expectedWin,attendance,revenue,expenses,profit,upfrontCash,newDebt,newInterest,newPrincipalDue,projectedEndingCash,existingDebt:debt.principal,projectedDebt:debt.principal+newDebt-debt.principalDue-newPrincipalDue};
+  const interest=debt.interest+newInterest;
+  const projectedEndingCash=state.cash+profit-interest-upfrontCash-debt.principalDue-newPrincipalDue;
+  return {expectedWin,attendance,revenue,expenses,profit,interest,upfrontCash,newDebt,newInterest,newPrincipalDue,projectedEndingCash,existingDebt:debt.principal,projectedDebt:debt.principal+newDebt-debt.principalDue-newPrincipalDue};
 }
 
 export function runCycle(state,selections,rationale){
@@ -264,7 +265,7 @@ export function runCycle(state,selections,rationale){
     working.debtTranches=a.debtTranches;
     working.activeInvestments.push(a.investment);
     upfrontCash+=a.cashNeed;
-    realized.push({id:s.proposal.id,name:s.proposal.name,forecastNet:a.impact.afterDebtNet,actualNet:a.actualNet,forecastROI:a.impact.directROI,actualROI:a.actualROI,cashNeed:a.cashNeed,debt:a.impact.debtAmount});
+    realized.push({...s.proposal,realizedRevenue:a.realizedRevenue,debtService:a.impact.annualDebtService,commitment:a.impact.year1Commitment,forecastNet:a.impact.afterDebtNet,actualNet:a.actualNet,forecastROI:a.impact.directROI,actualROI:a.actualROI,cashNeed:a.cashNeed,debt:a.impact.debtAmount});
   });
   const active=getActiveEffects(working);
   const m=MARKETS[working.marketId];
@@ -295,9 +296,11 @@ export function runCycle(state,selections,rationale){
   const expenses={roster:rosterBase+playerCost,operations:operating,interest:debtBefore.interest};
   const revTotal=Object.values(revenue).reduce((a,b)=>a+b,0);
   const expTotal=Object.values(expenses).reduce((a,b)=>a+b,0);
-  const profit=revTotal-expTotal;
+  const operatingExpenses=expenses.roster+expenses.operations;
+  const profit=revTotal-operatingExpenses;
+  const afterInterest=profit-expenses.interest;
   const principalPaid=debtBefore.principalDue;
-  const cashChange=profit-upfrontCash-principalPaid;
+  const cashChange=afterInterest-upfrontCash-principalPaid;
   const cash=working.cash+cashChange;
   const newDebts=working.debtTranches.map(d=>{
     const originalTerm=d.originalTerm||d.remaining||1;
@@ -309,12 +312,24 @@ export function runCycle(state,selections,rationale){
   const brand=clamp(working.brand+(wins-.5)*9+active.brand*.45+(mods.brand||0),20,95);
   const facility=clamp(working.facility+active.facility*.28-.6,20,100);
   const rosterQuality=clamp(working.rosterQuality+(wins-expectedWin)*.05+active.development*.10,.32,.70);
-  const margin=profit/revTotal;
+  const margin=afterInterest/revTotal;
   const valueGrowth=clamp(.015+(wins-.5)*.055+(brand-working.brand)/250+(facility-working.facility)/330+margin*.07,-.07,.13);
   const franchiseValue=Math.max(2,working.franchiseValue*(1+valueGrowth));
   const distress=cash<-25||debtAfter>560||(margin<-.10&&working.cycle>=2);
   const agedInvestments=working.activeInvestments.map(x=>({...x,remaining:Math.max(0,x.remaining-1)})).filter(x=>x.remaining>0);
-  const record={cycle:working.cycle,event,wins,attendance,revenue,expenses,revTotal,expTotal,profit,cash,cashChange,debt:debtAfter,principalPaid,fan,brand,facility,franchiseValue,realized,rationale,upfrontCash};
+  // Reconcile each new proposal with the same market adjustments used in revenue.
+  for(const x of realized){
+    const factor=['premium','sponsor','digital','other'].includes(x.stream)?(mods[x.stream]||1):1;
+    const inv=working.activeInvestments.find(p=>p.id===x.id);
+    x.realizedRevenue=(inv.annualRevenue||0)*factor;
+    x.actualNet=round(x.realizedRevenue-(x.annualCost||0)-x.debtService);
+    x.actualROI=round((x.realizedRevenue-(x.annualCost||0))/x.commitment*100);
+  }
+  const record={cycle:working.cycle,event,wins,attendance,revenue,expenses,revTotal,expTotal,operatingExpenses,profit,afterInterest,cash,cashChange,debt:debtAfter,principalPaid,fan,brand,facility,franchiseValue,realized,rationale,upfrontCash,
+    marketId:working.marketId,capacity:m.capacity,openingCash:state.cash,openingDebt:getDebtSummary(state).principal,
+    openingFan:state.fanTrust,openingBrand:state.brand,openingFacility:state.facility,
+    newDebt:realized.reduce((sum,x)=>sum+x.debt,0),
+    commitments:working.activeInvestments.map(x=>({id:x.id,name:x.name,type:x.type,remaining:x.remaining,annualCost:x.annualCost||0,annualRevenue:x.annualRevenue||0}))};
   const next={...working,cycle:working.cycle+1,cash,fanTrust:fan,brand,facility,rosterQuality,franchiseValue,activeInvestments:agedInvestments,debtTranches:newDebts,history:[...working.history,record],rationales:[...working.rationales,rationale],distress:working.distress||distress};
   return {next,record,event,distress};
 }
@@ -323,7 +338,7 @@ export function finalEvaluation(state){
   const h=state.history;
   if(!h.length)return null;
   const m=MARKETS[state.marketId],mandate=MANDATES[state.mandateId];
-  const avgMargin=h.reduce((a,b)=>a+b.profit/b.revTotal,0)/h.length;
+  const avgMargin=h.reduce((a,b)=>a+(b.afterInterest??b.profit)/b.revTotal,0)/h.length;
   const avgWins=h.reduce((a,b)=>a+b.wins,0)/h.length;
   const debt=getDebtSummary(state).principal;
   const financial=clamp(52+avgMargin*120+(state.cash/180)*22-(state.distress?28:0),0,100);

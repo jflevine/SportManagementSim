@@ -1,8 +1,9 @@
-import {MARKETS,MANDATES,createState,getOpportunitySet,advisorViews,estimateProposalImpact,getScenarioModel,forecastCycle,runCycle,finalEvaluation,getDebtSummary} from './model.js';
+import {MARKETS,MANDATES,createState,getOpportunitySet,advisorViews,estimateProposalImpact,getScenarioModel,forecastCycle,runCycle,finalEvaluation,getDebtSummary} from './model.js?v=20260924a';
+import {mountReplay,mountLeagueLens,stopReplay} from './replay.js?v=20260924a';
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
-const money = v => `${v < 0 ? '−' : ''}$${Math.abs(v).toFixed(Math.abs(v) >= 100 ? 0 : 1)}M`;
+const money = v => `${v < 0 ? '−' : ''}$${Math.abs(v).toFixed(1)}M`;
 const pct = v => `${(v * 100).toFixed(1)}%`;
 
 let marketId = 'growth';
@@ -14,9 +15,10 @@ let selections = [];
 let activeProposal = null;
 
 function show(id) {
+  if(id!=='resultScreen')stopReplay();
   $$('.screen').forEach(x => x.classList.remove('active'));
   $('#' + id).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth' });
 }
 function team() { return $('#teamName').value.trim() || 'Explorer Sport Group'; }
 function seed() { return $('#seed').value.trim() || 'MGT340'; }
@@ -55,6 +57,8 @@ $('#howBtn').onclick = () => $('#howDialog').showModal();
 $('#closeHow').onclick = () => $('#howDialog').close();
 
 function beginCycle() {
+  $('#rationaleText').value='';$('#riskChoice').value='';
+  $('#runCycleBtn').disabled=false;
   opportunities = getOpportunitySet(state);
   selections = [];
   activeProposal = opportunities[0];
@@ -164,11 +168,11 @@ function renderDocuments(p, debtPct) {
     <tr><th>New debt</th><td>${money(impact.debtAmount)}</td></tr>
     <tr><th>Base annual gross benefit</th><td>${money(p.annualRevenue || 0)}</td></tr>
     <tr><th>Annual recurring cost</th><td>${money(p.annualCost || 0)}</td></tr>
-    <tr><th>Estimated annual debt service</th><td>${money(impact.annualDebtService)}</td></tr>
+    <tr><th>First-year principal + interest</th><td>${money(impact.annualDebtService)}</td></tr>
     <tr class="strong"><th>Base annual cash contribution</th><td>${money(scenario.baseNet)}</td></tr>
     <tr class="strong"><th>${roiLabel}</th><td>${impact.directROI.toFixed(1)}%</td></tr>
     <tr><th>Approx. break-even</th><td>${impact.breakEvenYears ? `${impact.breakEvenYears.toFixed(1)} years` : 'No direct-cash break-even in base case'}</td></tr>
-  </tbody></table><p class="sheet-note">Direct ROI captures modeled cash economics only. Player wins, brand value, fan effects, and strategic flexibility are shown separately because they are not guaranteed cash receipts.</p></div>`;
+  </tbody></table><p class="sheet-note">Direct ROI = direct annual revenue minus recurring cost, divided by upfront capital (or upfront plus first-year recurring cost for player/commercial proposals), before financing. The annual cash contribution also subtracts first-year debt payments. Debt uses equal annual principal repayments plus interest on the outstanding balance. Taxes, depreciation and working-capital timing are omitted.</p></div>`;
 
   const maxAbs = Math.max(1, Math.abs(scenario.downsideNet), Math.abs(scenario.baseNet), Math.abs(scenario.upsideNet));
   const bar = v => Math.max(10, Math.round(Math.abs(v) / maxAbs * 95));
@@ -224,7 +228,7 @@ function renderPortfolio() {
         const i = estimateProposalImpact(state, s.proposal, s.debtPct);
         return `<div class="portfolio-item"><b>${s.proposal.name}</b><span>${money(i.cashNeed)} cash + ${money(i.debtAmount)} debt</span></div>`;
       }).join('')
-    : '<p class="empty-copy">Select one or two proposals. You are not expected to fund everything.</p>';
+    : '<p class="empty-copy">Choose up to two proposals, or hold cash. Holding cash still requires a board rationale.</p>';
 
   $('#portCash').textContent = money(forecast.upfrontCash);
   $('#portDebt').textContent = money(forecast.newDebt);
@@ -238,34 +242,40 @@ function renderPortfolio() {
         ? 'This portfolio leaves very little projected liquidity. That may be defensible—but it is a real risk.'
         : 'The portfolio is fundable under the current projection.';
 
-  $('#commitBtn').disabled = !selections.length || forecast.upfrontCash > state.cash;
+  $('#commitBtn').disabled = forecast.upfrontCash > Math.max(0,state.cash);
+  $('#commitBtn').textContent=selections.length?'Take this to the board →':'Defend holding cash →';
 }
 
 $('#commitBtn').onclick = () => {
-  if (!selections.length) return;
   renderRationale();
   show('rationaleScreen');
 };
 function renderRationale() {
-  $('#rationalePortfolio').innerHTML = selections.map(s => `<li>${s.proposal.name}</li>`).join('');
-  $('#rationaleText').value = '';
-  $('#riskChoice').value = '';
+  $('#rationalePortfolio').innerHTML = selections.map(s => `<li>${s.proposal.name}</li>`).join('') || '<li>Hold cash; continue existing commitments</li>';
+  // Preserve the student's explanation when returning to revise investments.
 }
+$('#backToChoices').onclick=()=>show('decisionCenter');
 $('#runCycleBtn').onclick = () => {
+  if($('#runCycleBtn').disabled)return;
   const text = $('#rationaleText').value.trim();
   const risk = $('#riskChoice').value;
   if (text.length < 12 || !risk) {
     flash('Add a short board rationale and identify the risk you are accepting.');
     return;
   }
-  const rationale = { text, risk, portfolio: selections.map(s => s.proposal.name) };
+  $('#runCycleBtn').disabled=true;
+  const rationale = { text, risk, portfolio: selections.length?selections.map(s => s.proposal.name):['Hold cash'] };
   const result = runCycle(state, selections, rationale);
   state = result.next;
-  renderResults(result);
   show('resultScreen');
+  renderResults(result);
 };
 
 function renderResults({ record, event, distress }) {
+  const replay=mountReplay($('#decisionReplay'),record);
+  mountLeagueLens($('#leagueLens'),record);
+  $('#cashBridge').innerHTML=[['Opening cash',record.openingCash],['+ Operating profit',record.profit],['− Interest',record.expenses.interest],['− Club cash invested',record.upfrontCash],['− Principal repaid',record.principalPaid],['= Ending cash',record.cash]].map(([label,v],i)=>`<div class="${i===5?'cash-end':''}"><span>${label}</span><b>${money(v)}</b></div>`).join('');
+  replay.play();
   $('#resultCycle').textContent = `CYCLE ${record.cycle} CLOSE`;
   $('#resultEvent').textContent = event.title;
   $('#resultEventText').textContent = event.desc;
@@ -282,7 +292,7 @@ function renderResults({ record, event, distress }) {
   $('#originalRationale').textContent = `“${record.rationale.text}” Risk accepted: ${record.rationale.risk}.`;
   $('#diagnosis').textContent =
     record.cashChange < record.profit - 10
-      ? 'Operating profit and cash diverged because upfront investment and principal repayment consumed liquidity.'
+      ? 'Operating profit and cash diverged because interest, upfront cash investment and principal repayment consumed liquidity. Borrowing funded part of eligible purchases; it was not earned revenue.'
       : record.profit < 0
         ? 'The core operating result was negative this cycle. Look first at recurring costs and demand—not merely the event shock.'
         : 'Operating performance translated reasonably well into cash this cycle, but persistent commitments still shape the next decision.';
@@ -331,7 +341,14 @@ $('#copyReport').onclick = async () => {
   const txt = `${team()} | PRO SPORT TYCOON
 Mandate: ${s.mandate.name}
 Board score: ${s.total}/100
-Cash: ${money(state.cash)} | Debt: ${money(getDebtSummary(state).principal)} | Value: $${state.franchiseValue.toFixed(1)}B`;
+Cash: ${money(state.cash)} | Debt: ${money(getDebtSummary(state).principal)} | Value: $${state.franchiseValue.toFixed(1)}B
+Market: ${MARKETS[state.marketId].name} | Seed: ${state.seed}
+Outcome score only; assess reasoning separately.
+${state.history.map(h=>`Cycle ${h.cycle}: ${h.rationale.portfolio.join(' + ')}
+Rationale: ${h.rationale.text}
+Accepted risk: ${h.rationale.risk}
+Operating profit ${money(h.profit)}; interest ${money(h.expenses.interest)}; ending cash ${money(h.cash)}; shared league revenue ${money(h.revenue.shared)}.
+`).join('\n')}`;
   try {
     await navigator.clipboard.writeText(txt);
     $('#copyReport').textContent = 'Copied ✓';
