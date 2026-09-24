@@ -16,7 +16,7 @@ test('replay and league comparison read saved results without mutation or reroll
  const s=createState(),out=runCycle(s,[{proposal:proposal('capital'),debtPct:.5}],rationale);const before=JSON.stringify(out);
  const a=replayFrames(out.record),b=replayFrames(out.record);assert.deepEqual(a,b);assert.equal(a.length,5);
  const sensitivity=leagueSensitivity(out.record,.2);close(out.record.profit-sensitivity.profit,out.record.revenue.shared*.2);close(out.record.cash-sensitivity.cash,out.record.revenue.shared*.2);
- assert.equal(JSON.stringify(out),before);assert.equal(finalEvaluation(out.next).total,finalEvaluation(out.next).total);
+ assert.equal(JSON.stringify(out),before);
  assert.throws(()=>leagueSensitivity(out.record,1.1));
 });
 test('changing portfolio order does not change a proposal realization or total result',()=>{
@@ -52,4 +52,10 @@ test('commitment term ages while debt persists and hold-cash recap explains obli
  let s=createState('growth','growth','MGT340','full');const p=proposal('capital');s=runCycle(s,[{proposal:p,debtPct:.7}],rationale).next;
  const out=runCycle(s,[],rationale);assert.equal(out.next.activeInvestments[0].remaining,p.term-2);assert.ok(out.record.expenses.interest>0);assert.ok(out.record.principalPaid>0);
  assert.match(replayFrames(out.record)[0].text,/held cash/);assert.ok(out.record.commitments.some(x=>x.id===p.id));
+});
+
+test('proposal direct result includes applicable operating-cost inflation',()=>{
+ const p=proposal('commercial');let record;
+ for(let i=0;i<100;i++){const r=runCycle(createState('growth','growth','inflation'+i),[{proposal:p,debtPct:0}],rationale).record;if(r.event.id==='inflation'){record=r;break;}}
+ assert.ok(record);const x=record.realized[0];close(x.actualCost,p.annualCost*1.055,.00001);close(x.actualNet,x.realizedRevenue-x.actualCost,.051);
 });

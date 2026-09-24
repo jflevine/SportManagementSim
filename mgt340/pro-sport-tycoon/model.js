@@ -322,8 +322,9 @@ export function runCycle(state,selections,rationale){
     const factor=['premium','sponsor','digital','other'].includes(x.stream)?(mods[x.stream]||1):1;
     const inv=working.activeInvestments.find(p=>p.id===x.id);
     x.realizedRevenue=(inv.annualRevenue||0)*factor;
-    x.actualNet=round(x.realizedRevenue-(x.annualCost||0)-x.debtService);
-    x.actualROI=round((x.realizedRevenue-(x.annualCost||0))/x.commitment*100);
+    x.actualCost=(x.annualCost||0)*(x.type==='player'?1:(mods.opex||1));
+    x.actualNet=round(x.realizedRevenue-x.actualCost-x.debtService);
+    x.actualROI=round((x.realizedRevenue-x.actualCost)/x.commitment*100);
   }
   const record={cycle:working.cycle,event,wins,attendance,revenue,expenses,revTotal,expTotal,operatingExpenses,profit,afterInterest,cash,cashChange,debt:debtAfter,principalPaid,fan,brand,facility,franchiseValue,realized,rationale,upfrontCash,
     marketId:working.marketId,capacity:m.capacity,openingCash:state.cash,openingDebt:getDebtSummary(state).principal,

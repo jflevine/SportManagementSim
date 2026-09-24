@@ -1,5 +1,5 @@
-import {MARKETS,MANDATES,createState,getOpportunitySet,advisorViews,estimateProposalImpact,getScenarioModel,forecastCycle,runCycle,finalEvaluation,getDebtSummary} from './model.js?v=20260924a';
-import {mountReplay,mountLeagueLens,stopReplay} from './replay.js?v=20260924a';
+import {MARKETS,MANDATES,createState,getOpportunitySet,advisorViews,estimateProposalImpact,getScenarioModel,forecastCycle,runCycle,finalEvaluation,getDebtSummary} from './model.js?v=20260924b';
+import {mountReplay,mountLeagueLens,stopReplay} from './replay.js?v=20260924b';
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];

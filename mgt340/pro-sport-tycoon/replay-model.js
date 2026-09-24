@@ -14,7 +14,7 @@ export function replayFrames(record){
   for(const p of record.realized){
     let mechanism=p.type==='player'?'The roster commitment supports competitive capacity. The whole-team result also depends on existing investments and the external event.':p.type==='capital'?'The asset enters service in this simplified annual model. It adds capacity or capability and continuing operating costs.':'The commercial program begins serving customers. Actual receipts depend on the proposal’s realization and any applicable market effect.';
     frames.push({kind:'investment',focus:p.id,title:p.name,proposal:p,
-      text:`${mechanism} ${money(p.realizedRevenue)} direct revenue, less ${money(p.annualCost||0)} recurring cost${p.debtService?` and ${money(p.debtService)} first-year debt payments`:''}, yields ${money(p.actualNet)} direct cash contribution.`,
+      text:`${mechanism} ${money(p.realizedRevenue)} direct revenue, less ${money(p.actualCost??p.annualCost??0)} recurring cost${p.debtService?` and ${money(p.debtService)} first-year debt payments`:''}, yields ${money(p.actualNet)} direct cash contribution.`,
       figures:[['Base direct net',money(p.forecastNet)],['Actual direct net',money(p.actualNet)],['Operating commitment',`${p.term} years`]]});
   }
   frames.push({kind:'season',focus:'season',title:record.event.title,
