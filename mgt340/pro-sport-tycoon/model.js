@@ -91,7 +91,7 @@ export function getDebtSummary(state){
     const originalTerm=d.originalTerm||d.remaining||1;
     principalDue+=d.remaining>0?Math.min(d.principal,d.original/Math.max(1,originalTerm)):0;
   }
-  return {principal:round(principal),interest:round(interest),principalDue:round(principalDue),service:round(interest+principalDue)};
+  return {principal,interest,principalDue,service:interest+principalDue};
 }
 
 export function getActiveEffects(state){
@@ -142,10 +142,10 @@ export function estimateProposalImpact(state,proposal,debtPct=0){
   const cashOnCashROI=cashNeed>0?afterDebtNet/cashNeed*100:0;
   const breakEvenYears=directNet>0?proposal.upfront/directNet:null;
   return {
-    debtPct:debtAllowed,debtAmount:round(debtAmount),cashNeed:round(cashNeed),annualDebtService:round(annualDebtService),
-    directNet:round(directNet),afterDebtNet:round(afterDebtNet),year1Commitment:round(year1Commitment),
-    directROI:round(directROI),cashOnCashROI:round(cashOnCashROI),breakEvenYears:breakEvenYears?round(breakEvenYears):null,
-    simpleROI:round(directROI),term,rate
+    debtPct:debtAllowed,debtAmount,cashNeed,annualDebtService,
+    directNet,afterDebtNet,year1Commitment,
+    directROI,cashOnCashROI,breakEvenYears,
+    simpleROI:directROI,term,rate
   };
 }
 
@@ -232,7 +232,7 @@ export function forecastCycle(state,selections=[]){
     upfrontCash+=impact.cashNeed;newDebt+=impact.debtAmount;
     annualNewCost+=s.proposal.annualCost||0;annualNewRevenue+=s.proposal.annualRevenue||0;winsAdd+=s.proposal.wins||0;
     newInterest+=impact.debtAmount*impact.rate;
-    newPrincipalDue+=Math.max(0,impact.annualDebtService-impact.debtAmount*impact.rate);
+    newPrincipalDue+=impact.debtAmount/impact.term;
   }
   const debt=getDebtSummary(state);
   const expectedWin=clamp(state.rosterQuality+active.wins+winsAdd+active.development*.5,.30,.75);
@@ -329,6 +329,7 @@ export function runCycle(state,selections,rationale){
   const record={cycle:working.cycle,event,wins,attendance,revenue,expenses,revTotal,expTotal,operatingExpenses,profit,afterInterest,cash,cashChange,debt:debtAfter,principalPaid,fan,brand,facility,franchiseValue,realized,rationale,upfrontCash,
     marketId:working.marketId,capacity:m.capacity,openingCash:state.cash,openingDebt:getDebtSummary(state).principal,
     openingFan:state.fanTrust,openingBrand:state.brand,openingFacility:state.facility,
+    fanDrivers:{performance:(wins-.5)*10,investments:active.fan*.55,environment:mods.fan||0,expectations:-.5},
     newDebt:realized.reduce((sum,x)=>sum+x.debt,0),
     commitments:working.activeInvestments.map(x=>({id:x.id,name:x.name,type:x.type,remaining:x.remaining,annualCost:x.annualCost||0,annualRevenue:x.annualRevenue||0}))};
   const next={...working,cycle:working.cycle+1,cash,fanTrust:fan,brand,facility,rosterQuality,franchiseValue,activeInvestments:agedInvestments,debtTranches:newDebts,history:[...working.history,record],rationales:[...working.rationales,rationale],distress:working.distress||distress};
@@ -351,4 +352,9 @@ export function finalEvaluation(state){
   let total=0;for(const [k,w] of Object.entries(mandate.weights))total+=s[k]*w;
   if(state.distress)total=Math.min(total,58);
   return {total:round(total,0),...Object.fromEntries(Object.entries(s).map(([k,v])=>[k,round(v,0)])),avgMargin,avgWins,mandate};
+}
+// The classroom controller uses a stable, focused menu instead of the full pipeline.
+export function getProposalById(id){
+ const p=[...PLAYERS,...CAPITAL,...COMMERCIAL].find(p=>p.id===id);
+ return p?{...p}:null;
 }
