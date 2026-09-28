@@ -12,7 +12,7 @@ export const ROUNDS=[
   {id:'p_vet',label:'Add veteran depth',benefit:'A modest competitive lift with a shorter, cheaper commitment.',risk:'Less competitive upside; the $9M annual cost still continues.',icon:'team'}]}
 ];
 export const newGame=()=>createState('growth','growth','MGT340','class');
-export function optionsFor(state){return ROUNDS[state.cycle-1].options.map(o=>({...o,proposal:getProposalById(o.id)}));}
+export function optionsFor(state){return ROUNDS[state.cycle-1].options.map(o=>({...o,proposal:{...getProposalById(o.id),name:o.label}}));}
 export function selectionFor(state,id,debtPct=0){
  if(!Number.isInteger(state.cycle)||state.cycle<1||state.cycle>3)throw Error('This franchise has completed its three cycles.');
  if(id==='hold'){if(debtPct!==0)throw Error('Holding cash does not create a new loan.');return [];}
