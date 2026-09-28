@@ -11,7 +11,7 @@ Canonical student URL: https://jflevine.github.io/SportManagementSim/mgt340/pro-
 - Cycle 3: star player, veteran depth, or preserve cash.
 - One choice and one sentence explaining benefit/risk per cycle. Optional ROI explanation on venue proposals.
 - Read recorded results: cash, win rate, fan confidence; causal story; simplified income and cash reconciliation.
-- Write a final reflection and download/copy the Board Report. There is no automatic submission, student backend, or numeric winning score.
+- Write a final reflection and download/copy/view the Board Report. There is no automatic submission, student backend, or numeric winning score.
 - Target 15–20 minutes plus demonstration and debrief. This is a facilitation target, not a measured student completion time.
 
 ## Teaching connections
@@ -22,7 +22,7 @@ Financial summaries are instructional, not GAAP statements. No taxes, depreciati
 
 ## Graphics and access
 
-Original SVG stadium and CSS crowd animations; supporter reaction derives from the saved change in fan confidence, with the underlying causes explained. Replaying a reaction never reruns the financial model. Animation lasts a few seconds and never blocks navigation. Reduced-motion preferences disable animation. No paid service, account, tracking or external application is needed. Web fonts have system fallbacks.
+Original SVG stadium and CSS crowd animations; supporter reaction derives from the saved change in fan confidence, with the underlying causes explained. Replaying a reaction never reruns the financial model. Animation lasts a few seconds and never blocks navigation. Reduced-motion preferences disable animation. No paid service, account, tracking or external application is needed. System fonts avoid external font requests.
 
 Progress and drafts save locally in the same browser if storage is available. Students sharing a device should download their report before Start over. Names and reports are not sent to a server. The game warns if browser storage is unavailable.
 
