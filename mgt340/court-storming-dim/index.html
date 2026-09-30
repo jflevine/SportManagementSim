@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#152c3c">
+  <meta name="description" content="An individual or pair activity applying Develop, Implement, and Manage to court-storming safety. MGT 340, La Salle University.">
+  <title>Court Storming: The Manager’s Plan | MGT 340</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23152c3c'/%3E%3Cpath d='M17 15h13c24 0 24 34 0 34H17z' fill='none' stroke='%23f3bc6d' stroke-width='7'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to activity</a>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">D<span>I</span>M</span><span>MGT 340<span class="brand-sub">La Salle University</span></span></div>
+    <div class="header-actions"><button type="button" class="text-button" id="guide-button">Instructor notes</button><button type="button" class="text-button" id="reset-button">Start over</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar" aria-label="Activity progress">
+      <p class="eyebrow">THE MANAGER’S PLAN</p>
+      <nav id="steps" aria-label="Activity steps"></nav>
+      <div class="sidebar-note"><strong>One risk. A working plan.</strong><p>Develop the plan.<br>Put it into practice.<br>Check and improve it.</p><p class="small">15 minutes · Solo or pairs</p></div>
+    </aside>
+    <main id="main" tabindex="-1"></main>
+  </div>
+  <footer><span>Jeffrey Levine, J.D., Ph.D. · MGT 340</span><span id="save-status" role="status" aria-live="polite"></span></footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="guide-dialog" aria-labelledby="guide-title">
+    <div class="dialog-head"><p class="eyebrow">FACILITATION</p><button type="button" class="text-button" id="close-guide">Close notes</button></div>
+    <h2 id="guide-title">A 15-minute D.I.M. exercise</h2>
+    <p>Students act as the host university’s event manager. Use the 2024 Clark collision as the starting point, then plan for the next game. The later crowd update is a hypothetical.</p>
+    <ol class="guide-list"><li><strong>3 minutes:</strong> Read the short case and AP article.</li><li><strong>6 minutes:</strong> Complete Develop, Implement, and Manage.</li><li><strong>3 minutes:</strong> Reveal the update and respond.</li><li><strong>3 minutes:</strong> Compare plans and debrief.</li></ol>
+    <h3>What to listen for</h3><p>A specific risk, workable preventive actions, named staff roles, an activation point, clear communication, and a way to check performance. There is no automatic quality score for written work.</p>
+    <h3>Debrief question</h3><p class="pullquote">If nobody is injured, is that enough evidence that the plan worked?</p><p>Invite students to discuss blocked routes, near misses, staff readiness, and whether procedures were followed. Distinguish a written policy from implementation. An incident alone does not establish legal liability.</p>
+    <h3>Collecting work</h3><p>Students copy or download their completed plan and submit it through Canvas. Print / Save PDF is also available. Responses stay on their own device; this activity has no central submission service or instructor dashboard. No opening or unlocking is required.</p>
+    <p class="small">This teaching exercise does not claim to reconstruct Ohio State’s actual staffing or establish fault. The schematic is illustrative. The AP source describes a collision without a reported injury.</p>
+  </dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title">
+    <h2 id="reset-title">Start a new plan?</h2><p>This will erase this activity’s saved names and responses on this device. Download or copy your current plan first if you want to keep it.</p>
+    <div class="actions"><button type="button" class="secondary" id="cancel-reset">Keep working</button><button type="button" class="danger" id="confirm-reset">Erase and start over</button></div>
+  </dialog>
+  <noscript><p class="noscript">This activity needs JavaScript. Enable it in your browser, then reload this page.</p></noscript>
+</body>
+</html>
