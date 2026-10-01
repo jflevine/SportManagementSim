@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#152c3c">
   <meta name="description" content="An individual or pair activity applying Develop, Implement, and Manage to court-storming safety. MGT 340, La Salle University.">
-  <title>Court Storming: The Manager’s Plan | MGT 340</title>
+  <title>Manage the Final Buzzer | MGT 340</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23152c3c'/%3E%3Cpath d='M17 15h13c24 0 24 34 0 34H17z' fill='none' stroke='%23f3bc6d' stroke-width='7'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script src="model.js?v=2" defer></script>
+  <script src="app.js?v=2" defer></script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to activity</a>
@@ -18,7 +19,7 @@
   </header>
   <div class="workspace">
     <aside class="sidebar" aria-label="Activity progress">
-      <p class="eyebrow">THE MANAGER’S PLAN</p>
+      <p class="eyebrow">MANAGE THE FINAL BUZZER</p>
       <nav id="steps" aria-label="Activity steps"></nav>
       <div class="sidebar-note"><strong>One risk. A working plan.</strong><p>Develop the plan.<br>Put it into practice.<br>Check and improve it.</p><p class="small">15 minutes · Solo or pairs</p></div>
     </aside>
@@ -29,16 +30,22 @@
   <dialog id="guide-dialog" aria-labelledby="guide-title">
     <div class="dialog-head"><p class="eyebrow">FACILITATION</p><button type="button" class="text-button" id="close-guide">Close notes</button></div>
     <h2 id="guide-title">A 15-minute D.I.M. exercise</h2>
-    <p>Students act as the host university’s event manager. Use the 2024 Clark collision as the starting point, then plan for the next game. The later crowd update is a hypothetical.</p>
-    <ol class="guide-list"><li><strong>3 minutes:</strong> Read the short case and AP article.</li><li><strong>6 minutes:</strong> Complete Develop, Implement, and Manage.</li><li><strong>3 minutes:</strong> Reveal the update and respond.</li><li><strong>3 minutes:</strong> Compare plans and debrief.</li></ol>
-    <h3>What to listen for</h3><p>A specific risk, workable preventive actions, named staff roles, an activation point, clear communication, and a way to check performance. There is no automatic quality score for written work.</p>
-    <h3>Debrief question</h3><p class="pullquote">If nobody is injured, is that enough evidence that the plan worked?</p><p>Invite students to discuss blocked routes, near misses, staff readiness, and whether procedures were followed. Distinguish a written policy from implementation. An incident alone does not establish legal liability.</p>
-    <h3>Collecting work</h3><p>Students copy or download their completed plan and submit it through Canvas. Print / Save PDF is also available. Responses stay on their own device; this activity has no central submission service or instructor dashboard. No opening or unlocking is required.</p>
-    <p class="small">This teaching exercise does not claim to reconstruct Ohio State’s actual staffing or establish fault. The schematic is illustrative. The AP source describes a collision without a reported injury.</p>
+    <p>Students act as the host university’s event manager. The 2024 Clark collision launches a fictional next-game simulation. Students develop a plan, assign functional teams, make three decisions, and revise their plan.</p>
+    <ol class="guide-list"><li><strong>2 minutes:</strong> Read the case and choose solo or pair mode.</li><li><strong>4 minutes:</strong> Develop: choose a priority risk and two measures; explain the fit in one or two sentences. Implement: assign all three units, an activation signal, and communication.</li><li><strong>5 minutes:</strong> Manage: advance through 30 seconds remaining, the final buzzer, and departure. Read the consequence after each decision.</li><li><strong>4 minutes:</strong> Review process evidence, write a revision, export for Canvas, and debrief.</li></ol>
+    <h3>What changes in the simulation?</h3><p>The exit-route measure helps establish an available lane. A rehearsal plus named radio confirmations establishes readiness. Spectator guidance slows the fictional crowd’s approach but does not cover an empty post. A verified backup enables the alternate-route choice. Staff placement, activation, and in-game decisions also change the displayed operation.</p>
+    <h3>What to listen for</h3><p>Specific roles, coverage tradeoffs, observable triggers, confirmation of instructions, and revision based on evidence. The final result is not a numeric safety score or an automatic grade of written reasoning. Choosing a priority group frames reflection; it does not change the duty to consider other people.</p>
+    <h3>Debrief question</h3><p class="pullquote">If nobody is injured, is that enough evidence that your plan worked?</p><p>Ask a pair that concentrated staff at the exit to compare its experience with a pair that kept posts covered. Then ask: “What did you have to fix during the event that you could have prepared beforehand?” Use the recorded warnings even if a team eventually completed departure.</p>
+    <h3>Collecting work</h3><p>Students enter names, complete a short revision, then download or copy the full report for Canvas. Print / Save PDF is also available. The report includes setup, all three decisions, consequences, process evidence, and reflection. Work stays on the device; there is no central dashboard or automatic submission. No opening or unlocking is required.</p>
+    <h3>Trying another approach</h3><p>“Restart simulation” retains the setup and names, then unlocks edits. It clears the current decisions and reflection after confirmation. Export a completed run first if it should be retained. “Start over” clears the new activity. Earlier writing-version plans remain separately available from the case screen.</p>
+    <p class="small">The diagram, three functional units, score, crowd movement, and outcomes are teaching simplifications. They are not Ohio State’s venue, staffing recommendations, injury predictions, or findings of legal fault. The AP source describes a collision without a reported injury.</p>
   </dialog>
   <dialog id="reset-dialog" aria-labelledby="reset-title">
-    <h2 id="reset-title">Start a new plan?</h2><p>This will erase this activity’s saved names and responses on this device. Download or copy your current plan first if you want to keep it.</p>
+    <h2 id="reset-title">Start a new plan?</h2><p>This will erase the current interactive run, names, and reflection on this device. Export your completed report first if you want to keep it. Any earlier writing-version plan remains saved separately.</p>
     <div class="actions"><button type="button" class="secondary" id="cancel-reset">Keep working</button><button type="button" class="danger" id="confirm-reset">Erase and start over</button></div>
+  </dialog>
+  <dialog id="restart-dialog" aria-labelledby="restart-title">
+    <h2 id="restart-title">Test a revised plan?</h2><p>Your names and setup will stay. Your current decisions and reflection will be cleared. Export your completed report first if you need to retain this run.</p>
+    <div class="actions"><button type="button" class="secondary" id="cancel-restart">Keep this run</button><button type="button" class="primary" id="confirm-restart">Revise and replay</button></div>
   </dialog>
   <noscript><p class="noscript">This activity needs JavaScript. Enable it in your browser, then reload this page.</p></noscript>
 </body>

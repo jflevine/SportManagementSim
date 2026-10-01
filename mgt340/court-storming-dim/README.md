@@ -1,33 +1,56 @@
-# Court Storming: The Manager’s Plan
+# Manage the Final Buzzer — D.I.M.
 
-MGT 340 · Jeffrey Levine, J.D., Ph.D. · La Salle University
+A 15-minute individual or pair exercise applying Develop, Implement, and Manage to court-storming safety. Static HTML, CSS, and JavaScript; no package installation, build, backend, room code, login, or unlocking.
 
-A 15-minute individual or pair exercise applying Develop, Implement, and Manage to postgame crowd safety. Static HTML, CSS, and JavaScript; no packages, build step, room code, backend, or unlocking.
+- Student URL: https://jflevine.github.io/SportManagementSim/mgt340/court-storming-dim/
+- Instructor notes: append `?guide=1`, or use the header button.
+- Suggested timing: 2 minutes case, 4 planning, 5 simulation, 4 reflection/export/debrief.
 
-## Use
+## Student flow
 
-- Student activity: `./`
-- Instructor notes: `?guide=1`, or the button in the header.
-- Local preview: serve the repository with `python3 -m http.server 8000` and open `/mgt340/court-storming-dim/`.
+1. Read the Clark case and enter a name (or both partners' names).
+2. **Develop:** select a priority group and two preventive measures; give one or two sentences of reasoning.
+3. **Implement:** select each functional unit and click a post on the arena, or use the equivalent labeled dropdowns. Select an activation trigger and communication approach.
+4. **Manage:** make one decision at each of three moments: 30 seconds, final buzzer, and departure. Read the consequences before advancing. Crowd/team markers move, staff posts change, and route/coverage/communication status updates.
+5. **After-action:** review outcomes, decisions, and process evidence. Write a two- or three-sentence revision. Download TXT, copy for Canvas (manual-copy fallback), or print/save PDF.
 
-Students read the case, identify one risk and two preventive actions, assign roles and communication procedures, establish monitoring and review, then respond to a hypothetical crowded exit route with 30 seconds left. The recommended 200-word D.I.M. target is advisory; short responses are accepted. Progress checks only require nonempty responses, not a claimed quality score. Names and both partners’ contributions are part of one shared plan.
+## Teaching model
 
-## Facts and teaching boundaries
+`model.js` contains deterministic, named consequences, not safety probabilities or automatic grading. The priority group frames the explanation and reflection; it does not excuse ignoring others or change a hidden score.
 
-The January 21, 2024 court-storming collision at Ohio State is the real case. AP reported that Clark was shaken up but not injured. Source: https://apnews.com/article/caitlin-clark-fans-storming-court-7f226a252df600432734db409d3b5b3e
+- Designating a lane helps staff establish an available main route.
+- Rehearsal plus a named radio confirmation protocol establishes initial readiness.
+- Spectator messaging moderates the illustrative approach but does not provide staff coverage.
+- A verified backup unlocks a usable alternate corridor.
+- Placement, activation, and live decisions change the operation. All three final-stage choices are available; an unverified alternate ends with a check still outstanding.
+- Process warnings remain in the report after recovery. A team can complete departure while leaving a coverage gap.
 
-The next-game planning role and 30-second update are fictional teaching situations. The schematic is not the actual arena layout. This activity does not reconstruct Ohio State’s staffing or determine negligence. It introduces no current conference penalty schedule. The separate Sports Illustrated article about Clark’s WNBA back issue is not used as evidence of injury from this collision.
+The clock advances by clicking; there is no speed score. Animation respects reduced-motion preferences. The map is a schematic and units represent functions, not recommended real-world staff counts. The short game score is fictional.
 
-## Work and submission
+## Case integrity
 
-Names and responses are saved only in this browser’s localStorage. They are never uploaded by the activity. Students must download the text, copy it, or print/save a PDF and then submit it through Canvas. There is no central instructor dashboard, automatic score, or server-side receipt. The UI states this explicitly.
+On January 21, 2024, Caitlin Clark collided with a spectator during Ohio State's court storming. AP reported that she was shaken up but not injured.
 
-Refreshing restores valid saved work when storage is available. If storage is blocked, students can still complete and export their plan while keeping the tab open. Start over requires confirmation and replaces only this activity’s saved record. A pair shares one device and one plan; it is not a networked collaboration tool.
+Source: https://apnews.com/article/caitlin-clark-fans-storming-court-7f226a252df600432734db409d3b5b3e
 
-Instructor facilitation: 3 minutes case, 6 minutes D.I.M., 3 minutes complication, 3 minutes debrief. Ask: “If nobody is injured, is that enough evidence that your plan worked?” Consider near misses, blocked routes, readiness, communication, and implementation.
+The next-game planning role, arena, staff reports, score, crowd behavior, and all outcomes are fictional teaching situations. This does not reconstruct Ohio State's staffing, predict actual crowd safety, or determine legal fault. The separate Sports Illustrated article about Clark's WNBA back issue is not evidence of injury from the collision.
 
-## Validation
+## Persistence and collection
 
-Complete Chromium playthroughs passed for solo and pair modes, including required-field validation, native browser save/restore, editing an earlier answer, both names in the export, all responses in the downloaded text, clipboard fallback, reset cancellation/confirmation, and print styling. The 390px layout and instructor-notes entry point were checked. A blocked-storage session remained usable with an explicit warning. Names containing HTML were rendered as text. No JavaScript page errors occurred.
+Names, setup, decisions, and reflection remain in local storage on the current device under `mgt340-court-storming-dim-v2`. Reload restores the same moment or consequence. Blocked storage does not prevent completion and displays a warning to export before closing.
 
-Because local network access differed between the authoring processes, browser checks used request interception to serve the exact local HTML/CSS/JavaScript under a consistent browser origin. This validated the application with native localStorage; it was not a live GitHub Pages browser run. Public publication and served-file verification are separate checks.
+The earlier `mgt340-court-storming-dim-v1` writing plan is not overwritten. If present, the case screen offers a download of it. It is not imported as an interactive run.
+
+Setup becomes read-only after the simulation launches. Restart requires confirmation, retains names/setup, and clears decisions/reflection. A full reset separately confirms clearing the interactive run. Neither operation clears the earlier writing-version plan.
+
+No data is transmitted, no instructor dashboard exists, and export is not submission. Students submit their exported report in Canvas. Export includes names, setup, reasoning, all three decisions, incoming reports, consequences, process evidence, and final revision.
+
+## Verification
+
+Run the deterministic model checks:
+
+```sh
+node --test mgt340/court-storming-dim/tests/model.test.cjs
+```
+
+The model checks cover all 27 decision paths plus coverage/recovery, readiness, backup verification, and early release. Chromium desktop pair and 390px mobile solo playthroughs verified placement, dropdown alternatives, validation, restored progress, escaped student names, distinct outcomes, TXT/clipboard export, print visibility, restart/reset, legacy-plan download, blocked storage, and instructor notes. No JavaScript errors or mobile horizontal overflow occurred.
