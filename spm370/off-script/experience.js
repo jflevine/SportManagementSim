@@ -8,7 +8,7 @@
   if(typeof module==='object'&&module.exports)module.exports=api;else root.OffScript=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(base){
 'use strict';
-const VERSION='1.1.1', BRIEFING_VERSION='1.1.0';
+const VERSION='1.2.0', BRIEFING_VERSION='1.1.0';
 const cast={
   blaze:{name:'Blaze',role:'Signal House player · streams on his own channel',initials:'BZ',color:'blue',intro:'A professional VALORANT player on Signal House’s roster. He also livestreams on a personal channel. Rook, a gaming-chair company, already sponsors those personal streams. He wants to help the team without breaking that earlier promise.'},
   nova:{name:'Nova',role:'Signal House creator · streamer and event personality',initials:'NV',color:'pink',intro:'A battle-royale streamer who works with Signal House on content and appearances. Fans recognize her voice, neon-pink hoodie, and goggles. She is open to paid event promotion, but wants to approve how her identity is used.'},
