@@ -1,135 +1,147 @@
 'use strict';
 (() => {
-  const STORAGE_KEY = 'mgt340-court-storming-dim-v1';
-  const AP_URL = 'https://apnews.com/article/caitlin-clark-fans-storming-court-7f226a252df600432734db409d3b5b3e';
-  const STEP_NAMES = ['Case', 'Develop', 'Implement', 'Manage', 'Update', 'Your plan'];
-  const FIELDS = {
-    risk: 'Risk and people affected', prevent1: 'Preventive action 1', prevent2: 'Preventive action 2',
-    deployment: 'Who, where, and when', communication: 'Briefing and communication',
-    monitor: 'Monitoring during the game', review: 'Evidence and improvement after the game', response: 'Response to the hypothetical update'
-  };
-  const GROUPS = [[], ['risk', 'prevent1', 'prevent2'], ['deployment', 'communication'], ['monitor', 'review'], ['response']];
-  const PLAN_KEYS = Object.keys(FIELDS).filter(k => k !== 'response');
-  const fresh = () => ({version:1, step:0, unlocked:0, mode:'solo', name1:'', name2:'', answers:Object.fromEntries(Object.keys(FIELDS).map(k=>[k,''])), created:new Date().toISOString()});
-  let state = fresh();
-  let storageAvailable = true;
-  let storageNote = '';
-  let toastTimer;
-  const $ = s => document.querySelector(s);
-  const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const wordCount = text => text.trim().split(/\s+/).filter(Boolean).length;
-  const hasIdentity = () => Boolean(state.name1.trim() && (state.mode === 'solo' || state.name2.trim()));
-  function validStep(step) { return step === 0 ? hasIdentity() : (GROUPS[step] || []).every(k => state.answers[k].trim()); }
-  function safeReach() { let reach = 0; while(reach < 5 && validStep(reach)) reach++; return reach; }
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const saved = JSON.parse(raw);
-      if (!saved || saved.version !== 1 || !saved.answers || typeof saved.answers !== 'object') throw new Error('Invalid saved plan');
-      const clean = fresh();
-      clean.mode = saved.mode === 'pair' ? 'pair' : 'solo';
-      for (const k of ['name1','name2']) clean[k] = typeof saved[k] === 'string' ? saved[k].slice(0,100) : '';
-      for (const k of Object.keys(FIELDS)) clean.answers[k] = typeof saved.answers[k] === 'string' ? saved.answers[k].slice(0,1600) : '';
-      if (typeof saved.created === 'string' && !Number.isNaN(Date.parse(saved.created))) clean.created = saved.created;
-      state = clean;
-      const requested = Number.isInteger(saved.unlocked) ? Math.max(0,Math.min(5,saved.unlocked)) : 0;
-      state.unlocked = Math.min(requested,safeReach());
-      state.step = Number.isInteger(saved.step) ? Math.max(0,Math.min(state.unlocked,saved.step)) : 0;
-      storageNote = 'Saved work restored on this device.';
+  const M=window.DIMSim;
+  const KEY='mgt340-court-storming-dim-v2';
+  const LEGACY_KEY='mgt340-court-storming-dim-v1';
+  const AP='https://apnews.com/article/caitlin-clark-fans-storming-court-7f226a252df600432734db409d3b5b3e';
+  const STEPS=['Case','Develop','Implement','Manage','After-action'];
+  const $=s=>document.querySelector(s);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const label=(items,id)=>items.find(x=>x.id===id)?.label||'Not selected';
+  const fresh=()=>({version:2,step:0,unlocked:0,mode:'solo',name1:'',name2:'',risk:'',measures:[],rationale:'',positions:{stewards:'',liaison:'',supervisor:''},trigger:'',comms:'',started:false,choices:[],round:0,reflection:'',finished:false});
+  let state=fresh(),storageOK=true,note='',legacy=null,selectedUnit='stewards',toastTimer;
+  const validId=(items,id)=>items.some(x=>x.id===id);
+  const plan=()=>({risk:state.risk,measures:[...state.measures],positions:{...state.positions},trigger:state.trigger,comms:state.comms});
+  function valid(step){
+    if(step===0)return Boolean(state.name1.trim()&&(state.mode==='solo'||state.name2.trim()));
+    if(step===1)return validId(M.RISKS,state.risk)&&state.measures.length===2&&Boolean(state.rationale.trim());
+    if(step===2)return M.UNITS.every(u=>validId(M.POSTS,state.positions[u.id]))&&validId(M.TRIGGERS,state.trigger)&&validId(M.COMMS,state.comms);
+    if(step===3)return state.choices.length===3;
+    return Boolean(state.reflection.trim());
+  }
+  function reach(){let i=0;while(i<4&&valid(i))i++;return i;}
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){
+      const s=JSON.parse(raw);if(s.version!==2)throw Error('version');
+      state.mode=s.mode==='pair'?'pair':'solo';
+      for(const key of ['name1','name2'])state[key]=typeof s[key]==='string'?s[key].slice(0,100):'';
+      for(const key of ['rationale','reflection'])state[key]=typeof s[key]==='string'?s[key].slice(0,1600):'';
+      for(const [key,items] of [['risk',M.RISKS],['trigger',M.TRIGGERS],['comms',M.COMMS]])state[key]=validId(items,s[key])?s[key]:'';
+      state.measures=Array.isArray(s.measures)?[...new Set(s.measures.filter(x=>validId(M.MEASURES,x)))].slice(0,2):[];
+      M.UNITS.forEach(u=>state.positions[u.id]=validId(M.POSTS,s.positions?.[u.id])?s.positions[u.id]:'');
+      state.started=Boolean(s.started&&valid(0)&&valid(1)&&valid(2));
+      if(state.started&&Array.isArray(s.choices))for(let i=0;i<Math.min(3,s.choices.length);i++){if(!validId(M.ROUNDS[i].choices,s.choices[i]))break;state.choices.push(s.choices[i]);}
+      state.round=Math.max(0,Math.min(state.choices.length,Number.isInteger(s.round)?s.round:0));
+      state.unlocked=Math.max(0,Math.min(reach(),Number.isInteger(s.unlocked)?s.unlocked:0));
+      state.step=Math.max(0,Math.min(state.unlocked,Number.isInteger(s.step)?s.step:0));
+      state.finished=Boolean(s.finished&&valid(3)&&valid(4));
+      note='Your saved run has been restored.';
     }
-  } catch (error) {
-    storageNote = 'A saved plan could not be restored. You can start a new plan.';
+    const old=localStorage.getItem(LEGACY_KEY);
+    if(old){const s=JSON.parse(old);if(s.version===1&&s.answers&&typeof s.answers==='object')legacy=s;}
+  }catch{note='Saved work could not be restored. You can start a new run.';}
+  try{localStorage.setItem(KEY+'-probe','1');localStorage.removeItem(KEY+'-probe');}catch{storageOK=false;}
+  function status(){ $('#save-status').textContent=storageOK?(note||'Saved on this device · Submit separately in Canvas'):'Saving unavailable · Export before closing'; }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=true;note='';}catch{storageOK=false;}status();}
+  function toast(text){$('#toast').textContent=text;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').textContent='',6500);}
+  function heading(stage,title,text){return `<p class="eyebrow">${stage}</p><h1>${title}</h1><p class="lead">${text}</p>`;}
+  function field(key,title,hint){return `<div class="field"><label for="${key}">${title}<span class="hint" id="${key}-hint">${hint}</span></label><textarea id="${key}" rows="3" maxlength="1600" required aria-describedby="${key}-hint">${esc(state[key])}</textarea></div>`;}
+  function options(items,key,type='radio'){
+    return `<div class="option-grid">${items.map(item=>{const checked=type==='checkbox'?state.measures.includes(item.id):state[key]===item.id;return `<label class="option ${checked?'selected':''}"><input type="${type}" name="${key}" value="${item.id}" ${checked?'checked':''}><span><strong>${esc(item.label)}</strong><span>${esc(item.text)}</span></span></label>`;}).join('')}</div>`;
   }
-  function storageStatus() {
-    $('#save-status').textContent = storageAvailable ? (storageNote || 'Saved on this device · Submit separately in Canvas') : 'Device saving unavailable · Export your work before closing';
+  function actions(back,next){return `<div class="actions">${back>=0?`<button type="button" class="secondary" data-go="${back}">Back</button>`:''}<button type="submit" class="primary">${next}</button></div>`;}
+  function lockNotice(){return state.started?'<div class="notice">This is the setup used for your current run. <button type="button" class="text-button" data-restart>Restart the simulation</button> to change it.</div>':'';}
+  function nav(){const r=Math.min(reach(),state.unlocked);$('#steps').innerHTML=STEPS.map((name,i)=>`<button type="button" class="step ${i===state.step?'current':''} ${i<r?'done':''}" data-go="${i}" ${i>r?'disabled':''} ${i===state.step?'aria-current="step"':''}><span class="step-num" aria-hidden="true">${i<r?'✓':i+1}</span><span>${name}</span></button>`).join('');}
+  function go(step){if(step<0||step>Math.min(reach(),state.unlocked))return;state.step=step;save();render();$('#main').focus();window.scrollTo({top:0,behavior:'instant'});}
+  function arena({interactive=false,scene=null,animate=false}={}){
+    const positions=scene?.positions||state.positions;
+    const pressure=scene?.pressure||0;
+    const route=scene?.route||(state.measures.includes('lane')?'Designated':'Not yet checked');
+    const isBackup=scene?.alternate;
+    const crowdY=pressure===3?188:pressure===2?156:pressure===1?125:96;
+    const spectators=Array.from({length:14},(_,i)=>`<circle class="spectator ${animate?'moving':''}" style="--shift-y:-${pressure?25:0}px;animation-delay:${i*30}ms" cx="${110+i*27}" cy="${crowdY+(i%3)*10}" r="6"/>`).join('');
+    const teamX=scene?.departed?(isBackup?84:515):130;
+    const teamY=isBackup?264:310;
+    const team=Array.from({length:5},(_,i)=>`<circle class="athlete ${animate&&scene?.departed?'moving':''}" style="--shift-x:-90px;animation-delay:${i*70}ms" cx="${teamX+(i%3)*13}" cy="${teamY+Math.floor(i/3)*13}" r="5.5"/>`).join('');
+    const hotspots=M.POSTS.map(post=>{
+      const assigned=M.UNITS.filter(u=>positions[u.id]===post.id);
+      const inner=`<span class="post-label">${post.label}</span><span class="post-units">${assigned.length?assigned.map(u=>`<span class="unit-badge" title="${u.label}">${u.short}</span>`).join(''):'<span class="empty-post">No unit</span>'}</span>`;
+      return interactive?`<button type="button" class="post post-${post.id}" data-post="${post.id}" aria-label="Assign ${label(M.UNITS,selectedUnit)} to ${post.label}" ${state.started?'disabled':''}>${inner}</button>`:`<div class="post post-${post.id}">${inner}</div>`;
+    }).join('');
+    const measures=state.measures.map(id=>label(M.MEASURES,id));
+    return `<figure class="arena-panel"><div class="arena-top"><span>FLOOR OPERATIONS</span><span>${scene?(scene.released?'STAFF RELEASED':scene.active?'RESPONSE ACTIVE':'AWAITING TRIGGER'):'YOUR SETUP'}</span></div><div class="arena"><svg viewBox="0 0 600 430" role="img" aria-label="Illustrative arena. Spectator access at the top, team bench on the left, main exit on the right. ${scene?esc(scene.team)+'. Route: '+route+'.':''}"><rect x="75" y="134" width="450" height="214" rx="3" fill="#b88f58"/><rect x="90" y="149" width="420" height="184" fill="none" stroke="#fff9" stroke-width="2"/><path d="M300 149v184M90 176h80v130H90M510 176h-80v130h80" fill="none" stroke="#fff9" stroke-width="2"/><circle cx="300" cy="241" r="34" fill="none" stroke="#fff9" stroke-width="2"/><path d="M126 357H554V296" class="exit-route ${route==='Available'?'available':''} ${state.measures.includes('lane')?'marked':''}"/><path d="m545 306 9-13 9 13" fill="none" stroke="${route==='Available'?'#4de0bc':'#efca88'}" stroke-width="4"/>${state.measures.includes('backup')?'<path d="M100 292H45V216" class="backup-route"/><text x="15" y="199" class="map-label">BACKUP</text>':''}<text x="88" y="398" class="map-label">${scene?esc(scene.team).toUpperCase():'TEAM BENCH TO MAIN EXIT'}</text>${spectators}${team}${isBackup?'<circle cx="45" cy="239" r="12" fill="#fff"/><text x="45" y="243" text-anchor="middle" font-size="12" fill="#152c3c">F</text>':''}</svg>${hotspots}${state.measures.includes('message')?'<span class="guidance-sign">Keep team exits clear</span>':''}</div><div class="map-legend"><span><i class="legend-fan"></i>Spectators</span><span><i class="legend-team"></i>Team</span><span>S Stewards · L Liaison · F Supervisor</span></div>${measures.length?`<div class="measure-strip">${measures.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}<figcaption>Illustrative teaching layout. Units represent functional teams, not recommended staffing numbers.</figcaption></figure>`;
   }
-  function save() {
-    try {localStorage.setItem(STORAGE_KEY,JSON.stringify(state));storageAvailable=true;storageNote='';}
-    catch {storageAvailable=false;}
-    storageStatus();
+  function intro(){return `${heading('MGT 340 · INTERACTIVE D.I.M. EXERCISE','Manage the final buzzer.','Set your plan. Place your people. Respond as the game ends.')}<div class="intro-grid"><div><div class="case-note"><strong>The case: Caitlin Clark at Ohio State</strong><p>On January 21, 2024, Clark collided with a spectator during a court storming after Iowa’s loss at Ohio State. AP reported that she was shaken up but not injured.</p><a href="${AP}" target="_blank" rel="noopener noreferrer">Read the AP article</a></div><p>You are the host university’s event manager planning for the next home game. Your choices shape a fictional final-buzzer scenario.</p><p class="small">About 15 minutes. Solo or pairs. You advance the clock—there is no speed score.</p></div>${arena()}</div>${legacy?'<div class="notice legacy-note">A plan from the earlier writing activity is still saved on this device. <button type="button" class="text-button" id="legacy-download">Download earlier plan</button></div>':''}<form id="activity-form" class="start-form"><fieldset class="mode-picker"><legend>How are you working?</legend><label><input type="radio" name="mode" value="solo" ${state.mode==='solo'?'checked':''}>By myself</label><label><input type="radio" name="mode" value="pair" ${state.mode==='pair'?'checked':''}>With a partner</label></fieldset><div class="form-row"><div class="field"><label for="name1">Your name</label><input id="name1" type="text" maxlength="100" autocomplete="name" required value="${esc(state.name1)}"></div><div class="field" id="partner-field" ${state.mode==='pair'?'':'hidden'}><label for="name2">Partner’s name</label><input id="name2" type="text" maxlength="100" ${state.mode==='pair'?'required':''} value="${esc(state.name2)}"></div></div>${actions(-1,'Develop your plan')}<p class="action-note">Your work stays on this device. Export your completed run and submit it in Canvas.</p></form>`;}
+  function develop(){return `${heading('D · DEVELOP','Choose what to protect.','Identify a collision risk and select two measures to prioritize before the next game.')}${lockNotice()}<form id="activity-form"><fieldset class="plain-fieldset" ${state.started?'disabled':''}><legend>1. Whose collision risk is your priority?</legend>${options(M.RISKS,'risk')}<h2 class="subheading">2. Choose two preventive measures <span id="measure-count">${state.measures.length}/2</span></h2><p class="small">Two priorities keep this exercise focused; a real event plan can include additional measures.</p>${options(M.MEASURES,'measures','checkbox')}<div id="plan-map">${arena()}</div>${field('rationale','Why do these measures fit your risk?','Write one or two sentences. Connect your choices to the Clark collision.')}</fieldset>${actions(0,'Assign your people')}</form>`;}
+  function implement(){return `${heading('I · IMPLEMENT','Put people behind the plan.','Select a unit, then click its post on the arena. All three units need assignments.')}${lockNotice()}<form id="activity-form"><fieldset class="plain-fieldset" ${state.started?'disabled':''}><legend class="sr-only">Staff assignments and activation</legend><div class="unit-picker" aria-label="Choose a unit to place">${M.UNITS.map(u=>`<button type="button" data-unit="${u.id}" class="unit-select ${selectedUnit===u.id?'active':''}" aria-pressed="${selectedUnit===u.id}"><span class="unit-badge">${u.short}</span>${u.label}</button>`).join('')}</div><div id="assignment-status" class="assignment-status" role="status">${label(M.UNITS,selectedUnit)} selected. Choose a post below.</div><div id="plan-map">${arena({interactive:true})}</div><details class="assignment-alternative"><summary>Use a list to assign posts</summary><div class="form-row">${M.UNITS.map(u=>`<div class="field"><label for="post-${u.id}">${u.label}</label><select id="post-${u.id}" data-assignment="${u.id}"><option value="">Choose a post</option>${M.POSTS.map(p=>`<option value="${p.id}" ${state.positions[u.id]===p.id?'selected':''}>${p.label}</option>`).join('')}</select></div>`).join('')}</div></details><div id="coverage-note" class="coverage-note">${coverageNote()}</div><h2 class="subheading">When will the response activate?</h2>${options(M.TRIGGERS,'trigger')}<h2 class="subheading">How will staff communicate?</h2>${options(M.COMMS,'comms')}</fieldset>${actions(1,state.started?'Return to the simulation':'Test your plan')}</form>`;}
+  function coverageNote(){const values=Object.values(state.positions);if(values.some(x=>!x))return 'Assign all three units. More than one unit can share a post.';const empty=M.POSTS.filter(p=>!values.includes(p.id));return empty.length?`Your setup leaves ${empty.map(x=>x.label.toLowerCase()).join(' and ')} without an assigned unit. You may proceed and test that tradeoff.`:'Every post has an assigned unit. The next question is when and how they act.';}
+  function planDetails(){return `<details class="context"><summary>Review your setup</summary><p><strong>Priority:</strong> ${label(M.RISKS,state.risk)}</p><p><strong>Measures:</strong> ${state.measures.map(x=>label(M.MEASURES,x)).join('; ')}</p><p>${esc(state.rationale)}</p>${M.UNITS.map(u=>`<p><strong>${u.label}:</strong> ${label(M.POSTS,state.positions[u.id])}</p>`).join('')}<p><strong>Activate:</strong> ${label(M.TRIGGERS,state.trigger)}</p><p><strong>Communicate:</strong> ${label(M.COMMS,state.comms)}</p></details>`;}
+  function statuses(s){return `<div class="operations-status" aria-label="Current operation status"><div><span>Team route</span><strong>${s.alternate?'Backup in use':s.route}</strong></div><div><span>Spectator access</span><strong>${s.access}</strong></div><div><span>Communication</span><strong>${s.communication}</strong></div></div>`;}
+  function manage(){
+    if(!state.started)return `${heading('M · MANAGE','Your plan is ready for a test.','Watch the floor, read the staff report, and make one decision at each moment.')}${arena({scene:M.simulate(plan()).current})}${planDetails()}<div class="notice">Three moments: 30 seconds remaining, the final buzzer, and team departure. Consequences are illustrative. Written explanations are not automatically scored.</div><div class="actions"><button class="secondary" type="button" data-go="2">Adjust setup</button><button class="primary" type="button" id="start-simulation">Start the final 30 seconds</button></div>`;
+    const i=Math.min(state.round,2),round=M.ROUNDS[i],run=M.simulate(plan(),state.choices),outcome=run.history[i];
+    const s=outcome?outcome.state:M.simulate(plan(),state.choices.slice(0,i)).current;
+    const radio=outcome?outcome.radio:M.radio(s,plan(),i);
+    return `<div class="simulation-heading"><div>${heading(`M · MANAGE · MOMENT ${i+1} OF 3`,round.title,'')}</div><div class="scoreboard"><span>GAME CLOCK</span><strong>${round.clock}</strong><span>${i===0?'HOME 71 · AWAY 70':i===1?'FINAL · HOME WINS':'POSTGAME'}</span></div></div><ol class="moment-track">${M.ROUNDS.map((r,j)=>`<li class="${j===i?'current':j<i?'complete':''}">${r.clock}<span>${['Gathering','Final buzzer','Departure'][j]}</span></li>`).join('')}</ol><div class="simulation-grid"><div>${arena({scene:s,animate:Boolean(outcome)})}${statuses(s)}</div><div class="decision-panel"><div class="radio-report"><span class="eyebrow">${outcome?'REPORT BEFORE YOUR DECISION':'STAFF RADIO · FICTIONAL NEXT GAME'}</span><p>${esc(radio)}</p></div>${outcome?`<section class="consequence" tabindex="-1" id="consequence"><p class="eyebrow">YOUR DECISION</p><p class="selected-decision">${esc(outcome.choice)}</p><h2>${outcome.headline}</h2><p>${outcome.result}</p><p class="lesson"><strong>Management takeaway:</strong> ${outcome.lesson}</p><button type="button" class="primary" id="advance-moment">${i===0?'Advance to the final buzzer':i===1?'Advance to team departure':'Review your after-action report'}</button></section>`:`<h2 class="decision-question">${round.question}</h2><div class="decision-list">${round.choices.map((c,j)=>`<button type="button" class="decision" data-choice="${c.id}"><span class="choice-letter">${String.fromCharCode(65+j)}</span><span><strong>${c.label}</strong><span>${c.text}</span></span></button>`).join('')}</div><p class="small">Choose once, observe what changes, then advance. You can restart after reviewing your run.</p>`}</div></div>${planDetails()}<button type="button" class="text-button" data-restart>Restart simulation with a revised plan</button>`;
   }
-  // Probe writable storage without changing an existing plan.
-  try {localStorage.setItem(STORAGE_KEY+'-check','1');localStorage.removeItem(STORAGE_KEY+'-check');} catch {storageAvailable=false;}
-  const count = () => PLAN_KEYS.reduce((n,k)=>n+wordCount(state.answers[k]),0);
-  const court = `<figure class="court-panel"><svg viewBox="0 0 330 340" role="img" aria-label="Illustrative court layout: spectator area above the court and a team exit route to the right. Not Ohio State’s actual venue layout."><rect x="18" y="15" width="270" height="37" rx="3" fill="#152c3c"/><text x="153" y="38" fill="white" text-anchor="middle" font-size="12" font-family="Arial">SPECTATORS</text><g fill="#a53032"><circle cx="45" cy="70" r="4"/><circle cx="68" cy="70" r="4"/><circle cx="91" cy="70" r="4"/><circle cx="114" cy="70" r="4"/><circle cx="137" cy="70" r="4"/><circle cx="160" cy="70" r="4"/><circle cx="183" cy="70" r="4"/><circle cx="206" cy="70" r="4"/><circle cx="229" cy="70" r="4"/><circle cx="252" cy="70" r="4"/></g><rect x="20" y="87" width="265" height="157" rx="2" fill="#d5b98e" stroke="#fff" stroke-width="2"/><path d="M152 87v157M20 126h48v80H20M285 126h-48v80h48" fill="none" stroke="white" stroke-width="2"/><circle cx="152" cy="165" r="27" fill="none" stroke="white" stroke-width="2"/><path d="M40 105c70 0 70 120 0 120M265 105c-70 0-70 120 0 120" fill="none" stroke="white" stroke-width="2"/><path d="M40 268h268v-45" fill="none" stroke="#286653" stroke-width="8"/><path d="m298 234 10-14 10 14" fill="none" stroke="#286653" stroke-width="4"/><text x="153" y="297" text-anchor="middle" font-size="12" font-family="Arial" fill="#152c3c">TEAM EXIT ROUTE</text><text x="153" y="320" text-anchor="middle" font-size="10" font-family="Arial" fill="#52636b">Who protects it? When? How?</text></svg><figcaption>Planning schematic · not the actual venue</figcaption></figure>`;
-  function field(key, label, hint, rows=3) {
-    return `<div class="field"><label for="${key}">${label}<span class="hint" id="${key}-hint">${hint}</span></label><textarea id="${key}" name="${key}" rows="${rows}" maxlength="1600" required aria-describedby="${key}-hint">${esc(state.answers[key])}</textarea></div>`;
+  function historyHTML(run){return `<ol class="event-log">${run.history.map(h=>`<li><span class="log-clock">${M.ROUNDS[h.round].clock}</span><div><h3>${esc(h.choice)}</h3><p>${h.result}</p><p class="small">${h.lesson}</p></div></li>`).join('')}</ol>`;}
+  function summary(){
+    const run=M.simulate(plan(),state.choices),reports=M.report(plan(),state.choices),names=state.mode==='pair'?`${state.name1} & ${state.name2}`:state.name1;
+    return `${heading('AFTER-ACTION · CHECK AND IMPROVE','What did your plan reveal?','Judge the process as well as the final result. You can recover during a run and still identify something to improve.')}<div class="summary-meta"><strong>${esc(names)}</strong><span>${state.mode==='pair'?'Pair':'Individual'} activity</span></div><div class="report-grid">${reports.map(r=>`<section><p class="eyebrow">${r.title}</p><h2>${r.status}</h2><p>${r.text}</p></section>`).join('')}</div><div class="evidence"><h2>Evidence from your run</h2><p><strong>Your priority:</strong> ${label(M.RISKS,state.risk)}. Consider whether your decisions kept that group protected as conditions changed.</p>${run.current.warnings.length?`<ul>${[...new Set(run.current.warnings)].map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p>No unconfirmed departure instruction or early release was recorded. Explain which actions supported that result.</p>'}${run.current.checks.length?`<ul>${run.current.checks.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>${historyHTML(run)}<form id="reflection-form">${field('reflection','What would you change before the next game?','Use one specific event from your run. Explain what it revealed about your original plan and one revision. Two or three sentences are enough.')}<button type="submit" class="primary">${state.finished?'Update completed report':'Complete your report'}</button></form>${state.finished?`<div class="export-panel" id="export-panel" tabindex="-1"><h2>Your report is ready.</h2><p>It has not been submitted. Download or copy it, then submit it in Canvas.</p><div class="actions"><button type="button" class="primary" id="download-button">Download report (.txt)</button><button type="button" class="secondary" id="copy-button">Copy for Canvas</button><button type="button" class="secondary" id="print-button">Print / Save PDF</button></div><div id="copy-fallback" hidden><label for="export-text">Copy the report below</label><textarea id="export-text" readonly></textarea></div></div>`:''}<section class="print-reflection"><h2>Your revision</h2><p class="answer">${esc(state.reflection)}</p></section>${planDetails()}<div class="receipt"><strong>For the class discussion</strong><p>If nobody is injured, is that enough evidence that your plan worked?</p><p>This is a teaching simulation, not a prediction of crowd behavior or an automatic grade of your written reasoning.</p></div><button type="button" class="text-button" data-restart>Revise setup and try another run</button><p class="small">Case source: <a href="${AP}" target="_blank" rel="noopener noreferrer">Associated Press</a>. All subsequent game events and outcomes are instructional hypotheticals.</p>`;
   }
-  const backNext = (next, number) => `<div class="actions"><button type="button" class="secondary" data-go="${number-1}">Back</button><button type="submit" class="primary">${next}<span class="next-arrow" aria-hidden="true">→</span></button></div>`;
-  function context() {
-    return `<details class="context"><summary>Your plan so far</summary>${PLAN_KEYS.filter(k=>state.answers[k].trim()).map(k=>`<p class="label">${FIELDS[k]}</p><p>${esc(state.answers[k])}</p>`).join('')}</details>`;
-  }
-  function stageHeader(letter, title, intro) {return `<div class="section-head"><div><p class="eyebrow">${STEP_NAMES[state.step].toUpperCase()} · ${state.step} OF 3</p><h1>${title}</h1></div><span class="phase-letter" aria-hidden="true">${letter}</span></div><p class="lead">${intro}</p><p class="word-count" id="word-count">D.I.M. plan: ${count()} words · Aim for about 200 words in total.</p>`;}
-  function intro() {return `<div class="intro-grid"><div><p class="eyebrow">RISK MANAGEMENT · 15 MINUTES</p><h1>Court Storming:<br>The Manager’s Plan</h1><p class="lead">You run the event. Build a plan to protect people when the final buzzer sounds.</p><div class="case-note"><strong>The case: Caitlin Clark at Ohio State</strong><p>On January 21, 2024, Clark collided with a spectator during a court storming after Iowa’s loss at Ohio State. AP reported that she was shaken up but not injured.</p><a href="${AP_URL}" target="_blank" rel="noopener noreferrer">Read the AP article <span class="small">(opens a new tab)</span></a></div></div>${court}</div><div class="form-block"><p><strong>Your assignment:</strong> Role-play as Ohio State’s event manager reviewing the incident. Prepare a D.I.M. plan for the next home game, then respond to one hypothetical update.</p><form id="activity-form" class="start-form"><fieldset class="mode-picker"><legend>How are you working?</legend><label><input type="radio" name="mode" value="solo" ${state.mode==='solo'?'checked':''}> By myself</label><label><input type="radio" name="mode" value="pair" ${state.mode==='pair'?'checked':''}> With a partner</label></fieldset><div class="form-row"><div class="field"><label for="name1">Your name</label><input type="text" id="name1" maxlength="100" autocomplete="name" required value="${esc(state.name1)}"></div><div class="field" id="partner-field" ${state.mode==='pair'?'':'hidden'}><label for="name2">Partner’s name</label><input type="text" id="name2" maxlength="100" ${state.mode==='pair'?'required':''} autocomplete="off" value="${esc(state.name2)}"></div></div><p class="small">Read the case first. Choose one risk, write a practical plan, and check how you would respond under pressure. Short bullets are welcome.</p><div class="actions"><button type="submit" class="primary">Develop your plan<span class="next-arrow" aria-hidden="true">→</span></button></div><p class="action-note" style="margin-top:15px">Your names and responses stay on this device. At the end, download or copy your plan and submit it in Canvas.</p></form></div>`;}
-  function develop() {return `<div class="form-block">${stageHeader('D','Develop the plan.','Define one collision risk and two actions that could reduce it at the next game.')}<form id="activity-form">${field('risk','What is the risk, and who could be harmed?','Connect your risk to a fact from the Clark incident. Consider athletes, officials, spectators, and staff.')}${field('prevent1','Preventive action 1','Describe a concrete action the host university could take before a crowd enters the court.',2)}${field('prevent2','Preventive action 2','Add a different action that supports the same safety goal.',2)}${backNext('Put it into practice',1)}</form></div>`;}
-  function implement() {return `<div class="form-block">${stageHeader('I','Put it into practice.','A written plan needs people, resources, and an activation point. Make your two actions workable.')}${context()}<form id="activity-form">${field('deployment','Who does what, where, and when?','Name staff roles, their locations, and the time or signal that activates your plan. “More security” needs specifics.',4)}${field('communication','How will staff be prepared and communicate?','Describe the pregame briefing or rehearsal and how staff share instructions and report a problem.',3)}${backNext('Check how it works',2)}</form></div>`;}
-  function manage() {return `<div class="form-block">${stageHeader('M','Check and improve it.','Decide how you will know whether staff are carrying out the plan and whether it needs to change.')}${context()}<form id="activity-form">${field('monitor','What will a supervisor monitor during the game?','Identify one observable check and the warning sign that would trigger an adjustment.',3)}${field('review','What will you review afterward?','Name the evidence you would use to judge the plan and one finding that would lead you to revise it.',3)}<p class="small">The next step adds a new situation. You can still revisit your plan.</p>${backNext('Reveal the update',3)}</form></div>`;}
-  function update() {return `<div class="form-block"><p class="eyebrow">APPLY YOUR PLAN · HYPOTHETICAL UPDATE</p><h1>Thirty seconds remain.</h1><p class="lead">Use the plan you just made to respond as the situation changes.</p><div class="update-banner"><p class="eyebrow">STAFF RADIO · NEXT HOME GAME</p><div class="clock" aria-label="30 seconds">00:30</div><p>The game is close. Spectators begin gathering near the court. A staff member reports that the visiting team’s planned exit route is becoming crowded.</p></div>${context()}<form id="activity-form">${field('response','What do you do now, and who carries it out?','Write two sentences. State your immediate action, name the responsible role, and explain any adjustment to your plan.',4)}<p class="small">This update is invented for the exercise. It is not a reconstruction of the 2024 incident.</p>${backNext('Review your completed plan',4)}</form></div>`;}
-  function summarySection(title, keys, step) {return `<section class="summary-section"><div class="summary-heading"><h2>${title}</h2><button type="button" class="text-button" data-go="${step}">Edit ${STEP_NAMES[step].toLowerCase()}</button></div>${keys.map(k=>`<h3>${FIELDS[k]}</h3><p class="answer">${esc(state.answers[k])}</p>`).join('')}</section>`;}
-  function summary() {
-    const names = state.mode === 'pair' ? `${state.name1} & ${state.name2}` : state.name1;
-    return `<p class="eyebrow">MGT 340 · COURT-STORMING RISK MANAGEMENT</p><h1>Your D.I.M. plan</h1><div class="summary-meta"><span><strong>${esc(names)}</strong></span><span>${state.mode==='pair'?'Pair':'Individual'} activity</span><span>${count()} D.I.M. words</span></div><div class="notice"><strong>Your plan is ready to export.</strong> It has not been submitted. Download or copy it, then submit it in Canvas as your instructor directs.</div><div class="actions"><button type="button" class="primary" id="download-button">Download plan (.txt)</button><button type="button" class="secondary" id="copy-button">Copy for Canvas</button><button type="button" class="secondary" id="print-button">Print / Save PDF</button></div><div id="copy-fallback" class="copy-fallback" hidden><label for="export-text">Copy this text manually</label><textarea id="export-text" readonly></textarea></div>${summarySection('D · Develop',GROUPS[1],1)}${summarySection('I · Implement',GROUPS[2],2)}${summarySection('M · Manage',GROUPS[3],3)}<section class="summary-section"><div class="summary-heading"><h2>The update</h2><button type="button" class="text-button" data-go="4">Edit response</button></div><p class="small">Hypothetical: With 30 seconds remaining, spectators gather near the court and the visiting team’s planned exit route becomes crowded.</p><p class="answer">${esc(state.answers.response)}</p></section><div class="receipt"><strong>For the class discussion</strong><p>If nobody is injured, is that enough evidence that your plan worked?</p><p>This is an applied planning exercise. Completing the prompts does not automatically evaluate the quality of your plan.</p></div><p class="small">Case source: <a href="${AP_URL}" target="_blank" rel="noopener noreferrer">Associated Press · Caitlin Clark’s collision with a fan</a>. Planning scenario and update are instructional hypotheticals.</p>`;
-  }
-  const pages = [intro,develop,implement,manage,update,summary];
-  function nav() {
-    const reach = Math.min(state.unlocked,safeReach());
-    $('#steps').innerHTML = STEP_NAMES.map((name,i)=>`<button type="button" class="step ${state.step===i?'current':''} ${i<reach?'done':''}" data-go="${i}" ${i>reach?'disabled':''} ${state.step===i?'aria-current="step"':''}><span class="step-num" aria-hidden="true">${i<reach?'✓':i+1}</span><span>${name}</span></button>`).join('');
-  }
-  function navigate(step) {
-    if (step<0 || step>Math.min(state.unlocked,safeReach())) return;
-    state.step=step;save();render();$('#main').focus();window.scrollTo({top:0,behavior:'instant'});
-  }
-  function render() {
-    nav();$('#main').innerHTML=pages[state.step]();storageStatus();
-    const form=$('#activity-form');
-    if (form) {
-      form.addEventListener('input',event=>{
-        const el=event.target;
-        el.setCustomValidity('');
-        if (el.id==='name1'||el.id==='name2') state[el.id]=el.value;
-        else if (Object.hasOwn(FIELDS,el.id)) state.answers[el.id]=el.value;
-        if (el.name==='mode') {
-          state.mode=el.value==='pair'?'pair':'solo';
-          $('#partner-field').hidden=state.mode!=='pair';$('#name2').required=state.mode==='pair';
-        }
-        save();nav();if($('#word-count')) $('#word-count').textContent=`D.I.M. plan: ${count()} words · Aim for about 200 words in total.`;
-      });
-      form.addEventListener('submit',event=>{
-        event.preventDefault();
-        const invalid=[...form.querySelectorAll('[required]')].find(el=>!el.value.trim());
-        if(invalid){invalid.setCustomValidity('Please add a response before continuing.');invalid.reportValidity();return;}
-        if (!validStep(state.step)) return;
-        state.unlocked=Math.max(state.unlocked,state.step+1);navigate(state.step+1);
-      });
+  function exportText(){const run=M.simulate(plan(),state.choices),names=state.mode==='pair'?`${state.name1} and ${state.name2}`:state.name1;return [
+    'MANAGE THE FINAL BUZZER — D.I.M. REPORT','MGT 340 | Jeffrey Levine | La Salle University',`Student(s): ${names}`,`Mode: ${state.mode==='pair'?'Pair':'Individual'}`,`Exported: ${new Date().toLocaleString()}`,'',
+    'CASE','Caitlin Clark collided with a spectator at Ohio State on January 21, 2024. AP reported that she was shaken up but not injured. All game events below are fictional teaching scenarios.','',
+    'D — DEVELOP',`Priority: ${label(M.RISKS,state.risk)}`,`Measures: ${state.measures.map(x=>label(M.MEASURES,x)).join('; ')}`,`Reasoning: ${state.rationale}`,'',
+    'I — IMPLEMENT',...M.UNITS.map(u=>`${u.label}: ${label(M.POSTS,state.positions[u.id])}`),`Activation: ${label(M.TRIGGERS,state.trigger)}`,`Communication: ${label(M.COMMS,state.comms)}`,'',
+    'M — MANAGE',...run.history.flatMap(h=>[`${M.ROUNDS[h.round].clock} — ${M.ROUNDS[h.round].title}`,`Staff report: ${h.radio}`,`Decision: ${h.choice} ${h.detail}`,`Observed result: ${h.result}`,`Management takeaway: ${h.lesson}`,'']),
+    'AFTER-ACTION',...M.report(plan(),state.choices).map(r=>`${r.title}: ${r.status}. ${r.text}`),'',
+    'PROCESS EVIDENCE',...(run.current.warnings.length?run.current.warnings:['No unconfirmed departure instruction or early release was recorded.']),...run.current.checks,'',
+    'REVISION FOR NEXT GAME',state.reflection,'','DEBRIEF','If nobody is injured, is that enough evidence that the plan worked?','',
+    `Case source: ${AP}`,'Illustrative outcomes; not a crowd-safety prediction or automatic assessment of written work.','Submit this report through Canvas. Exporting is not submission.'
+  ].join('\n');}
+  function downloadText(text,name){const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Download requested. Submit your file in Canvas.');}
+  function download(){downloadText(exportText(),`DIM_Final_Buzzer_${state.name1.trim().replace(/[^a-z0-9_-]+/gi,'_').slice(0,50)||'Student'}.txt`);}
+  async function copy(){try{await navigator.clipboard.writeText(exportText());toast('Report copied. Paste it into Canvas to submit.');}catch{$('#copy-fallback').hidden=false;$('#export-text').value=exportText();$('#export-text').focus();$('#export-text').select();toast('Copy the report below, then paste it into Canvas.');}}
+  function drawPlanningMap(){if($('#plan-map'))$('#plan-map').innerHTML=arena({interactive:state.step===2});if($('#coverage-note'))$('#coverage-note').textContent=coverageNote();}
+  function updateOptions(){document.querySelectorAll('.option').forEach(el=>el.classList.toggle('selected',el.querySelector('input').checked));}
+  function input(event){const el=event.target;if(typeof el.setCustomValidity==='function')el.setCustomValidity('');
+    if(['name1','name2','rationale','reflection'].includes(el.id))state[el.id]=el.value;
+    if(el.name==='mode'){state.mode=el.value;$('#partner-field').hidden=state.mode!=='pair';$('#name2').required=state.mode==='pair';}
+    if(state.started&&['risk','measures','trigger','comms'].includes(el.name))return;
+    if(['risk','trigger','comms'].includes(el.name))state[el.name]=el.value;
+    if(el.name==='measures'){
+      if(el.checked&&state.measures.length===2){el.checked=false;toast('Two measures are selected. Deselect one before choosing another.');return;}
+      state.measures=el.checked?[...state.measures,el.value]:state.measures.filter(x=>x!==el.value);
+      $('#measure-count').textContent=`${state.measures.length}/2`;drawPlanningMap();
     }
-    if (state.step===5) {
-      $('#download-button').addEventListener('click',download);
-      $('#copy-button').addEventListener('click',copy);
-      $('#print-button').addEventListener('click',()=>window.print());
-    }
+    if(el.dataset.assignment&&!state.started){state.positions[el.dataset.assignment]=el.value;drawPlanningMap();}
+    updateOptions();if(el.id==='reflection'&&state.finished){state.finished=false;$('#export-panel')?.remove();}save();nav();
   }
-  function exportText() {
-    const names=state.mode==='pair'?`${state.name1} and ${state.name2}`:state.name1;
-    return ['COURT STORMING: THE MANAGER’S PLAN','MGT 340 | Jeffrey Levine | La Salle University',`Student(s): ${names}`,`Mode: ${state.mode==='pair'?'Pair':'Individual'}`,`Exported: ${new Date().toLocaleString()}`,'','CASE: Caitlin Clark’s 2024 court-storming collision at Ohio State. AP reported no injury. The plan is a role-play for the next game.','',...[[1,'DEVELOP'],[2,'IMPLEMENT'],[3,'MANAGE']].flatMap(([i,title])=>[title,...GROUPS[i].flatMap(k=>[`${FIELDS[k]}:`,state.answers[k].trim(),''])]),'HYPOTHETICAL UPDATE','Thirty seconds remain in a close game. Spectators gather near the court. Staff report that the visiting team’s planned exit route is becoming crowded.','Response:',state.answers.response.trim(),'','DEBRIEF','If nobody is injured, is that enough evidence that the plan worked?','',`Case source: ${AP_URL}`,'Planning scenario and update are instructional hypotheticals.','This export is not proof of submission. Submit through Canvas as directed.'].join('\n');
+  function render(){nav();$('#main').innerHTML=[intro,develop,implement,manage,summary][state.step]();status();
+    $('#activity-form')?.addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;const empty=[...form.querySelectorAll('[required]:not(:disabled)')].find(el=>!el.value.trim());if(empty){empty.setCustomValidity('Please add a response before continuing.');empty.reportValidity();return;}if(!valid(state.step)){toast(state.step===1?'Select a priority, exactly two measures, and add your reasoning.':'Assign all three units and select an activation trigger and communication method.');return;}state.unlocked=Math.max(state.unlocked,state.step+1);go(state.step+1);});
+    $('#reflection-form')?.addEventListener('submit',event=>{event.preventDefault();if(!state.reflection.trim()){$('#reflection').setCustomValidity('Add a specific revision before exporting.');$('#reflection').reportValidity();return;}state.finished=true;save();render();$('#export-panel').focus();$('#export-panel').scrollIntoView({behavior:'smooth',block:'center'});});
+    $('#start-simulation')?.addEventListener('click',()=>{if(!valid(0)||!valid(1)||!valid(2))return;state.started=true;state.round=0;save();render();$('#main').focus();});
+    $('#advance-moment')?.addEventListener('click',()=>{state.round=Math.min(3,state.round+1);save();if(state.round===3){state.unlocked=4;go(4);}else{render();$('#main').focus();window.scrollTo({top:0,behavior:'instant'});}});
+    $('#download-button')?.addEventListener('click',download);$('#copy-button')?.addEventListener('click',copy);$('#print-button')?.addEventListener('click',()=>window.print());
+    $('#legacy-download')?.addEventListener('click',()=>downloadText(['EARLIER D.I.M. WRITTEN PLAN',`Student(s): ${typeof legacy.name1==='string'?legacy.name1:''}${legacy.mode==='pair'?' and '+(typeof legacy.name2==='string'?legacy.name2:''):''}`,...Object.entries(legacy.answers).filter(([,v])=>typeof v==='string').flatMap(([k,v])=>['',k.toUpperCase(),v])].join('\n'),'DIM_Earlier_Written_Plan.txt'));
   }
-  function toast(message){$('#toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{$('#toast').textContent='';},6000);}
-  function download(){
-    const blob=new Blob([exportText()],{type:'text/plain;charset=utf-8'});
-    const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;
-    const base=(state.name1.trim().replace(/[^a-z0-9_-]+/gi,'_').slice(0,50)||'Student');
-    link.download=`DIM_Court_Storming_${base}.txt`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-    toast('Download requested. Check your Downloads folder, then submit in Canvas.');
-  }
-  async function copy(){
-    try{await navigator.clipboard.writeText(exportText());toast('Plan copied. Paste it into Canvas to submit.');}
-    catch{$('#copy-fallback').hidden=false;$('#export-text').value=exportText();$('#export-text').focus();$('#export-text').select();toast('Select and copy the text below, then paste it into Canvas.');}
-  }
-  document.addEventListener('click',event=>{const b=event.target.closest('[data-go]');if(b&&!b.disabled) navigate(Number(b.dataset.go));});
-  $('#guide-button').addEventListener('click',()=>$('#guide-dialog').showModal());
-  $('#close-guide').addEventListener('click',()=>$('#guide-dialog').close());
-  $('#reset-button').addEventListener('click',()=>$('#reset-dialog').showModal());
-  $('#cancel-reset').addEventListener('click',()=>$('#reset-dialog').close());
-  $('#confirm-reset').addEventListener('click',()=>{state=fresh();save();$('#reset-dialog').close();render();$('#main').focus();toast('A new plan is ready.');});
-  render();
-  if(new URLSearchParams(location.search).get('guide')==='1') $('#guide-dialog').showModal();
+  document.addEventListener('input',input);
+  document.addEventListener('click',event=>{
+    const navButton=event.target.closest('[data-go]');if(navButton&&!navButton.disabled)go(Number(navButton.dataset.go));
+    const unit=event.target.closest('[data-unit]');if(unit&&!state.started){selectedUnit=unit.dataset.unit;document.querySelectorAll('[data-unit]').forEach(b=>{b.classList.toggle('active',b.dataset.unit===selectedUnit);b.setAttribute('aria-pressed',String(b.dataset.unit===selectedUnit));});drawPlanningMap();$('#assignment-status').textContent=`${label(M.UNITS,selectedUnit)} selected. Choose a post below.`;}
+    const post=event.target.closest('[data-post]');if(post&&!state.started){state.positions[selectedUnit]=post.dataset.post;save();nav();drawPlanningMap();$(`#post-${selectedUnit}`).value=post.dataset.post;$('#assignment-status').textContent=`${label(M.UNITS,selectedUnit)} assigned to ${label(M.POSTS,post.dataset.post).toLowerCase()}. Select another unit or move this one.`;document.querySelector(`[data-post="${post.dataset.post}"]`)?.focus();}
+    const choice=event.target.closest('[data-choice]');if(choice&&state.started&&state.step===3&&state.choices.length===state.round&&state.round<3){state.choices.push(choice.dataset.choice);save();render();$('#consequence').focus();}
+    if(event.target.closest('[data-restart]'))$('#restart-dialog').showModal();
+  });
+  $('#guide-button').addEventListener('click',()=>$('#guide-dialog').showModal());$('#close-guide').addEventListener('click',()=>$('#guide-dialog').close());
+  $('#reset-button').addEventListener('click',()=>$('#reset-dialog').showModal());$('#cancel-reset').addEventListener('click',()=>$('#reset-dialog').close());
+  $('#confirm-reset').addEventListener('click',()=>{state=fresh();selectedUnit='stewards';save();$('#reset-dialog').close();render();$('#main').focus();});
+  $('#cancel-restart').addEventListener('click',()=>$('#restart-dialog').close());
+  $('#confirm-restart').addEventListener('click',()=>{state.started=false;state.choices=[];state.round=0;state.reflection='';state.finished=false;state.step=2;state.unlocked=3;save();$('#restart-dialog').close();render();$('#main').focus();toast('Your setup is retained. Revise it, then test another run.');});
+  let printDetails=[];
+  window.addEventListener('beforeprint',()=>{printDetails=[...document.querySelectorAll('details:not([open])')];printDetails.forEach(el=>el.open=true);});
+  window.addEventListener('afterprint',()=>{printDetails.forEach(el=>el.open=false);printDetails=[];});
+  render();if(new URLSearchParams(location.search).get('guide')==='1')$('#guide-dialog').showModal();
 })();
