@@ -8,7 +8,7 @@
   if(typeof module==='object'&&module.exports)module.exports=api;else root.OffScript=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(base){
 'use strict';
-const VERSION='1.1.0';
+const VERSION='1.1.1', BRIEFING_VERSION='1.1.0';
 const cast={
   blaze:{name:'Blaze',role:'Signal House player · streams on his own channel',initials:'BZ',color:'blue',intro:'A professional VALORANT player on Signal House’s roster. He also livestreams on a personal channel. Rook, a gaming-chair company, already sponsors those personal streams. He wants to help the team without breaking that earlier promise.'},
   nova:{name:'Nova',role:'Signal House creator · streamer and event personality',initials:'NV',color:'pink',intro:'A battle-royale streamer who works with Signal House on content and appearances. Fans recognize her voice, neon-pink hoodie, and goggles. She is open to paid event promotion, but wants to approve how her identity is used.'},
@@ -18,6 +18,7 @@ const cast={
   moth:{name:'Moth',role:'Independent fan artist · not a Signal House employee',initials:'MO',color:'blue',intro:'An independent artist whose cartoon attracts attention during the campaign. Moth did not agree to work for Signal House simply by making art about Nova.'},
   echo:{name:'ECHO Studio',role:'Outside technology vendor · offers an AI voice imitation',initials:'EC',color:'violet',intro:'An outside software company offering a computer-generated voice that sounds like Nova. Its offer is not the same thing as Nova giving permission.'}
 };
+for(const [id,person] of Object.entries(cast))person.avatar='assets/avatars/'+id+(id==='echo'?'.svg':'.webp');
 const glossary=[
  ['NIL','Name, image, and likeness: identity interests involving a person’s name, recognizable appearance, voice, or persona. The game asks who approved a particular use; it does not decide every legal claim.'],
  ['Campaign','The connected advertisements, videos, appearances, and other promotions around CROSSPLAY. It is not a second event.'],
@@ -40,6 +41,8 @@ const setup={
 function plain(t){return String(t).replaceAll('creator assent','creator agreement').replaceAll('Blaze’s written assent','Blaze’s written agreement').replaceAll('Blaze’s assent','Blaze’s agreement').replaceAll('carve-out','written exception').replaceAll('sponsor inventory','sponsor advertising space').replaceAll('production capacity','help producing the show').replaceAll('retirement workflow','end-of-use plan').replaceAll('retire controlled assets','stop using the campaign material you control').replaceAll('risk meter','status display').replaceAll('STATIC campaign','campaign of fixed ads').replaceAll('static-ad extension','extension for fixed ads').replaceAll('contextual paid disclosures','clear statements in the content identifying the paid promotion');}
 function decorate(v,s){
   v.phase=['10 days before CROSSPLAY','8 days before CROSSPLAY','5 days before CROSSPLAY','3 days before CROSSPLAY','1 day before CROSSPLAY','CROSSPLAY launch morning'][s.step];
+  v.thread=['Sponsor offer','Chair sponsorship','Trailer v1 review','Fan art response','Live segment change','Final sign-off'][s.step];
+  v.hook=['The sponsor is waiting for your first promise.','Seatline’s next request puts your new agreement to the test.','A polished trailer lands in your inbox. The permissions are less polished.','A fan’s joke about the campaign is getting attention.','Nova cannot go live. What you prepared may save the show.','The sponsor wants a bigger deal. Your earlier choices shape Nova’s answer.'][s.step];
   v.setting=['The sponsorship meeting','Planning the sponsored content','Reviewing the event advertisement','Responding to the fan community','Replacing a live appearance','The final campaign review'][s.step];
   const set=(title,paragraphs,task,evidence)=>Object.assign(v,{title,paragraphs,deck:paragraphs.join(' '),task,evidence});
   if(s.step===0){
@@ -91,12 +94,13 @@ function decorate(v,s){
       'The team controls the account that would post it. But the filmmaker only licensed the footage for editorial use, such as reporting. The company that owns the game and the music rights holders have not authorized this sponsor ad. Its paid-promotion notice is only in the account’s profile, not in the video.'
     ],'Which version of the CROSSPLAY trailer will you approve for release?',[
       ['Separate permissions are involved','The creators’ approval concerns their identities. The filmmaker, game publisher, and music rights holders control different material in the video. One approval does not supply all the others.'],
-      ['Your production alternatives',s.sponsorOK?'A simpler original shoot costs $1,800 and includes a separately approved recorded Nova greeting. Keeping the existing highlight with all specified permissions costs $2,400. Both include clear paid-promotion notices in the video.':'A new shoot costs $1,800; obtaining permissions for an edited highlight costs $2,400. Both exclude the disputed chair promotion and include paid-promotion notices in the video. Neither resolves the earlier chair dispute itself.']
+      ['Your production alternatives',s.sponsorOK?'A simpler original shoot costs $1,800 and includes a separately approved recorded Nova greeting. Keeping the existing highlight with all specified permissions costs $2,400. Both include clear paid-promotion notices in the video.':'A new shoot costs $1,800 and includes a separately approved recorded Nova greeting; obtaining permissions for an edited highlight costs $2,400. Both exclude the disputed chair promotion and include paid-promotion notices in the video. Neither resolves the earlier chair dispute itself.']
     ]);
+    v.messages[0]=['mara','Trailer v1 is ready. The upload is ours; the footage and track still need sign-off.'];
     v.options[0].title='Shoot a simpler, fully approved trailer.';
-    v.options[0].body='Use newly licensed footage and music, without game footage or the disputed chair promotion. Get the creators’ approval and identify the paid promotion in the video.';
+    v.options[0].body='Use newly licensed footage and music, without game footage. '+(s.sponsorOK?'Include only chair promotion covered by your signed agreement.':'Leave out the disputed chair promotion.')+' Get the creators’ approval and identify the paid promotion in the video.';
     v.options[1].title='Get permission for the existing highlight.';
-    v.options[1].body='Pay for the specified footage, game, music, and identity permissions. Edit out disputed chair material and add the paid-promotion notice inside the video.';
+    v.options[1].body='Pay for the specified footage, game, music, and identity permissions. '+(s.sponsorOK?'Keep chair promotion within your signed agreement.':'Edit out disputed chair material.')+' Add the paid-promotion notice inside the video.';
     v.options[2].title='Post the current video without those changes.';
   }else if(s.step===3){
     const friction=!s.sponsorOK||!s.disclosure;
@@ -113,28 +117,32 @@ function decorate(v,s){
   }else if(s.step===4){
     const prepared=s.media==='owned',ally=s.fan==='ally';
     set('Nova cannot join the live program. What replaces her?',[
-      'One day before CROSSPLAY, Nova tells Mara she cannot appear live. You need a replacement for that segment of the show. ECHO Studio, an outside technology vendor, offers a computer-generated host that imitates Nova’s unmistakable voice.',
-      'ECHO built its prototype from publicly available streams without Nova’s agreement. It says the audio is newly generated and will carry an AI label. Nova has not approved it. She will consider a different, tightly controlled version: ten approved event greetings, not a host that invents new answers or product endorsements.'
+      'The day before CROSSPLAY, Nova cancels her live appearance. Mara needs a replacement for her segment. ECHO Studio, an outside technology vendor, offers a computer-generated host with Nova’s unmistakable voice.',
+      'ECHO’s prototype uses public streams, without Nova’s approval. It will carry an AI label, but that does not supply her permission. She is open to ten reviewed event greetings under a separate agreement; she refuses an unscripted host or new chair endorsements.'
     ],'What will you use for the missing live segment?',[
-      ['The limited AI offer','Nova will sign a separate paid agreement specifying authorized source recordings, limited training, ten reviewed greetings, event-only use, and when the model and outputs must stop being used. The unapproved prototype must be discarded. No open-ended chat or chair testimonials are included.'],
+      ['The limited AI offer','Nova will approve licensed source audio, limited training, ten reviewed greetings, payment, event-only use, and an end-of-use date for the model and outputs. ECHO must discard its unapproved prototype. No open-ended chat or chair testimonials.'],
       ['Your non-AI alternative',prepared?'Your earlier original shoot included Nova’s approved recorded greeting. You can play that recording and use a real host speaking in their own voice for $500. A recorded greeting is not an AI imitation.':ally?'Your earlier collaboration with Moth supplies an approved event graphic. Use it with a real host speaking in their own voice for $900. You have no standalone approved Nova greeting.':'You have neither a standalone approved Nova greeting nor an artist collaboration. A rush booking of a real host speaking in their own voice costs $2,200. Tell viewers that Nova is not appearing live.']
     ]);
     v.options[0].title='Agree to ten controlled AI greetings.';
-    v.options[0].body='Discard ECHO’s unapproved prototype. Obtain the separate written agreement and source permissions, then build and review only the ten agreed greetings.';
+    v.options[0].body='Sign Nova’s separate agreement, clear source recordings, and replace ECHO’s prototype with ten reviewed event greetings.';
     v.options[1].title=prepared?'Use the approved recording and a real host.':ally?'Use the approved art and a real host.':'Book a real host without imitating Nova.';
     v.options[2].title='Publish ECHO’s existing AI voice preview.';
   }else{
     const wounded=s.voice==='unauthorized',open=s.open.length>0;
     const repair=1200+(s.open.includes('sponsor')?2200:0)+(s.open.includes('media')?1600:0)+(s.open.includes('disclosure')?300:0)+(wounded?1800:0);
     set(wounded?'Seatline wants an extension. Nova is saying no.':open?'A bigger request arrives before the old problems are fixed.':'The sponsor wants to turn the event into a year-long ad.',[
-      'On launch morning, Seatline proposes a follow-on campaign: a year of online ads with a virtual Nova that talks to fans and promotes chairs. It offers another $12,000. This is a new project, not merely another showing of the CROSSPLAY trailer.',
+      'Launch morning: Seatline offers another $12,000 for a year of online ads featuring an interactive Nova who talks to fans and promotes chairs. This is a new campaign, beyond your CROSSPLAY agreement.',
       wounded?'Your decision to publish the unapproved voice preview changed the conversation. Nova now refuses any new voice or extended identity license at this deadline. She will approve a limited non-AI repair for the event, but not the expansion.':open?'Your earlier decisions left permissions unresolved. The original identity license ends 30 days after signing, and none of your agreements permits this interactive campaign. Repairing the original event and negotiating a new use are separate tasks.':'Your event materials have agreed permissions, but the original identity license ends 30 days after signing. Neither an approved recording, event artwork, nor ten AI greetings gives Seatline a year-long interactive Nova.'
     ],'What campaign will you authorize at this deadline?',[
       ['Your current boundary',wounded?'Nova’s refusal is an explicit fact, not a low relationship score. You cannot select a new extension today. Previously released material may still need withdrawal and follow-up.':'Only the uses and time periods actually agreed are authorized. An interactive host can generate new statements; it is different from a fixed image or prerecorded ad.'],
-      [wounded?'The available repair':'A narrower new agreement is available',wounded?`An expressly approved replacement event package costs ${base.money(repair)}. Or postpone, withdraw the preview, and reopen negotiations later for $4,500; no future consent is guaranteed.`:`Seatline and the creators will agree to 90 days of identified fixed ads, not an interactive host. New funding is $8,000; permissions, compensation, and replacement work cost ${base.money(3600+repair-1200)}. Launch moves by 24 hours.`]
+      [wounded?'The available repair':'A narrower new agreement is available',wounded?`An expressly approved replacement event package costs ${base.money(repair)}. Or postpone, withdraw the preview, and reopen negotiations later for $4,500; no future consent is guaranteed.`:`Seatline and the creators will agree to 90 days of identified fixed ads, not an interactive host. New funding is $8,000; permissions, compensation, and replacement work cost ${base.money(3600+repair-1200)}. Mara can arrange a 24-hour postponement of CROSSPLAY and its campaign launch as part of this agreement.`]
     ]);
     v.options[0].title=open?'Repair the event and keep it limited.':'Deliver the agreed event campaign only.';
     v.options[1].title=wounded?'Postpone and reopen the negotiations.':'Sign a new, limited 90-day ad agreement.';
+    if(!wounded){
+      v.options[1].body+=' Approve the producer’s 24-hour postponement of CROSSPLAY and its campaign launch.';
+      v.options[1].trade=v.options[1].trade.replace('delay 24 hours.','CROSSPLAY and its campaign launch move back 24 hours.');
+    }
     v.options[2].title='Release the year-long interactive campaign now.';
   }
   v.callback=plain(v.callback);
@@ -158,7 +166,33 @@ function choose(s,id,read=[]){
   return n;
 }
 function rebuild(history){let s=initial();for(const h of history){s=choose(s,typeof h==='string'?h:h.option,typeof h==='string'?[]:h.evidence||[]);}return s;}
-function documents(s){return base.documents(s).map(d=>({title:plain(d.title),text:plain(d.text)}));}
+function documents(s){
+  const docs=base.documents(s).map(d=>({title:plain(d.title),text:plain(d.text)}));
+  const set=(title,text)=>{docs.find(d=>d.title===title).text=text;};
+  const append=(title,text)=>{docs.find(d=>d.title===title).text+=' '+text;};
+  if(s.step===0)set('Identity permission','No agreement has been signed yet. The three opening offers cover specified event uses for 30 days from signing; none includes AI imitations or ownership of the creators.');
+  else append('Identity permission','Day 30 is measured from signing, not from the event.');
+  if(s.history[1]?.option==='optin')append('Sponsor scope','Blaze and Rook also approved a separate, limited Seatline shoot in decision 2. That permission does not cover unrelated personal-channel material.');
+  if(s.expanded){
+    append('Sponsor scope','A separate follow-on agreement now adds 90 days of identified fixed ads; it does not authorize an interactive host.');
+    append('Identity permission','The new 90-day agreement separately authorizes the specified fixed-ad identity uses in addition to the original event grant. It does not extend every original permission.');
+    append('Media rights','The follow-on fixed-ad package has separately agreed component permissions and replacement material where needed.');
+    if(s.fan==='ally')append('Fan art','For the follow-on package, Moth and Nova separately approved a paid 90-day extension of the official art. The original satire remains independent.');
+  }
+  if(s.launch==='reset'){
+    docs.unshift({title:'Current campaign status',text:'Launch is postponed. Disputed uses have stopped; no campaign launches and no new Nova license is obtained today. Earlier uses may still need follow-up. Future permission is not guaranteed.'});
+    if(s.scope==='broad'&&!s.sponsorOK)set('Sponsor scope','The broader chair proposal never received Rook’s waiver. The conditional $10,000 was not paid and is no longer part of this plan. Seatline accepted a written postponement; any restart needs a new agreement.');
+    if(s.media==='uncleared')append('Media rights','This disputed trailer has now been withdrawn as part of the postponement; withdrawal does not retroactively clear its earlier use.');
+    append('Voice / AI','The preview has now been withdrawn. Nova has not granted a new voice license.');
+    set('Ending / retirement','The launch is paused while the parties reconsider scope and schedule. Stop disputed uses and address earlier releases; no replacement campaign or future license is presumed approved. Third-party copies may still remain.');
+  }
+  return docs;
+}
+function dealName(s){
+  if(s.deal==='broad'&&s.scope==='event')return 'Event-only fallback agreement';
+  if(s.scope==='broad'&&s.sponsorOK)return 'Agreed all-channel campaign';
+  return base.dealName(s);
+}
 function ending(s){const e=base.ending(s);return {...e,title:plain(e.title),text:plain(e.text)};}
-return Object.freeze({...base,VERSION,cast,glossary,setup,initial,scene,choose,rebuild,documents,ending});
+return Object.freeze({...base,VERSION,BRIEFING_VERSION,cast,glossary,setup,initial,scene,choose,rebuild,documents,dealName,ending});
 });

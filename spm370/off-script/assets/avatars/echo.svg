@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="echo-title">
+  <title id="echo-title">ECHO Studio audio-wave mark</title>
+  <rect width="256" height="256" fill="#c3b3e2"/>
+  <circle cx="128" cy="128" r="88" fill="#282236"/>
+  <g fill="none" stroke="#f6f1e8" stroke-width="11" stroke-linecap="round">
+    <path d="M70 119v18M93 99v58M116 80v96M139 106v44M162 92v72M185 118v20"/>
+  </g>
+  <circle cx="184" cy="71" r="7" fill="#b3d7bc"/>
+</svg>
