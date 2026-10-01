@@ -12,8 +12,8 @@
   ];
   const MEASURES = [
     {id:'lane', label:'Designate the exit route', text:'Mark a team route and brief staff to keep it available.'},
-    {id:'brief', label:'Rehearse the response', text:'Walk through posts, activation, and radio confirmations before tipoff.'},
-    {id:'message', label:'Give spectator guidance', text:'Explain celebration boundaries and keep exit routes visible to fans.'},
+    {id:'brief', label:'Rehearse the response', text:'Practice access-point coverage, activation signals, and radio confirmations before tipoff.'},
+    {id:'message', label:'Give spectator guidance', text:'Tell spectators to remain in authorized areas and keep court access and exits clear.'},
     {id:'backup', label:'Verify a backup route', text:'Check an alternate corridor and agree who may authorize its use.'}
   ];
   const UNITS = [{id:'stewards',label:'Steward team',short:'S'},{id:'liaison',label:'Team liaison',short:'L'},{id:'supervisor',label:'Floor supervisor',short:'F'}];
@@ -49,13 +49,14 @@
   const has = (plan,id) => plan.measures.includes(id);
   const at = (s,post) => Object.values(s.positions).filter(x=>x===post).length;
   function assess(s,p) {
+    if(s.pressure>=2&&!s.entryOccurred){s.entryOccurred=true;s.warnings.push('Spectators entered the playing space during the scenario; a later recovery does not erase that prevention gap.');}
     s.access = at(s,'access') ? 'Covered' : (has(p,'message') ? 'Guidance only' : 'Uncovered');
     s.route = s.checked || (s.active && at(s,'route') && (has(p,'lane') || at(s,'route') >= 2)) ? 'Available' : (s.active && at(s,'route') ? 'Needs a check' : 'Crowded');
     s.communication = s.confirmed ? 'Confirmed' : (p.comms==='relay' ? 'Messages in transit' : 'No confirmation');
     return s;
   }
   function initial(p) {
-    return assess({positions:clone(p.positions),active:p.trigger==='gathering'||(p.trigger==='obstruction'&&!has(p,'lane')),checked:false,confirmed:has(p,'brief')&&p.comms==='confirm',pressure:0,team:'At the bench',departed:false,alternate:false,released:false,warnings:[],checks:[]},p);
+    return assess({positions:clone(p.positions),active:p.trigger==='gathering'||(p.trigger==='obstruction'&&!has(p,'lane')),checked:false,confirmed:has(p,'brief')&&p.comms==='confirm',pressure:0,entryOccurred:false,team:'At the bench',departed:false,alternate:false,released:false,warnings:[],checks:[]},p);
   }
   function scene(s,p,round) {
     const next=clone(s);
@@ -104,7 +105,7 @@
         else {s.team='Departure paused';headline='The liaison pauses the departure.';result=`${s.route!=='Available'?'The route has not been established as available.':'The route is available, but staff have not confirmed readiness.'} The team waits for a route check and clear instructions.`;s.warnings.push('Departure was ordered before route availability and readiness were both confirmed.');}
         lesson='A departure instruction is only useful when the route and responsible people are ready.';
       } else {
-        s.pressure=Math.max(0,s.pressure-1);s.team='Waiting at the bench';
+        s.pressure=Math.max(s.entryOccurred?2:0,s.pressure-1);s.team='Waiting at the bench';
         headline='Fans hear the announcement. Staff positions stay the same.';
         result=`The crowd’s approach slows in this scenario. ${at(s,'access')?'A unit can reinforce that message at spectator access.':'No unit is assigned to reinforce the message at spectator access.'} The team still needs a departure decision.`;
         lesson='Communication supports an operational response; it does not fill an empty post.';
@@ -146,6 +147,7 @@
   function report(plan,choices) {
     const run=simulate(plan,choices),s=run.current;
     return [
+      {title:'Playing-space entry',status:s.entryOccurred?'Entry occurred':'Entry prevented in this run',text:s.entryOccurred?'Spectators crossed into the playing space. Review when access coverage was lost, even if the team later departed.':'Spectators remained outside the playing space in this simplified scenario. Identify which measures and assignments supported that result.'},
       {title:'Team departure',status:s.departed?'Confirmed':'Still unresolved',text:s.team+'. '+(s.alternate?'Your prepared alternative supported departure.':s.departed?'Compare the final result with the warnings recorded along the way.':'Name the outstanding check or action before claiming the task is complete.')},
       {title:'Coverage',status:at(s,'access')&&at(s,'route')?'Both posts covered':at(s,'access')&&s.alternate?'Access + backup covered':'Coverage gap',text:s.released?'Staff were released while spectator movement continued.':`${s.access} at spectator access. ${s.alternate?'Supervisor at the backup corridor.':s.route+' on the original route.'}`},
       {title:'Communication',status:s.communication,text:s.confirmed?'The run included confirmations of staff readiness or route status.':'Instructions were issued without a completed confirmation loop.'}
