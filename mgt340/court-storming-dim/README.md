@@ -54,3 +54,9 @@ node --test mgt340/court-storming-dim/tests/model.test.cjs
 ```
 
 The model checks cover all 27 decision paths plus coverage/recovery, readiness, backup verification, and early release. Chromium desktop pair and 390px mobile solo playthroughs verified placement, dropdown alternatives, validation, restored progress, escaped student names, distinct outcomes, TXT/clipboard export, print visibility, restart/reset, legacy-plan download, blocked storage, and instructor notes. No JavaScript errors or mobile horizontal overflow occurred.
+
+## Classroom clarity update (October 1)
+
+The opening briefing explicitly defines playing-space invasion, distinguishes prevention from response after entry, and introduces the host event-manager role and D.I.M. sequence. The instructor-selected video is linked directly, with three observation prompts: entry points, crossing paths, and preventive action before the buzzer. Its YouTube title/metadata were checked; the full footage was not independently reviewed. The written case remains sufficient if playback is unavailable. Allow approximately 15 minutes for the exercise after the video.
+
+Typography now uses one consistent sans-serif family, larger body text and controls, more readable line spacing, and clearer group spacing. The staff-assignment screen defines each role before students place units. The playing-space status and after-action report record entry separately from team departure; that record persists after recovery. The model's sixth test checks this distinction. Previously saved runs remain usable and the original decisions/fields are retained.

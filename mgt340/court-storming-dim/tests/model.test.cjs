@@ -28,7 +28,14 @@ test('all 27 paths complete deterministically without mutating the plan',()=>{
  for(const a of M.ROUNDS[0].choices)for(const b of M.ROUNDS[1].choices)for(const c of M.ROUNDS[2].choices){
   const choices=[a.id,b.id,c.id],run=M.simulate(prepared,choices);
   assert.equal(run.history.length,3);assert.equal(run.complete,true);assert.deepEqual(run,M.simulate(prepared,choices));
-  assert.equal(M.report(prepared,choices).length,3);assert.ok(run.history.every(h=>h.result&&h.lesson));count++;
+  assert.equal(M.report(prepared,choices).length,4);assert.ok(run.history.every(h=>h.result&&h.lesson));count++;
  }
  assert.equal(count,27);assert.equal(JSON.stringify(prepared),before);
+});
+
+test('playing-space entry remains recorded after recovery, but covered access prevents entry in the model',()=>{
+ const recovered=M.simulate(prepared,['concentrate','rebalance','verify']).current;
+ assert.equal(recovered.departed,true);assert.equal(recovered.entryOccurred,true);
+ const prevented=M.simulate(prepared,['hold','send','verify']).current;
+ assert.equal(prevented.entryOccurred,false);
 });
