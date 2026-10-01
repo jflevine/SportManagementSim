@@ -6,6 +6,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const M=require('../experience.js');
+const L=require('../lab.js');
 const source=fs.readFileSync(require.resolve('../app.js'),'utf8');
 const KEY='spm370.offscript.v1.student';
 const choices=['event','boundary','original','collab','human','scoped'];
@@ -30,7 +31,7 @@ function boot(saved,{blocked=false,query='',clipboardFail=false}={}){
   const document={getElementById:id=>{if(id==='toast'&&!elements.has(id))elements.set(id,element(id));return elements.get(id)||null;},body:{classList:{toggle(){}},append(){}},querySelectorAll:()=>[],addEventListener:(type,fn)=>(listeners[type]??=[]).push(fn)};
   const localStorage={getItem:key=>{if(blocked)throw new DOMException('Blocked','SecurityError');return data.get(key)??null;},setItem:(key,value)=>{if(blocked)throw new DOMException('Blocked','SecurityError');data.set(key,value);}};
   const context={document,localStorage,location:{search:query},URLSearchParams,crypto:{randomUUID:()=> 'test-uuid'},DOMException,console,setTimeout:()=>0,clearTimeout(){},confirm:()=>confirmation,navigator:{clipboard:{writeText:async t=>{if(clipboardFail)throw Error('Clipboard denied');copied=t;}}}};
-  context.window={OffScript:M,matchMedia:()=>({matches:false}),scrollTo(){},print(){}};
+  context.window={OffScript:M,OffScriptLab:{...L,bind(){}},matchMedia:()=>({matches:false}),scrollTo(){},print(){}};
   vm.runInNewContext(source,context,{filename:'app.js'});
   const dispatch=async(type,target)=>{for(const fn of listeners[type]||[])await fn({target,preventDefault(){}});};
   return {html:()=>html,state:()=>JSON.parse(data.get(KEY)),el:id=>document.getElementById(id),modal:()=>modal,focused:()=>focused,copied:()=>copied,data,
@@ -43,7 +44,7 @@ function boot(saved,{blocked=false,query='',clipboardFail=false}={}){
 
 test('fresh players see both setup screens and the NIL definition before choosing',async()=>{
   const ui=boot();assert.match(ui.html(),/Read the story setup/);
-  await ui.input('name1',' Test Student ');await ui.submit('start-form');
+  assert.doesNotMatch(ui.html(),/id="name1"/);await ui.submit('start-form');
   assert.equal(ui.state().phase,'briefing');assert.match(ui.html(),/NIL means name, image, and likeness/);
   await ui.click('brief-next');assert.match(ui.html(),/Meet the people behind the deal/);
   await ui.click('brief-back');assert.equal(ui.state().briefStep,0);
@@ -59,7 +60,7 @@ test('v1.1 saves migrate without another introduction or loss of names, selectio
   assert.doesNotMatch(ui.html(),/Story setup ·/);
   assert.equal(ui.state().names[0],s.names[0]);
   assert.deepEqual(ui.state().reflections,s.reflections);
-  await ui.click('commit');assert.equal(ui.state().version,'1.1.1');assert.equal(ui.state().primary.step,2);
+  await ui.click('commit');assert.equal(ui.state().version,'1.2.0');assert.equal(ui.state().primary.step,2);
 });
 
 test('v1.0 saves receive orientation and return to the saved consequence',async()=>{
@@ -103,13 +104,13 @@ test('completed summary includes both timelines and clipboard denial offers sele
   const alternate=M.rebuild([...choices.slice(0,5),'extend']);
   const ui=boot(fixture({alternate,forkAt:5}),{clipboardFail:true});
   await ui.submit('brief-form');assert.equal(ui.state().phase,'report');
-  assert.match(ui.el('receipt').value,/OPTIONAL ALTERNATE TIMELINE/);assert.match(ui.el('receipt').value,/Nothing was automatically sent/);
+  assert.match(ui.el('receipt').value,/OPTIONAL ALTERNATE TIMELINE/);assert.match(ui.el('receipt').value,/Nothing is sent to Canvas automatically/);
   await ui.click('copy');assert.equal(ui.el('receipt').selected,true);
 });
 
 test('blocked/corrupt storage and canceled reset do not trap the activity',async()=>{
   let ui=boot(undefined,{blocked:true});assert.match(ui.html(),/Browser storage is blocked/);
-  await ui.input('name1','Test Student');await ui.submit('start-form');assert.match(ui.html(),/Story setup ·/);
+  await ui.submit('start-form');assert.match(ui.html(),/Story setup ·/);
   ui=boot('{broken');assert.match(ui.html(),/previous save could not be restored/);
   ui=boot(fixture());ui.confirm(false);await ui.click('new');assert.equal(ui.state().primary.step,6);
 });
@@ -145,4 +146,26 @@ test('portraits remain paired with visible character names and role labels',asyn
     const c=M.cast[who],markup=ui.el('file-content').innerHTML;
     assert.ok(markup.includes(`src="${c.avatar}" alt=""`));assert.ok(markup.includes(c.name));assert.ok(markup.includes(c.role));
   }
+});
+
+
+test('anonymous progress and previous completed v1.1.1 saves remain accessible',async()=>{
+  let ui=boot(fixture({version:'1.1.1',names:['',''],phase:'story',primary:M.rebuild(['event'])}));
+  assert.match(ui.html(),/Can a personal stream/);assert.doesNotMatch(ui.html(),/id="start-form"/);
+  ui=boot(fixture({version:'1.1.1',phase:'report'}));assert.match(ui.html(),/A quick learning check/);assert.match(ui.html(),/id="lab-first"/);
+});
+
+test('pending submissions block story reset and reflection edits',async()=>{
+  const l=L.fresh();l.attemptId='a';l.pending={attemptId:'a'};
+  const ui=boot(fixture({phase:'report',lab:l}));ui.confirm(true);await ui.click('new');assert.equal(ui.state().primary.step,6);assert.ok(ui.state().lab.pending);
+  await ui.click('edit');assert.match(ui.html(),/Retry the same submission/);
+});
+
+test('confirmed submissions export their frozen reflection snapshot',async()=>{
+  const l=L.fresh();l.attemptId='test-attempt';l.firstName='Test';l.lastName='Student';l.email='test@example.com';l.checks=['permissions','new-agreement'];
+  l.receipt={receipt:'receipt-test',score:10,maxScore:10,submittedAt:'2026-10-01T19:00:00Z'};
+  l.submitted={attemptId:l.attemptId,firstName:'Test',lastName:'Student',email:l.email,choices,checks:l.checks,reflections:['Frozen first reflection about permissions.','Frozen second reflection about stakeholder consent.'],completedAt:'2026-10-01T19:00:00Z'};
+  const ui=boot(fixture({phase:'report',lab:l}));
+  assert.match(ui.el('receipt').value,/Frozen first reflection/);assert.doesNotMatch(ui.el('receipt').value,/An earlier choice changed the fallback/);
+  await ui.click('edit');assert.match(ui.html(),/id="reflection1" maxlength="1000" readonly/);
 });
