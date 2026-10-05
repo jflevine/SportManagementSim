@@ -2,11 +2,13 @@
 
 MGT 340 Knowledge Check 2: a simple, individual, ten-minute finance/legal check in one fictional basketball-event story. Ten three-choice questions, one point each, with five finance and five legal points. There is no countdown, economy, leaderboard, branching penalty, or bonus score.
 
-## Current status
+## Student and pilot versions
 
-This review build is **not connected to official submission**. `config.js` has an empty endpoint, so the page explicitly identifies itself as an instructor preview. Preview collects no name or email, sends no responses, issues no grade, and cannot be mistaken for a completed official submission.
+The student page uses the approved private KC2 submission endpoint in `config.js`. First/last name and La Salle email are collected only for an official attempt. A matching server receipt confirms a saved grade.
 
-The proposed server-side grading/storage implementation is included under `backend/`, with disabled defaults. See its README for exact data, authorization boundaries, and the approval-gated activation checklist. No answer key is present in this public repository.
+Open the same URL with `?pilot=1` to try all ten story decisions without collecting identity, sending responses, or creating a student record. Pilot mode is clearly labeled, uses separate browser-tab recovery, and issues no grade. It includes a link back to the student version.
+
+The backend source under `backend/` retains disabled public defaults. The approved deployment receives the real rubric privately; no answer key is present in this repository. See `VERIFICATION.md` for checks and any remaining release verification.
 
 ## Student experience
 

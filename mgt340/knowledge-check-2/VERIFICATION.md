@@ -34,3 +34,7 @@ After separate deployment approval, verify the hosted page at desktop and 390px/
 ## Story progression update
 
 After the connective-story revision, all 84 Node regression tests and the same 11 memory-only DOM scenarios passed again. A before/after structured comparison confirmed every question ID, section, point value, stem, and option stayed identical. Only Q2’s context was clarified to keep its postgame report in the pre-event planning timeline; all assessed facts remain the same. Stage labels, short bridges, and intro/review wording now follow one event through the week toward tipoff. Real-browser and live-backend verification remains outstanding; no deployment or database action was performed.
+
+## Approved release preparation
+
+The instructor approved private score storage and publication on October 5. The student frontend is now configured for the new KC2 endpoint. A separately labeled `?pilot=1` path lets the instructor complete the full story without collecting identity, sending responses, or creating a record. The added configured-pilot DOM test passed, bringing DOM coverage to 12 scenarios. The public deployment config still contains no key or rubric. Hosted browser and controlled live-backend results are recorded separately after verification.
