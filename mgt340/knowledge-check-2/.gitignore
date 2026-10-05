@@ -1,0 +1,6 @@
+# Real grading data belongs only in the approved private server deployment.
+*.private.*
+*-private.*
+.env*
+node_modules/
+*.csv

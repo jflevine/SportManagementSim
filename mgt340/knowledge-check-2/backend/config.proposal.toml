@@ -1,0 +1,4 @@
+# PROPOSAL ONLY. Merge into the real Supabase config only after deployment approval.
+# Typed identity follows KC1: email is unverified, and this is not authentication.
+[functions.submit-mgt340-kc2]
+verify_jwt = false
