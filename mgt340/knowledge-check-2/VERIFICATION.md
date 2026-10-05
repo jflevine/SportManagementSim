@@ -30,3 +30,7 @@ The installed cloud Chromium process was blocked by its required Unix socket per
 ## Before opening to students
 
 After separate deployment approval, verify the hosted page at desktop and 390px/320px widths, keyboard-only navigation, mobile overflow, each question/review/result screen, refresh/back/repeated-submit behavior, failed network/retry, copy/download fallbacks, and official feedback. Run controlled synthetic end-to-end 10/10, 0/10, and mixed attempts through the approved backend, verify private storage/role denials, and clean those exact synthetic records without touching student records. Do not call the graded check ready until this succeeds.
+
+## Story progression update
+
+After the connective-story revision, all 84 Node regression tests and the same 11 memory-only DOM scenarios passed again. A before/after structured comparison confirmed every question ID, section, point value, stem, and option stayed identical. Only Q2’s context was clarified to keep its postgame report in the pre-event planning timeline; all assessed facts remain the same. Stage labels, short bridges, and intro/review wording now follow one event through the week toward tipoff. Real-browser and live-backend verification remains outstanding; no deployment or database action was performed.

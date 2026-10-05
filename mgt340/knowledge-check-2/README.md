@@ -11,6 +11,8 @@ The proposed server-side grading/storage implementation is included under `backe
 ## Student experience
 
 - A short role/story briefing and a restrained event scene
+- A chronological story: Monday budget briefing, midweek funding/equipment, Friday team coordination, Saturday walkthrough/early entry, sponsorship check-in, and a late participation dispute before tipoff
+- Brief stage labels and connective sentences link each item; Q2 plans a future postgame report without moving the story past the game
 - One question at a time, with native keyboard-accessible radio controls
 - Back and review controls allow revisions until final submission
 - A final review shows every selected answer before submission
@@ -46,3 +48,7 @@ node --test mgt340/*/tests/*.mjs mgt340/*/tests/*.cjs
 ```
 
 Backend unit tests use memory stores and mocked requests only. They are not proof of deployed PostgreSQL permissions, production availability, or live browser submission. No student records are read by this test suite.
+
+## Story continuity refinement
+
+The same Forge Arena/River City/Northside event now builds visibly toward tipoff. Jordan connects the agency and sponsorship-exchange items, and the final participation dispute threatens the matchup introduced at the start. Narrative transitions add about 124 words. Assessed stems, options, IDs, points, and the private rubric are unchanged; no new calculation, branching outcome, or dependent scoring was added. The funding and equipment proposals are not asserted to be the same transaction; the injury report does not establish liability or claim that an earlier answer caused it; the court request has no promised outcome.

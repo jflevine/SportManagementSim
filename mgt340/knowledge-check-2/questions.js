@@ -11,8 +11,8 @@ export const assessment = {
     "There are five finance questions and five legal questions, worth one point each.",
     "You can revise your choices before submitting. Each question includes the facts you need."
   ],
-  "intro": "You’re the event manager at Forge Arena. Rivalry Night brings River City and visiting Northside together for a basketball game. Work through five money decisions and five legal decisions surrounding the event.",
-  "story": "All teams, people, organizations, and amounts in this activity are fictional.",
+  "intro": "You’re the event manager at Forge Arena, preparing for River City versus Northside. Follow Rivalry Night from its budget briefing to the arena walkthrough, early arrivals, and a last-minute decision before tipoff.",
+  "story": "One event unfolds in a fixed sequence. Each question is scored separately. All teams, people, organizations, and amounts are fictional.",
   "questions": [
     {
       "id": "q1",
@@ -34,14 +34,16 @@ export const assessment = {
           "id": "c",
           "text": "$21,000"
         }
-      ]
+      ],
+      "stage": "Monday · Budget briefing",
+      "transition": "Rivalry Night is coming. Your first task is to review the event budget."
     },
     {
       "id": "q2",
       "section": "finance",
       "points": 1,
       "title": "Pick the right report",
-      "context": "After Rivalry Night, you will need a report showing the event’s revenue, expenses, and profit for the event period.",
+      "context": "You are choosing the report now. After Rivalry Night, it will need to show the event’s revenue, expenses, and profit for the event period.",
       "stem": "Which financial statement fits that purpose?",
       "options": [
         {
@@ -56,7 +58,9 @@ export const assessment = {
           "id": "c",
           "text": "Income statement (profit and loss statement)"
         }
-      ]
+      ],
+      "stage": "Same briefing · Plan the review",
+      "transition": "Before leaving the budget briefing, you plan how to review the event afterward."
     },
     {
       "id": "q3",
@@ -78,7 +82,9 @@ export const assessment = {
           "id": "c",
           "text": "Revenue and owners’ equity"
         }
-      ]
+      ],
+      "stage": "Midweek · Funding update",
+      "transition": "The planning file moves forward. A funding update arrives from finance."
     },
     {
       "id": "q4",
@@ -100,7 +106,9 @@ export const assessment = {
           "id": "c",
           "text": "10%"
         }
-      ]
+      ],
+      "stage": "Same meeting · Equipment proposal",
+      "transition": "Next, the operations team brings you a proposal for handling the arriving crowd."
     },
     {
       "id": "q5",
@@ -122,7 +130,9 @@ export const assessment = {
           "id": "c",
           "text": "Cooperating makes the teams’ revenues equal"
         }
-      ]
+      ],
+      "stage": "Friday · Coordinate the rivals",
+      "transition": "The arena plans are taking shape. You join River City and Northside’s event meeting."
     },
     {
       "id": "q6",
@@ -144,7 +154,9 @@ export const assessment = {
           "id": "c",
           "text": "Manage and revise the working plan"
         }
-      ]
+      ],
+      "stage": "Saturday · Final walkthrough",
+      "transition": "Planning gives way to the arena walkthrough. You check the spill-response plan."
     },
     {
       "id": "q7",
@@ -166,7 +178,9 @@ export const assessment = {
           "id": "c",
           "text": "Tort law, specifically negligence"
         }
-      ]
+      ],
+      "stage": "Early entry · Incident report",
+      "transition": "As early spectators arrive, a spill-related incident report reaches your desk."
     },
     {
       "id": "q8",
@@ -188,7 +202,9 @@ export const assessment = {
           "id": "c",
           "text": "The prospective sponsor"
         }
-      ]
+      ],
+      "stage": "Before tipoff · Sponsor check-in",
+      "transition": "Alongside the incident report, sponsorship arrangements still need your attention. Jordan checks in."
     },
     {
       "id": "q9",
@@ -210,7 +226,9 @@ export const assessment = {
           "id": "c",
           "text": "Injunctive relief"
         }
-      ]
+      ],
+      "stage": "Same check-in · Review the deal",
+      "transition": "Jordan brings you the proposed sponsorship terms for a final review."
     },
     {
       "id": "q10",
@@ -232,7 +250,9 @@ export const assessment = {
           "id": "c",
           "text": "Injunctive relief"
         }
-      ]
+      ],
+      "stage": "Tipoff approaches · A late complication",
+      "transition": "Just as the event preparations come together, Northside’s participation is suddenly in question."
     }
   ]
 };
