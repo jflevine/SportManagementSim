@@ -1,0 +1,1 @@
+{"name":"build-the-hype","private":true,"version":"1.0.0","description":"Local-first SPM 343 esports event planning sandbox","scripts":{"test":"node --test tests/*.test.cjs","test:model":"node --test tests/model.test.cjs"},"devDependencies":{"jsdom":"26.1.0"}}

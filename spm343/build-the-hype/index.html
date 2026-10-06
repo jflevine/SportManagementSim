@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171126">
+  <meta name="description" content="Build a campus esports event in a quick, creative SPM 343 planning sandbox. Play solo or in pairs.">
+  <title>Build the Hype · SPM 343</title>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="model.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#screen">Skip to activity</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#0" aria-label="Build the Hype introduction"><img src="assets/mark.svg" alt="" width="38" height="38"><span>BUILD THE HYPE<small>SPM 343 · ESPORTS EVENTS</small></span></a>
+      <div class="top-actions"><button class="text-button" id="guide-button" type="button">How to play</button><button class="text-button" id="reset-button" type="button">Start over</button></div>
+    </header>
+    <div id="storage-notice" class="storage-notice" role="status" hidden></div>
+    <nav id="progress" class="progress" aria-label="Activity steps"></nav>
+    <main class="workspace">
+      <section id="screen" tabindex="-1" aria-labelledby="screen-title"></section>
+      <aside class="poster-side" aria-labelledby="poster-label">
+        <div class="poster-label"><span id="poster-label">YOUR EVENT, TAKING SHAPE</span><span class="live-dot" aria-hidden="true"></span></div>
+        <div id="poster"></div>
+        <p class="poster-caption">An event is more than the bracket. Give people a reason to show up, stay, and come back.</p>
+      </aside>
+    </main>
+    <footer class="footer"><span>12–15 minutes · Solo or pairs · No grades</span><span>Illustrative simulation · Choices stay in this browser</span></footer>
+  </div>
+  <dialog id="guide-dialog" aria-labelledby="guide-title">
+    <form method="dialog"><button class="dialog-close" aria-label="Close how to play">×</button></form>
+    <p class="eyebrow">YOUR QUICK BRIEF</p><h2 id="guide-title">Make an event worth attending.</h2>
+    <ol class="guide-list"><li>Choose who your event is for and what success means.</li><li>Pick a format that serves that purpose.</li><li>Spend up to 10 planning credits on up to 3 event features.</li><li>Handle one opening-day surprise.</li><li>Explain your tradeoff. Replay with the same surprise if time allows.</li></ol>
+    <p>Work alone or with one partner on one device. In pairs, one person drives and the other challenges the choices; switch at opening day.</p>
+    <p class="fine-print">These outcomes are invented teaching signals, not attendance forecasts, grades, or proof that your goal was achieved. No login, student name, or submission is needed. Download or print the recap only if your instructor asks.</p>
+  </dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><p class="eyebrow">FRESH START</p><h2 id="reset-title">Clear this event?</h2><p>This replaces this activity’s saved plan and recap on this browser. Download your recap first if you want to keep it.</p><div class="button-row"><button class="secondary" id="cancel-reset" type="button">Keep my event</button><button class="primary" id="confirm-reset" type="button">Clear and start over</button></div></dialog>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
+  <section id="print-report" aria-label="Printable event report"></section>
+  <noscript><p class="no-script">This activity needs JavaScript. There are no accounts or downloads to install. Enable JavaScript, then reload this page.</p></noscript>
+</body>
+</html>
