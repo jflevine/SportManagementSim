@@ -22,3 +22,12 @@ test('every question advances the fixed event story with a concise stage and bri
   assert.match(assessment.questions[8].transition,/Jordan/);
   assert.match(assessment.questions[9].transition,/Northside/);
 });
+
+
+test('Q10 uses the approved concrete remedy scenario and unchanged question',()=>{
+  const q=assessment.questions[9];
+  assert.equal(q.id,'q10');
+  assert.equal(q.context,'One hour before tipoff, the league bars Northside from playing, saying its roster paperwork arrived late. Northside disputes that decision and asks a court to temporarily stop the league from enforcing the ban so the team can play tonight. It is not asking for money.');
+  assert.equal(q.stem,'What type of remedy is Northside requesting?');
+  assert.equal(q.points,1);
+});

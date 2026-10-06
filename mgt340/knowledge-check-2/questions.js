@@ -235,7 +235,7 @@ export const assessment = {
       "section": "legal",
       "points": 1,
       "title": "A decision before tipoff",
-      "context": "A league ruling bars Northside from Rivalry Night. Northside asks a court for an order allowing it to participate while the dispute is heard.",
+      "context": "One hour before tipoff, the league bars Northside from playing, saying its roster paperwork arrived late. Northside disputes that decision and asks a court to temporarily stop the league from enforcing the ban so the team can play tonight. It is not asking for money.",
       "stem": "What type of remedy is Northside requesting?",
       "options": [
         {
