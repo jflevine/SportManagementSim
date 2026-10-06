@@ -1,0 +1,36 @@
+name: Off Script Nova API QA
+on:
+  push:
+    branches: [offscript-nova-simplified-20261006]
+    paths:
+      - 'spm370/off-script/**'
+      - '.github/workflows/offscript-nova-api-qa.yml'
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify Nova health, scoring, idempotency, and access controls
+        env:
+          ENDPOINT: https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-offscript-nova
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {randomUUID} from 'node:crypto';
+          const base=process.env.ENDPOINT;
+          const request=async(path='',value,extra={})=>{const response=await fetch(base+path,{method:value===undefined?'GET':'POST',headers:{'Content-Type':'application/json',...extra},body:value===undefined?undefined:JSON.stringify(value),signal:AbortSignal.timeout(25000)});let body;try{body=await response.json();}catch{body={};}return {status:response.status,body};};
+          const health=await request();assert.equal(health.status,200,JSON.stringify(health));assert.equal(health.body.storageReady,true);
+          assert.equal((await request('/instructor')).status,401);
+          assert.equal((await request('/instructor',undefined,{'x-instructor-key':'deliberately-invalid-synthetic-test-key'})).status,401);
+          const email=`nova-qa-${process.env.GITHUB_RUN_ID}-${process.env.GITHUB_RUN_ATTEMPT}@example.invalid`;
+          const payload={version:'2.0.0',attemptId:randomUUID(),firstName:'Synthetic',lastName:'NovaQA',email,answers:[1,2,0,1,2],firstAnswers:[0,2,0,1,2],proposal:'ai',recommendation:'ai',reflections:['SYNTHETIC QA ONLY: the supplied clause excludes AI and requires a new written agreement.','SYNTHETIC QA ONLY: require script and audio approval; the fictional tradeoff is lower payment.'],consent:true,score:999};
+          console.log('SYNTHETIC_ROW_TO_REMOVE',JSON.stringify({email,attemptId:payload.attemptId}));
+          const saved=await request('',payload);assert.equal(saved.status,201,JSON.stringify(saved));assert.equal(saved.body.score,10);assert(saved.body.receipt);
+          const retry=await request('',payload);assert.equal(retry.status,200);assert.equal(retry.body.receipt,saved.body.receipt);
+          assert.equal((await request('',{...payload,recommendation:'human'})).status,409);
+          assert.equal((await request('',{...payload,attemptId:randomUUID()})).status,409);
+          assert.equal((await request('',{})).status,400);
+          console.log('NOVA_API_QA_PASSED',JSON.stringify({email,score:saved.body.score,receipt:saved.body.receipt,health:health.body.version}));
+          JS
