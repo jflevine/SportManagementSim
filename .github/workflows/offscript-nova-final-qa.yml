@@ -1,0 +1,63 @@
+name: Off Script Nova Final QA
+on:
+  push:
+    branches: [offscript-nova-final-qa-20261006]
+    paths:
+      - 'spm370/off-script/**'
+      - '.github/workflows/offscript-nova-final-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  browser-sweep:
+    if: github.ref == 'refs/heads/offscript-nova-final-qa-20261006'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned browser test runtime
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Normalize test root
+        run: sed -i 's/parents\[4\]/parents[3]/' spm370/off-script/qa/final_sweep.py
+      - name: Baseline regression sweep
+        continue-on-error: true
+        run: |
+          python spm370/off-script/qa/final_sweep.py
+      - name: Preserve baseline and apply guarded source fixes
+        run: |
+          cp nova-qa-results/results.json nova-baseline-results.json
+          python spm370/off-script/qa/apply_final_fixes.py
+      - name: Validate corrected source and live private submission
+        env:
+          NOVA_LIVE: '1'
+        run: python spm370/off-script/qa/final_sweep.py
+      - name: Publish QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-final-qa
+          path: |
+            nova-qa-results/
+            nova-baseline-results.json
+          retention-days: 7
+      - name: Commit only the verified app and QA report to the isolated branch
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          rows=json.loads(Path('nova-qa-results/results.json').read_text())
+          assert rows and all(r['status']=='PASS' for r in rows)
+          text='# Nova final QA — October 6, 2026\n\n'
+          text+='Workflow run: '+os.environ['GITHUB_SERVER_URL']+'/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID']+'\n\n'
+          text+=str(len(rows))+' checks passed. Chromium, Firefox, and WebKit were exercised at 390, 820, and 1440 CSS pixels. All 12 proposal/recommendation combinations were tested. Browser-to-server submission used a clearly synthetic example.invalid identity; that row requires cleanup after verification. Instructor success-path review and grade overrides used synthetic fixtures, not a real instructor key. No physical-device, first-time-student, or campus-network trial is claimed.\n\n'
+          text+='| Check | Result |\n|---|---|\n'
+          text+=''.join('| '+r['test'].replace('|','/')+' | PASS |\n' for r in rows)
+          Path('spm370/off-script/QA_FINAL_20261006.md').write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add spm370/off-script/index.html spm370/off-script/README.md spm370/off-script/QA_FINAL_20261006.md spm370/off-script/qa/final_sweep.py
+          git diff --cached --quiet || git commit -m 'Fix Nova submission recovery, browser compatibility, and classroom clarity after QA'
+          git push origin HEAD:offscript-nova-final-qa-20261006
