@@ -13,7 +13,7 @@ import traceback
 import uuid
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[4]
+ROOT = Path(__file__).resolve().parents[3]
 PAGE_PATH = '/spm370/off-script/'
 PROD = 'https://jflevine.github.io/SportManagementSim/spm370/off-script/'
 API = 'https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-offscript-nova'
