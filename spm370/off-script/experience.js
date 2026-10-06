@@ -32,7 +32,7 @@ const glossary=[
 const setup={
  organization:'Signal House is a fictional esports organization. It supports competitive players and online entertainers, and works with brands on paid promotions.',
  role:'You are its brand-partnerships manager. You negotiate what sponsors receive, coordinate with the creators, and decide which promotional material the organization releases. You do not own the creators or control their independent decisions.',
- event:'CROSSPLAY is the name of Signal House’s upcoming two-day fan event: gaming exhibitions, creator interviews, and livestreams. “Creator weekend” means this event—not a separate project you need to invent.',
+ event:'CROSSPLAY is not a video game. It is the name of Signal House’s upcoming two-day fan event: gaming exhibitions, creator interviews, and livestreams. “Creator weekend” means this event—not a separate project you need to invent.',
  campaign:'Seatline, a gaming-chair company, wants to help fund CROSSPLAY. In return, it wants Blaze, the pro player, and Nova, the streamer, to appear in advertisements, videos, and event promotions associated with its chairs.',
  goal:'Deliver a compelling sponsor campaign that stays within the permissions you actually obtain and keeps the creators willing to work with you. More money helps production; it does not buy unlimited control.',
  first:'Your first decision is the sponsorship agreement: how much promotion will you promise Seatline, and how much funding will it provide? You are choosing between three possible deals—not writing contract language from scratch.'
