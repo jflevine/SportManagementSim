@@ -16,7 +16,7 @@ October 7, 2026. Revised self-contained events-and-venues decision lab.
 
 Local Chromium cannot create sockets in this execution environment. No local runtime/layout pass is claimed. The portable hosted suite runs against the exact release commit with Chromium, Firefox, and WebKit, using synthetic fixtures for student/instructor UI and a separate deployed test-mode API smoke check.
 
-The suite exercises identity validation, unknown-success/retry, serialized saving, interrupted/offline edits, immutable initial position, budget constraints, repeated submit/receipt, explicit conflict reconciliation, grade zero versus pending, instructor score/release controls, CSV safety, guest privacy, keyboard labels, and mobile/desktop layouts. Hosted results are recorded before publication.
+The suite exercises identity validation, unknown-success/retry, serialized saving, interrupted/offline edits, immutable initial position, budget constraints, repeated submit/receipt, explicit conflict reconciliation, grade zero versus pending, instructor score/release controls, CSV safety, guest privacy, keyboard labels, and mobile/desktop layouts. Full hosted run [37684074430](https://github.com/jflevine/SportManagementSim/actions/runs/37684074430) passed all 60 browser scenarios (20 per engine), 12 backend tests, 18 static checks, and deployed synthetic API checks on commit ccd1f0252a420447d87a671e60c6a16f0d1d17c6. Mobile/desktop screenshot pixels were inspected. Visual review then clarified that the fictional 27-person total occupancy includes 24 visitors and up to three staff, and simplified the program-time display to avoid double-counting arrival/closing. A final rerun verifies those small display changes before publication.
 
 ## Remaining limits
 

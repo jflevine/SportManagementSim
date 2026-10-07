@@ -14,7 +14,7 @@ Publication of this revised interface is verified separately in QA.md. The previ
 
 ## What students do
 
-1. Read a fictional venue brief: 24 visitors, 12 PC stations, two included hosts, a 90-minute slot, and a $300 incremental budget. All figures are classroom inputs, never claims about TAP’s real capacity or rates
+1. Read a fictional venue brief: 24 visitors, 12 PC stations, two included hosts, a 90-minute slot, and a $300 incremental budget. The total occupancy limit is 27 people, including up to three staff; the off-station area has 16 visitor places. All figures are classroom inputs, never claims about TAP’s real capacity or rates
 2. Compare Rivalry Mini-Cup ($280, 12 stations), Play & Connect ($180, 10), and Campus Showcase ($240, 8). Save an initial choice and a short position before seeing the registration update
 3. Read the new information: 16 visitors are new to gaming PCs and 8 are experienced. The organizer wants supported hands-on participation, while the club still wants a competitive finish
 4. Keep or change the proposal, select one adjustment and stakeholder priority, explain adaptation and a risk/response, then explain why the runner-up loses despite its benefit
