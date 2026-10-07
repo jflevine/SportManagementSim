@@ -1,27 +1,7 @@
 'use strict';
-(() => {
-const ENDPOINT='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm343-tap-lab2';
-const $=id=>document.getElementById(id);
-let busy=false,lastSuccess=null;
-function formatName(v){return v==='tournament'?'Beginner-friendly mini-tournament':'Guided play + short team exhibition';}
-async function refresh(){
- if(busy)return;busy=true;$('refresh').disabled=true;
- const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
- try{
-  const response=await fetch(`${ENDPOINT}?view=guest`,{cache:'no-store',signal:controller.signal});const data=await response.json();
-  if(!response.ok||!data.ok||data.mode!=='pilot'||data.synthetic!==true||!data.aggregate)throw Error('Pilot unavailable');
-  const a=data.aggregate;
-  for(const [id,key]of[['started','started'],['initial','initialPlans'],['completed','completedRevisions']])$(id).textContent=String(Number(a[key])||0);
-  const guided=Number(a.formats?.guided)||0,tournament=Number(a.formats?.tournament)||0,total=Math.max(guided+tournament,1);
-  $('guided-count').textContent=String(guided);$('tournament-count').textContent=String(tournament);
-  $('guided-bar').style.width=`${100*guided/total}%`;$('tournament-bar').style.width=`${100*tournament/total}%`;
-  $('shared-demo').hidden=!data.demo;
-  if(data.demo){$('demo-format').textContent=formatName(data.demo.format);$('demo-stage').textContent=({draft:'Choosing the event',plan_locked:'Initial plan saved · listening to Andrew',submitted:'Reflection complete'})[data.demo.stage]||'Practice in progress';$('demo-summary').textContent=data.demo.summary||'';}
-  $('proposals').replaceChildren();const proposals=Array.isArray(data.proposals)?data.proposals:[];$('no-proposals').hidden=proposals.length>0;
-  for(const p of proposals){const article=document.createElement('article');article.className='proposal';const h=document.createElement('h3');h.textContent=`${p.label} · ${formatName(p.format)}`;const text=document.createElement('p');text.textContent=p.summary;article.append(h,text);$('proposals').append(article);}
-  lastSuccess=new Date();$('refresh-status').textContent=`Updated ${lastSuccess.toLocaleTimeString()} · Synthetic pilot data`;
- }catch{ $('refresh-status').textContent=lastSuccess?`Connection interrupted. Showing the last saved view from ${lastSuccess.toLocaleTimeString()}. Trying again automatically.`:'The live pilot is not available yet. No data is shown. Try Refresh now shortly.'; }
- finally{clearTimeout(timeout);busy=false;$('refresh').disabled=false;}
-}
-$('refresh').addEventListener('click',refresh);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});setInterval(()=>{if(!document.hidden)refresh();},10000);refresh();
-})();
+(()=>{const ENDPOINT='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm343-tap-lab2-v2',$=id=>document.getElementById(id),preview=new URLSearchParams(location.search).get('mode')==='pilot';const names={cup:'Rivalry Mini-Cup',open:'Play & Connect',showcase:'Campus Showcase'},adjustments={orientation:'a 10-minute orientation replacing main-program time',extra_host:'an additional host for $75',rotations:'shorter scheduled turns and rotations'},priorities={newcomers:'newcomer participation',club:'the club’s competitive experience',operator:'the venue’s operational limits'};let busy=false,lastSuccess=null;
+function node(tag,text,className){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;}
+function render(data){const a=data.aggregate;for(const [id,key]of[['started','started'],['initial','initialPlans'],['completed','completedRevisions']])$(id).textContent=String(Number(a[key])||0);$('choice-list').replaceChildren();for(const choice of Object.keys(names)){const first=Number(a.initialChoices?.[choice])||0,final=Number(a.finalChoices?.[choice])||0,max=Math.max(Number(a.initialPlans)||0,Number(a.completedRevisions)||0,1);const row=node('div',undefined,'choice-row');row.append(node('strong',names[choice]));const bars=node('div',undefined,'choice-bars');bars.setAttribute('aria-hidden','true');for(const [v,c]of[[first,'bar-initial'],[final,'']]){const track=node('div',undefined,'bar-track'),fill=node('div',undefined,`bar-fill ${c}`);fill.style.width=`${100*v/max}%`;track.append(fill);bars.append(track);}row.append(bars,node('span',`Initial ${first} · Final ${final}`,'choice-count'));$('choice-list').append(row);}
+$('proposals').replaceChildren();const proposals=Array.isArray(data.proposals)?data.proposals:[];$('no-proposals').hidden=!!proposals.length;for(const p of proposals){if(!names[p.initialChoice]||!names[p.finalChoice]||!adjustments[p.adjustment]||!priorities[p.priority]||!names[p.runnerUp])continue;const card=node('article',undefined,'proposal');card.append(node('p',p.label,'eyebrow'),node('h3',`${names[p.initialChoice]} → ${names[p.finalChoice]}`),node('p',`Adjustment: ${adjustments[p.adjustment]}. Priority: ${priorities[p.priority]}. Runner-up: ${names[p.runnerUp]}.`));$('proposals').append(card);}}
+async function refresh(){if(busy)return;busy=true;$('refresh').disabled=true;try{if(preview){render({aggregate:{started:3,initialPlans:3,completedRevisions:2,initialChoices:{cup:2,open:0,showcase:1},finalChoices:{cup:1,open:1,showcase:0}},proposals:[{label:'Invented preview example',initialChoice:'cup',finalChoice:'open',adjustment:'extra_host',priority:'newcomers',runnerUp:'cup'}]});$('refresh-status').textContent='Local preview only · no class data';return;}const r=await fetch(`${ENDPOINT}?view=guest`,{cache:'no-store',signal:AbortSignal.timeout(12000)}),d=await r.json();if(!r.ok||!d.ok||d.mode!=='live'||!d.aggregate)throw Error('Unavailable');render(d);lastSuccess=new Date();$('refresh-status').textContent=`Updated ${lastSuccess.toLocaleTimeString()} · Saved class progress`;}catch{$('refresh-status').textContent=lastSuccess?`Connection interrupted. Showing the last confirmed view from ${lastSuccess.toLocaleTimeString()}; retrying automatically.`:'Class progress could not be loaded. No counts are assumed. Try Refresh now.';}finally{busy=false;$('refresh').disabled=false;}}
+$('preview-notice').hidden=!preview;$('guest-mode').textContent=preview?'Guest preview · invented examples':'Anonymous guest view';$('refresh').onclick=refresh;document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});setInterval(()=>{if(!document.hidden&&!preview)refresh();},10000);refresh();})();

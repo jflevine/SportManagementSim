@@ -11,3 +11,355 @@
 .receipt-actions{display:flex;flex-wrap:wrap;gap:18px;align-items:center}.receipt-actions .text-button{margin-top:19px}.receipt-actions .button{width:auto}@media(max-width:620px){.receipt-actions{gap:10px}.receipt-actions .button{width:100%}.receipt-actions .text-button{margin-top:3px}}
 /* Companion guest and instructor views share the same restrained course shell. */
 main.page-shell{padding-top:38px;padding-bottom:42px}main.page-shell>section{margin-bottom:28px}main.page-shell>.card{padding:31px 34px}main.page-shell h1{font-size:48px;letter-spacing:-.025em;margin:12px 0 20px}main.page-shell h2{font-size:30px;margin:10px 0 18px}main.page-shell p{font-size:17px;line-height:1.5}main.page-shell .notice{margin:21px 0;padding:15px 19px;font-size:15px}main.page-shell .eyebrow{font-size:12px}main.page-shell details{margin-top:21px;font-size:16px}main.page-shell summary{cursor:pointer;min-height:29px}main.page-shell .toolbar{margin:20px 0 14px}main.page-shell .small{font-size:14px}main.page-shell .key-field{display:block;margin:22px 0 16px}main.page-shell input[type=password],main.page-shell input[type=text],main.page-shell input[type=number]{padding:10px 12px;min-height:45px}main.page-shell .key-field input{width:100%}main.page-shell .review-record input{margin-top:7px}main.page-shell .feedback{margin-bottom:16px}.site-footer:not(.page-shell){max-width:1164px;margin:0 auto;padding:20px 0 24px}.is-valid{color:var(--teal)!important}@media(max-width:1260px){.site-footer:not(.page-shell){margin-left:48px;margin-right:48px}}@media(max-width:1050px){.site-footer:not(.page-shell){margin-left:32px;margin-right:32px}main.page-shell h1{font-size:44px}}@media(max-width:620px){main.page-shell{padding-top:24px;padding-bottom:28px}main.page-shell>.card{padding:24px 21px}main.page-shell h1{font-size:37px;margin-top:10px;margin-bottom:17px}main.page-shell h2{font-size:28px}main.page-shell p{font-size:16px}main.page-shell .notice{font-size:14px;padding:13px 15px}main.page-shell .eyebrow{font-size:10px}.site-footer:not(.page-shell){margin-left:22px;margin-right:22px}}
+
+/* Live decision lab: student-only styles preserve the companion view shell. */
+.student-app { --radius: 9px; }
+.student-app .mode-pill { font-size:12px; letter-spacing:.04em; padding:6px 10px; border:1px solid #61716f; border-radius:3px; color:#e9e5d9; white-space:nowrap; }
+.student-app .lab-landing { padding-top:48px; padding-bottom:44px; }
+.student-app .lab-hero { display:grid; grid-template-columns:1fr .95fr; gap:74px; align-items:center; padding-bottom:40px; }
+.student-app .lab-hero-copy h1 { font-size:88px; line-height:.96; letter-spacing:-.048em; margin:17px 0 23px; }
+.student-app .lab-hero-copy h1 em { color:var(--teal); font-weight:400; }
+.student-app .lab-hero-copy .hero-question { font-size:29px; line-height:1.12; letter-spacing:-.01em; margin-bottom:15px; }
+.student-app .lab-hero-copy .hero-description { max-width:430px; font-size:17px; line-height:1.47; }
+.student-app .lab-meta { display:flex; gap:18px; flex-wrap:wrap; margin-top:23px; font-size:13px; }
+.student-app .lab-meta span { border-right:1px solid #c5cec4; padding-right:18px; }
+.student-app .lab-meta span:last-child { padding-right:0; border:0; }
+.student-app .lab-meta strong { color:var(--ink); font-size:16px; }
+.student-app .case-boundary { max-width:420px; font-size:12px; margin-top:18px; color:var(--muted); line-height:1.4; }
+.student-app .venue-board { padding:31px 30px 24px; border-radius:var(--radius); color:var(--paper); background:var(--navy); box-shadow:0 10px 30px #142c3b0a; }
+.student-app .venue-board .eyebrow { color:var(--gold); font-size:11px; }
+.student-app .venue-board h2 { font-size:32px; margin-top:8px; }
+.student-app .venue-art { display:block; width:100%; height:auto; margin:19px 0 9px; }
+.student-app .venue-numbers { display:grid; grid-template-columns:1fr 1fr 1.3fr; padding:11px 0 23px; }
+.student-app .venue-numbers div { padding-left:18px; border-left:1px solid #456068; }
+.student-app .venue-numbers div:first-child { border:0; padding-left:0; }
+.student-app .venue-numbers strong { display:block; font-weight:400; font-size:34px; line-height:1.1; }
+.student-app .venue-numbers span { display:block; color:#c4d3d2; font-size:12px; margin-top:5px; }
+.student-app .time-track { display:grid; grid-template-columns:1fr 4fr 1fr; gap:3px; text-align:center; }
+.student-app .time-track>span { background:#294550; border-top:2px solid #708888; padding:8px 3px; font-size:16px; }
+.student-app .time-track>span:nth-child(2) { background:#355b5a; border-color:#d8b875; }
+.student-app .time-track small { display:block; font-size:11px; color:#d7e2dc; }
+.student-app .venue-caption { margin-top:11px; color:#bfcfcd; font-size:11px; text-align:center; }
+.student-app .lab-entry-grid { border-top:1px solid #c4cec2; padding-top:34px; display:grid; grid-template-columns:1fr .95fr; gap:74px; align-items:start; }
+.student-app .lab-runway { padding:7px 0 0; }
+.student-app .lab-runway h2 { font-size:29px; margin-top:9px; }
+.student-app .lab-steps { list-style:none; padding:0; margin:25px 0 21px; display:grid; gap:21px; }
+.student-app .lab-steps li { display:flex; gap:17px; }
+.student-app .lab-steps li>span { color:var(--teal); border:1px solid #aebfaf; border-radius:50%; width:32px; height:32px; display:grid; place-items:center; flex:none; font-size:12px; }
+.student-app .lab-steps strong { display:block; font-size:17px; line-height:1.2; margin:1px 0 6px; }
+.student-app .lab-steps p { font-size:14px; color:var(--muted); line-height:1.45; max-width:355px; }
+.student-app .runway-note { font-size:13px; color:var(--muted); line-height:1.5; border-left:2px solid var(--gold); padding:0 0 0 16px; max-width:414px; }
+.student-app .identity-card { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:25px 28px 28px; }
+.student-app .identity-card h2 { margin-top:7px; font-size:29px; }
+.student-app .identity-card .eyebrow { font-size:10px; }
+.student-app .identity-fields { border:0; padding:0; margin:0; }
+.student-app .identity-names { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+.student-app .identity-card .field { margin-top:16px; }
+.student-app .identity-card label:not(.individual-check) { font-weight:700; font-size:14px; display:block; margin-bottom:5px; }
+.student-app .identity-card input[type=text],.student-app .identity-card input[type=email] { width:100%; padding:10px 11px; min-height:43px; font-size:16px; }
+.student-app .identity-card .field-help { margin:6px 0 0; font-size:11px; }
+.student-app .individual-check { display:flex; align-items:flex-start; gap:10px; font-size:13px; line-height:1.4; margin:19px 0 0; }
+.student-app .individual-check input { width:17px; height:17px; }
+.student-app .identity-privacy { font-size:11px; color:var(--muted); line-height:1.45; margin:16px 0; }
+.student-app .identity-privacy strong { color:#3d514c; }
+.student-app .identity-card .button-primary { width:100%; font-size:15px; }
+.student-app .resume-panel { background:var(--teal-pale); border:1px solid #bbcbbb; border-radius:5px; padding:13px; margin-top:16px; font-size:13px; }
+.student-app .resume-panel p { font-size:12px; line-height:1.4; margin-top:5px; }
+.student-app .inline-actions { display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:10px; }
+.student-app .pilot-identity { background:var(--gold-pale); border:1px solid #d8c292; padding:15px; margin-top:17px; border-radius:5px; }
+.student-app .pilot-identity strong { display:block; margin-top:6px; font-size:16px; }
+.student-app .pilot-identity p { font-size:12px; margin-top:7px; }
+.student-app .workspace { padding-top:34px; }
+.student-app .workspace-heading { margin-bottom:31px; }
+.student-app .workspace-heading h1 { font-size:49px; }
+.student-app .identity-chip { max-width:300px; }
+.student-app .identity-chip strong { overflow-wrap:anywhere; }
+.student-app .work-layout { grid-template-columns:215px minmax(0,1fr); gap:35px; }
+.student-app .sidebar-brief h2 { font-size:27px; }
+.student-app .sidebar-brief p:not(.eyebrow) { font-size:14px; }
+.student-app .work-sidebar>.sidebar-boundary { font-size:11px; color:var(--muted); line-height:1.45; border-top:1px solid var(--line); margin-top:21px; padding-top:13px; }
+.student-app .rubric li { align-items:flex-start; gap:10px; }
+.student-app .rubric li strong { min-width:13px; }
+.student-app .rubric p+p { margin-top:9px; }
+.student-app .stage-title { margin-bottom:20px; }
+.student-app .stage-kicker { display:block; color:var(--teal); font-size:11px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:7px; }
+.student-app .stage-title h2 { font-size:33px; letter-spacing:-.02em; }
+.student-app .stage-title p { font-size:15px; color:var(--muted); margin-top:8px; }
+.student-app .case-brief { padding:23px 25px; background:#e9eee5; border:1px solid #cfdbcc; border-radius:var(--radius); margin-bottom:25px; }
+.student-app .brief-heading h3 { font-size:24px; margin-top:5px; }
+.student-app .brief-heading .eyebrow { font-size:10px; }
+.student-app .brief-facts { display:grid; grid-template-columns:repeat(4,1fr); margin:20px 0 18px; padding:17px 0; border-top:1px solid #c7d4c6; border-bottom:1px solid #c7d4c6; }
+.student-app .brief-facts div { border-left:1px solid #c7d4c6; padding-left:17px; }
+.student-app .brief-facts div:first-child { padding-left:0; border:0; }
+.student-app .brief-facts strong { display:block; font-weight:400; font-size:29px; line-height:1; }
+.student-app .brief-facts span { display:block; font-size:12px; color:var(--muted); margin-top:6px; }
+.student-app .case-brief>p { font-size:14px; line-height:1.45; }
+.student-app .case-brief>p+p { margin-top:11px; }
+.student-app .case-brief p.brief-assumption { font-size:12px; color:var(--teal); margin-top:14px; }
+.student-app .proposal-fieldset { border:0; padding:0; margin:0; }
+.student-app .proposal-legend { font-size:18px; font-weight:400; margin-bottom:13px; }
+.student-app .proposal-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.student-app .proposal-card { display:flex; position:relative; cursor:pointer; background:var(--white); border:1px solid #bcc9bd; border-radius:var(--radius); transition:border-color .15s,background .15s; }
+.student-app .proposal-card>input { position:absolute; top:17px; right:13px; width:17px; height:17px; z-index:1; }
+.student-app .proposal-card:hover { border-color:#6c917a; background:#fbfcf6; }
+.student-app .proposal-card:has(input:checked) { border-color:var(--teal); background:#eff5ed; box-shadow:inset 0 0 0 1px var(--teal); }
+.student-app .proposal-card:has(input:focus-visible) { outline:3px solid #297e87; outline-offset:3px; }
+.student-app .proposal-card input:focus-visible { outline:none; }
+.student-app .proposal-content { display:flex; flex-direction:column; width:100%; padding:18px 17px 14px; }
+.student-app .proposal-code { font-size:9px; text-transform:uppercase; letter-spacing:.08em; color:var(--teal); padding-right:18px; }
+.student-app .proposal-name { display:block; font-size:27px; line-height:1.03; font-weight:400; letter-spacing:-.01em; margin:18px 0 16px; }
+.student-app .proposal-spec { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; border-block:1px solid #d6ded0; padding:10px 0; font-size:12px; }
+.student-app .proposal-spec b { font-size:22px; font-weight:400; color:var(--teal); }
+.student-app .proposal-description { display:block; margin:13px 0; font-size:13px; line-height:1.45; }
+.student-app .proposal-tension { display:block; font-size:12px; line-height:1.45; color:var(--muted); margin-top:auto; }
+.student-app .proposal-tension>b { display:block; color:var(--ink); font-size:11px; margin-bottom:4px; }
+.student-app .proposal-select { display:flex; justify-content:space-between; align-items:center; gap:8px; border-top:1px solid #d6ded0; padding-top:12px; margin-top:17px; color:var(--teal); font-size:11px; font-weight:700; }
+.student-app .proposal-select>span { font-size:18px; font-weight:400; }
+.student-app .initial-writing { margin-top:16px; padding:22px 24px; }
+.student-app .initial-writing .field { margin-top:0; }
+.student-app .initial-writing .field-label { font-size:17px; }
+.student-app .stage-action { padding:20px 23px; }
+.student-app .stage-action strong { font-size:20px; }
+.student-app .stage-action p { max-width:395px; }
+.student-app .initial-snapshot { background:#f0f0e7; border:1px solid #ced8c7; border-left:3px solid var(--teal); border-radius:var(--radius); padding:20px 23px; margin-bottom:28px; }
+.student-app .initial-snapshot .eyebrow { font-size:10px; }
+.student-app .initial-snapshot h2 { font-size:24px; margin-top:7px; }
+.student-app .initial-snapshot .original-plan { color:var(--ink); font-size:15px; }
+.student-app .initial-snapshot .original-plan p { margin-top:8px; }
+.student-app .initial-snapshot>p { color:var(--muted); font-size:12px; margin-top:14px; border-top:1px solid #d4dccf; padding-top:11px; }
+.student-app .registration-update { color:var(--paper); background:var(--navy); border-radius:var(--radius); padding:22px 25px 19px; margin-bottom:20px; }
+.student-app .update-label { display:flex; align-items:center; gap:8px; color:var(--gold); font-size:11px; letter-spacing:.07em; text-transform:uppercase; }
+.student-app .update-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); }
+.student-app .registration-content { display:grid; grid-template-columns:170px 1fr; gap:26px; align-items:center; margin-top:20px; }
+.student-app .registration-number { border-right:1px solid #52676a; padding-right:19px; }
+.student-app .registration-number>strong { font-weight:400; font-size:56px; line-height:1; white-space:nowrap; letter-spacing:-.03em; }
+.student-app .registration-number>strong>span { font-size:26px; color:#a9c4bc; }
+.student-app .registration-number>span { display:block; margin-top:8px; font-size:12px; color:#d5e0da; }
+.student-app .registration-content h3 { font-size:24px; margin-bottom:9px; }
+.student-app .registration-content p { font-size:14px; color:#d1ded8; line-height:1.45; }
+.student-app .update-question { border-top:1px solid #405b62; margin-top:19px; padding-top:13px; font-size:14px; color:var(--gold); }
+.student-app .decision-controls { padding:25px; }
+.student-app .choice-fieldset { border:0; padding:0; margin:0; }
+.student-app .numbered-label { display:flex; align-items:center; gap:9px; font-size:17px; font-weight:400; }
+.student-app .numbered-label>span { width:24px; height:24px; border:1px solid #a9bfae; border-radius:50%; display:grid; place-items:center; font-size:12px; color:var(--teal); }
+.student-app .final-options,.student-app .priority-options { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+.student-app .compact-option { display:flex; gap:9px; align-items:flex-start; padding:13px 11px; border:1px solid #c7d1c3; border-radius:5px; cursor:pointer; background:#fff; }
+.student-app .compact-option input { width:16px; height:16px; margin-top:2px; }
+.student-app .compact-option strong { display:block; font-size:13px; line-height:1.25; }
+.student-app .compact-option small { display:block; font-size:11px; color:var(--muted); line-height:1.4; margin-top:5px; }
+.student-app .compact-option:hover,.student-app .adjustment-option:hover { border-color:#74917b; background:#f8faf3; }
+.student-app .compact-option:has(input:checked),.student-app .adjustment-option:has(input:checked) { border-color:var(--teal); background:#edf4eb; box-shadow:inset 0 0 0 1px var(--teal); }
+.student-app .adjustment-fieldset,.student-app .priority-fieldset { margin-top:27px; }
+.student-app .adjustment-options { display:grid; gap:9px; margin-top:12px; }
+.student-app .adjustment-option { cursor:pointer; display:flex; align-items:flex-start; gap:11px; border:1px solid #c7d1c3; border-radius:5px; padding:14px 15px; background:#fff; }
+.student-app .adjustment-option input { width:16px; height:16px; margin-top:3px; }
+.student-app .adjustment-option>span { flex:1; }
+.student-app .adjustment-option strong { display:block; font-size:15px; }
+.student-app .adjustment-option small { display:block; font-size:12px; color:var(--muted); line-height:1.4; margin-top:4px; max-width:500px; }
+.student-app .adjustment-option>b { font-weight:400; font-size:18px; padding-left:5px; color:var(--teal); white-space:nowrap; }
+.student-app .fit-strip { display:grid; grid-template-columns:1.1fr 1fr 1.4fr .9fr; border:1px solid #c5d4c7; background:#edf2e9; padding:16px 15px 13px; border-radius:5px; margin-top:20px; }
+.student-app .fit-strip>div { border-left:1px solid #c9d5c7; padding-left:12px; }
+.student-app .fit-strip>div:first-child { border:0; padding-left:0; }
+.student-app .fit-strip>div>span { display:block; font-size:11px; color:var(--muted); }
+.student-app .fit-strip strong { display:block; font-size:25px; font-weight:400; line-height:1.15; margin:6px 0; overflow-wrap:anywhere; }
+.student-app .fit-strip small { display:block; font-size:10px; color:var(--muted); line-height:1.4; padding-right:6px; }
+.student-app .fit-strip>p { grid-column:1/-1; border-top:1px solid #c9d5c7; padding-top:10px; margin-top:13px; font-size:11px; color:var(--teal); line-height:1.45; }
+.student-app .fit-strip.invalid,.student-app .fit-strip[data-valid="false"] { background:var(--error-pale); border-color:#d8a89c; }
+.student-app .fit-strip.invalid>p,.student-app .fit-strip[data-valid="false"]>p { color:var(--error); border-color:#ddbbb2; }
+.student-app .priority-help { margin:10px 0 0; font-size:12px; }
+.student-app .defend-card { padding:25px; }
+.student-app .defend-heading .eyebrow { font-size:10px; }
+.student-app .defend-heading h2 { font-size:30px; margin-top:7px; }
+.student-app .defend-card .field-label { font-size:16px; }
+.student-app .runnerup-field { max-width:390px; }
+.student-app .runnerup-field select { font-size:15px; }
+.student-app .sharing-choice { margin-top:22px; }
+.student-app .sharing-choice label { font-size:13px; }
+.student-app .sharing-choice p { font-size:11px; }
+.student-app .submit-row { display:flex; gap:20px; justify-content:space-between; align-items:center; border-top:1px solid var(--line); padding-top:21px; }
+.student-app .submit-row strong { font-size:17px; font-weight:400; }
+.student-app .submit-row p { font-size:12px; color:var(--muted); line-height:1.4; margin-top:5px; max-width:290px; }
+.student-app .submit-row .button { flex:none; font-size:14px; gap:12px; }
+.student-app .receipt .eyebrow { font-size:11px; }
+.student-app .receipt h2 { font-size:34px; }
+.student-app .clear-confirmation { border-top:1px solid #bbcdbe; margin-top:24px; padding-top:19px; }
+.student-app .clear-confirmation>strong { font-weight:400; font-size:21px; }
+.student-app .clear-confirmation>p { font-size:13px; color:var(--muted); margin-top:8px; }
+.student-app .clear-confirmation .individual-check { margin-top:13px; }
+.student-app .clear-confirmation .button { margin:0; width:auto; }
+.student-app .clear-confirmation .text-button { margin:0; }
+.student-app #initial-stage,.student-app #revision-stage,.student-app #receipt { scroll-margin-top:24px; }
+@media(min-width:1450px) { .student-app .lab-landing { padding-top:58px; }.student-app .lab-hero-copy h1 { font-size:94px; } }
+@media(max-width:1100px) {
+ .student-app .lab-hero,.student-app .lab-entry-grid { gap:42px; }
+ .student-app .lab-hero-copy h1 { font-size:78px; }
+ .student-app .venue-board { padding:26px 23px 23px; }
+ .student-app .work-layout { grid-template-columns:190px minmax(0,1fr); gap:25px; }
+ .student-app .proposal-grid { gap:9px; }
+ .student-app .proposal-content { padding:17px 13px 13px; }
+ .student-app .proposal-name { font-size:25px; }
+ .student-app .proposal-code { font-size:8px; }
+ .student-app .proposal-card>input { right:9px; top:15px; width:16px; height:16px; }
+ .student-app .proposal-select { font-size:10px; }
+ .student-app .final-options,.student-app .priority-options { gap:7px; }
+ .student-app .compact-option { padding:12px 8px; gap:7px; }
+ .student-app .compact-option strong { font-size:12px; }
+ .student-app .compact-option small { font-size:10px; }
+ .student-app .registration-content { grid-template-columns:148px 1fr; gap:20px; }
+ .student-app .registration-number>strong { font-size:49px; }
+ .student-app .registration-number>strong>span { font-size:23px; }
+ .student-app .submit-row { align-items:flex-start; flex-direction:column; gap:14px; }
+ .student-app .submit-row .button { width:100%; font-size:15px; }
+ .student-app .submit-row p { max-width:none; }
+}
+@media(max-width:850px) {
+ .student-app .lab-hero,.student-app .lab-entry-grid { gap:30px; }
+ .student-app .lab-hero-copy h1 { font-size:70px; }
+ .student-app .lab-hero-copy .hero-question { font-size:25px; }
+ .student-app .lab-hero-copy .hero-description { font-size:15px; }
+ .student-app .lab-meta { gap:11px; font-size:11px; }
+ .student-app .lab-meta span { padding-right:11px; }
+ .student-app .lab-meta strong { font-size:13px; }
+ .student-app .venue-board { padding:24px 20px 22px; }
+ .student-app .venue-board h2 { font-size:27px; }
+ .student-app .venue-numbers strong { font-size:29px; }
+ .student-app .venue-numbers span { font-size:10px; }
+ .student-app .venue-numbers div { padding-left:12px; }
+ .student-app .venue-caption { font-size:10px; }
+ .student-app .lab-runway h2,.student-app .identity-card h2 { font-size:26px; }
+ .student-app .identity-card { padding:22px; }
+ .student-app .lab-steps { gap:19px; }
+ .student-app .lab-steps li { gap:12px; }
+ .student-app .work-layout { grid-template-columns:1fr; gap:26px; }
+ .student-app .work-sidebar { display:grid; grid-template-columns:1fr 1fr; gap:16px 25px; position:static; }
+ .student-app .work-sidebar .sidebar-brief { display:block; }
+ .student-app .work-sidebar .step-nav,.student-app .work-sidebar>.sidebar-boundary { display:none; }
+ .student-app .rubric { grid-column:1; grid-row:2; margin:0; padding:0; border:0; }
+ .student-app .status-panel { grid-column:2; grid-row:1/3; align-self:start; }
+ .student-app .proposal-content { padding:19px 18px 15px; }
+ .student-app .proposal-card>input { right:13px; top:16px; }
+ .student-app .proposal-code { font-size:9px; }
+ .student-app .proposal-name { font-size:29px; }
+ .student-app .compact-option strong { font-size:14px; }
+ .student-app .compact-option small { font-size:11px; }
+ .student-app .compact-option { padding:14px 12px; gap:9px; }
+}
+@media(max-width:650px) {
+ .student-app .mode-pill { font-size:9px; padding:5px 7px; }
+ .student-app .lab-landing { padding-top:32px; padding-bottom:34px; }
+ .student-app .lab-hero { grid-template-columns:1fr; gap:25px; padding-bottom:28px; }
+ .student-app .lab-hero-copy h1 { font-size:78px; margin:15px 0 20px; }
+ .student-app .lab-hero-copy .hero-question { font-size:27px; }
+ .student-app .lab-hero-copy .hero-description { font-size:17px; max-width:450px; }
+ .student-app .lab-meta { font-size:12px; gap:17px; margin-top:20px; }
+ .student-app .lab-meta strong { font-size:15px; }
+ .student-app .lab-meta span { padding-right:17px; }
+ .student-app .case-boundary { font-size:11px; margin-top:15px; }
+ .student-app .venue-board { padding:25px 24px 21px; }
+ .student-app .venue-board h2 { font-size:30px; }
+ .student-app .venue-art { max-height:195px; margin-top:15px; }
+ .student-app .venue-numbers { padding-top:5px; padding-bottom:18px; }
+ .student-app .venue-numbers strong { font-size:32px; }
+ .student-app .venue-numbers span { font-size:12px; }
+ .student-app .lab-entry-grid { grid-template-columns:1fr; padding-top:24px; gap:28px; }
+ .student-app .lab-runway h2 { font-size:29px; }
+ .student-app .lab-steps { margin:22px 0 18px; gap:18px; }
+ .student-app .lab-steps p { max-width:none; }
+ .student-app .lab-steps strong { font-size:17px; }
+ .student-app .lab-steps p { font-size:14px; }
+ .student-app .runway-note { max-width:none; }
+ .student-app .identity-card { padding:24px; }
+ .student-app .identity-card h2 { font-size:29px; }
+ .student-app .identity-card .field-help,.student-app .identity-privacy { font-size:12px; }
+ .student-app .identity-card .button-primary { min-height:48px; font-size:16px; }
+ .student-app .individual-check { font-size:14px; }
+ .student-app .workspace-heading h1 { font-size:43px; }
+ .student-app .workspace-heading { margin-bottom:24px; }
+ .student-app .identity-chip { max-width:none; }
+ .student-app .work-sidebar { display:block; }
+ .student-app .work-sidebar .sidebar-brief { display:none; }
+ .student-app .status-panel { margin:0; }
+ .student-app .rubric { margin-top:13px; }
+ .student-app .rubric summary { font-size:13px; }
+ .student-app .work-layout { gap:21px; }
+ .student-app .stage-title h2 { font-size:31px; }
+ .student-app .stage-title p { font-size:14px; }
+ .student-app .case-brief { padding:21px 19px; margin-bottom:22px; }
+ .student-app .brief-heading h3 { font-size:25px; }
+ .student-app .brief-facts { grid-template-columns:1fr 1fr; gap:16px 0; padding:16px 0; margin:17px 0; }
+ .student-app .brief-facts div { padding-left:18px; }
+ .student-app .brief-facts div:nth-child(3) { border:0; padding-left:0; }
+ .student-app .brief-facts strong { font-size:29px; }
+ .student-app .brief-facts span { font-size:12px; }
+ .student-app .case-brief>p { font-size:14px; }
+ .student-app .proposal-grid { grid-template-columns:1fr; gap:12px; }
+ .student-app .proposal-content { padding:20px 22px 17px; }
+ .student-app .proposal-card>input { top:17px; right:18px; width:19px; height:19px; }
+ .student-app .proposal-name { font-size:31px; margin:13px 0; }
+ .student-app .proposal-name br { display:none; }
+ .student-app .proposal-name br::after { content:' '; }
+ .student-app .proposal-spec { justify-content:flex-start; gap:14px; padding:9px 0; font-size:13px; }
+ .student-app .proposal-description { font-size:14px; margin:11px 0; }
+ .student-app .proposal-tension { font-size:13px; }
+ .student-app .proposal-tension>b { font-size:12px; display:inline; margin-right:6px; }
+ .student-app .proposal-select { font-size:12px; margin-top:13px; padding-top:10px; }
+ .student-app .initial-writing { padding:21px 19px; }
+ .student-app .stage-action { padding:20px; }
+ .student-app .stage-action p { font-size:13px; }
+ .student-app .initial-snapshot { padding:20px; }
+ .student-app .initial-snapshot h2 { font-size:25px; }
+ .student-app .registration-update { padding:22px 20px; }
+ .student-app .registration-content { grid-template-columns:1fr; gap:18px; margin-top:18px; }
+ .student-app .registration-number { border-right:0; border-bottom:1px solid #52676a; padding:0 0 16px; display:flex; align-items:flex-end; gap:18px; }
+ .student-app .registration-number>strong { font-size:59px; }
+ .student-app .registration-number>strong>span { font-size:27px; }
+ .student-app .registration-number>span { font-size:13px; max-width:104px; margin-bottom:4px; }
+ .student-app .registration-content h3 { font-size:25px; }
+ .student-app .registration-content p { font-size:15px; }
+ .student-app .update-question { font-size:14px; }
+ .student-app .decision-controls,.student-app .defend-card { padding:22px 19px; }
+ .student-app .final-options,.student-app .priority-options { grid-template-columns:1fr; gap:9px; }
+ .student-app .compact-option { padding:13px 14px; gap:11px; }
+ .student-app .compact-option strong { font-size:15px; }
+ .student-app .compact-option small { font-size:12px; margin-top:3px; }
+ .student-app .numbered-label { font-size:18px; align-items:flex-start; }
+ .student-app .numbered-label>span { flex:none; margin-top:1px; }
+ .student-app .adjustment-option { padding:14px 12px; gap:9px; }
+ .student-app .adjustment-option strong { font-size:15px; }
+ .student-app .adjustment-option small { font-size:12px; }
+ .student-app .adjustment-option>b { font-size:16px; padding:0; }
+ .student-app .fit-strip { grid-template-columns:1fr 1fr; gap:16px 0; padding:17px 14px 13px; }
+ .student-app .fit-strip>div { padding-left:16px; }
+ .student-app .fit-strip>div:nth-child(3) { border:0; padding-left:0; }
+ .student-app .fit-strip>div>span { font-size:12px; }
+ .student-app .fit-strip strong { font-size:26px; }
+ .student-app .fit-strip small { font-size:11px; }
+ .student-app .fit-strip>p { margin-top:0; font-size:12px; }
+ .student-app .defend-heading h2 { font-size:30px; }
+ .student-app .sharing-choice label { font-size:14px; }
+ .student-app .sharing-choice p { font-size:12px; }
+ .student-app .submit-row .button { font-size:16px; min-height:48px; }
+ .student-app .receipt h2 { font-size:31px; }
+ .student-app .clear-confirmation .inline-actions { align-items:flex-start; }
+ .student-app .site-footer p { max-width:300px; }
+}
+@media(max-width:375px) {
+ .student-app .lab-hero-copy h1 { font-size:70px; }
+ .student-app .lab-meta { gap:11px; }
+ .student-app .lab-meta span { padding-right:11px; }
+ .student-app .mode-pill { font-size:8px; }
+ .student-app .identity-card,.student-app .venue-board { padding:21px 19px; }
+ .student-app .identity-names { gap:10px; }
+ .student-app .proposal-content { padding:18px; }
+ .student-app .proposal-name { font-size:29px; }
+ .student-app .registration-number { gap:12px; }
+ .student-app .registration-number>strong { font-size:52px; }
+}
+@media print {
+ .student-app .lab-landing,.student-app .mode-pill,.student-app .clear-confirmation { display:none!important; }
+ .student-app .registration-update { background:white; color:black; border:1px solid #aaa; }
+ .student-app .registration-update p,.student-app .registration-update span { color:black; }
+ .student-app .proposal-card,.student-app .initial-snapshot,.student-app .case-brief,.student-app .fit-strip { break-inside:avoid; background:white; }
+ .student-app .proposal-grid { gap:10px; }
+ .student-app .receipt { break-inside:avoid; }
+}
