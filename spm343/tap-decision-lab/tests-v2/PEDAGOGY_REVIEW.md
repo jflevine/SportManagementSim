@@ -23,8 +23,8 @@ Three short textareas can support a genuine 10–15 minute individual activity i
 - Risk and runner-up tradeoff: 0–3, a named affected stakeholder, plausible risk, mitigation and a real reason not to choose the runner-up
 - Adaptation: 0–2, explanation of what changed or why retaining the initial position remains justified
 
-No fixed winning format and no automated correctness score should be implied. A recorded zero is a grade; pending manual review is not zero. Strong retention of the initial format can earn full credit when the reasoning addresses the new information.
+No fixed winning format and no automated correctness score should be implied. In the instructor view, a recorded zero is a grade and pending manual review is not zero. Student receipts expose review status only; numeric scores and private feedback remain instructor-only. Strong retention of the initial format can earn full credit when the reasoning addresses the new information.
 
 ## Release review checks
 
-The executed browser suite checks visible sequencing, response count, budget arithmetic, private/manual grade states and all three formats. A reviewer must still read the final wording and conduct a first-time-student pilot to verify that the prompt elicits argument rather than box checking. This lab must be self-contained: no Andrew or guest-speaker contribution is needed to finish or receive a grade.
+When executed, the browser suite checks visible sequencing, response count, budget arithmetic, private/manual grade states and all three formats. A reviewer must still read the final wording and conduct a first-time-student pilot to verify that the prompt elicits argument rather than box checking. This lab must be self-contained: no Andrew or guest-speaker contribution is needed to finish or receive a grade.

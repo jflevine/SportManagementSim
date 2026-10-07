@@ -6,7 +6,7 @@ API contract: CONTRACT.md. Status: https://havsvkhddvdbzbsmhqbr.supabase.co/func
 
 ## Learning record
 
-Names, La Salle email, individual-work acknowledgment, the three brief written responses and final selections are private. Identity is explicitly self-reported, not university-verified. A fixed class-run identifier separates this case from other work. Initial choice/position lock before the audience update; submitted answers and stable receipt cannot be overwritten. The instructor alone applies the 2/3/3/2 rubric with private feedback. Ungraded is null; zero is an actual grade. Students can resume only their own attempt and see only their own resulting grade/feedback.
+Names, La Salle email, individual-work acknowledgment, the three brief written responses and final selections are private. Identity is explicitly self-reported, not university-verified. A fixed class-run identifier separates this case from other work. Initial choice/position lock before the audience update; submitted answers and stable receipt cannot be overwritten. The instructor alone applies the 2/3/3/2 rubric with private feedback. Ungraded is null; zero is an actual grade. Students can resume only their own attempt and see a receipt plus pending/reviewed status. Numeric grades, rubric scores and instructor feedback remain instructor-only. An explicit allowlist filters every student response, including historical idempotency replays.
 
 This is an individual graded decision exercise. No automated content grade or predicted operational outcome is generated. All three proposals can be defended within constraints. The server checks required fields, immutable phases and the $300 cap, not whether the reasoning is pedagogically strong.
 
@@ -33,10 +33,10 @@ The guest RPC reads only the dedicated projection table, restricted to live mode
 
 ## Verification
 
-- 12/12 independent Node handler tests passed: authorization boundaries, strict identity/input validation, mode/attempt-bound session, exact retry, immutable phases, stale CAS, three valid proposal paths, invalid budget rejection, stable receipts, manual score bounds and null versus zero, opt-in/template release, guest segregation and safe errors
+- 12/12 independent Node handler tests passed: authorization boundaries, strict identity/input validation, mode/attempt-bound session, exact retry, immutable phases, stale CAS, three valid proposal paths, invalid budget rejection, stable receipts, manual score bounds and null versus zero for instructors, student assessment-field exclusion on resume and historical replay, opt-in/template release, guest segregation and safe errors
 - Real PostgreSQL service-role RPC verification passed seven workflow/review/publication transitions in a rollback transaction, retaining no fixture rows; checked original snapshot, original receipt replay, manual zero and test exclusion from guest output
 - 9/9 deployed HTTP test groups passed. Three example.invalid test attempts were retained in the separate test table, with final submissions for cup/orientation, open/extra_host and showcase/rotations. Wrong token, stale version, changed payload, immutable snapshot and over-budget cases failed safely. Live guest output was identical before and after. No live-mode student record was seeded
-- Live status confirms version2.0.0/private-server/live-enabled. Old pilot status remains version1.0.0/browser-local/live-disabled
+- Live status confirms version2.0.1/private-server/live-enabled. Old pilot status remains version1.0.0/browser-local/live-disabled
 - Database privilege query confirmed RLS + FORCE RLS on all four new tables, anon/authenticated SELECT denied, service_role DELETE denied
 - RPC checks confirmed security-invoker, empty search path and anon/authenticated EXECUTE denied
 - Supabase security advisors reported only expected INFO rls_enabled_no_policy for the deliberately browser-inaccessible new tables, with no new warning/error. Explanation: https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy
@@ -52,3 +52,7 @@ Supabase changelog was read on2026-10-07 including the recent PostgreSQL minor b
 - https://supabase.com/docs/guides/database/postgres/row-level-security
 
 No new package dependency or runtime credential was installed. schema.sql is the exact additive schema. generate-sql-verification.mjs regenerates a random isolated rollback test. Keep tests confined to mode:test; never populate live-mode students as a test, and do not delete retained evidence automatically.
+
+## Privacy narrowing, version2.0.1
+
+Student responses are explicitly allowlisted on all success exits, including durable idempotency replays created by earlier versions. Numeric grades and feedback remain instructor-only. Fresh student resume reports only pending/reviewed status. No schema or existing record changes were needed.

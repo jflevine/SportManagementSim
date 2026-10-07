@@ -5,6 +5,7 @@ are BLOCKED and return a nonzero exit code. Results record exact source hashes.
 """
 from __future__ import annotations
 import copy
+import base64
 import csv
 import io
 import datetime
@@ -75,6 +76,11 @@ def actions(fixture, action):
 
 def shot(page, name):
     page.screenshot(path=str(OUTPUT / f'{ENGINE}-{name}.png'), full_page=True)
+    if ENGINE == 'chromium' and name in {'landing-1440', 'landing-390', 'revision-1440', 'guest-1440'}:
+        if name == 'revision-1440':
+            page.locator('#revision-stage').evaluate("element => element.scrollIntoView({block: 'start'})")
+        pixels = page.screenshot(path=str(OUTPUT / f'{ENGINE}-{name}-viewport.jpg'), type='jpeg', quality=60, full_page=False)
+        print(f'TAP_VISUAL:{name}:' + base64.b64encode(pixels).decode('ascii'), flush=True)
 
 
 def no_overflow(page):
@@ -105,6 +111,7 @@ class Fixture:
         self.held = None
         self.private_record = None
         self.guest_payload = None
+        self.inject_legacy_grade = False
 
     def answer(self, route, status, body):
         headers = {'access-control-allow-origin': '*', 'cache-control': 'no-store'}
@@ -142,7 +149,7 @@ class Fixture:
         if req.method == 'GET':
             if 'view=guest' in req.url:
                 return self.answer(route, 200, self.guest())
-            return self.answer(route, 200, {'ok': True, 'version': '2.0.0', 'mode': 'live', 'liveEnabled': True,
+            return self.answer(route, 200, {'ok': True, 'version': '2.0.1', 'mode': 'live', 'liveEnabled': True,
                 'studentStorage': 'private-server', 'identityVerification': 'self-reported', 'grading': 'instructor-only', 'maxScore': 10, 'rubricMax': [2,3,3,2]})
         action = data.get('action')
         if action.startswith('instructor'):
@@ -161,12 +168,17 @@ class Fixture:
         assert self.records, 'No fixture attempt has been started'
         return list(self.records.values())[-1]
 
-    def project(self, state):
+    def project(self, state, student=False):
         v = copy.deepcopy(state)
         v['finalGrade'] = v['review']['total'] if v.get('review') else None
         v['guest'] = {'consent': v['answers']['guestConsent'], 'published': v.get('guestPublished', False),
                       'template': 'decision', 'summary': 'Synthetic safe structured decision template'}
         v.pop('guestPublished', None)
+        if student:
+            v['reviewStatus'] = 'reviewed' if v.get('review') else 'pending'
+            if not self.inject_legacy_grade:
+                v.pop('review', None)
+                v.pop('finalGrade', None)
         return {'ok': True, 'mode': v['mode'], 'submission': v}
 
     def student(self, data, token):
@@ -185,7 +197,7 @@ class Fixture:
                 return error('INVALID_INPUT')
             if not state:
                 return error('UNAUTHORIZED', 401)
-            return 200, self.project(state)
+            return 200, self.project(state, student=True)
         allowed = {'start': {'identity'}, 'save': {'answers'}, 'lockPlan': set(), 'submit': set()}
         if action not in allowed or set(data) != {'action', 'mode', 'attemptId', 'requestId', 'expectedVersion'} | allowed[action]:
             return error('INVALID_INPUT')
@@ -254,7 +266,7 @@ class Fixture:
             state['submittedAt'] = now
         state['version'] += 1
         self.records[aid] = state
-        response = self.project(state)
+        response = self.project(state, student=True)
         self.requests[reqkey] = (signature, copy.deepcopy(response))
         return 200, response
 
@@ -395,10 +407,12 @@ def student_flow(browser):
     assert p.locator('textarea').count() == 3
     expect(p.locator('#revision-stage')).to_be_hidden()
     start(p)
+    expect(p.locator('#workspace-title')).to_be_focused()
     expect(p.locator('#guest-consent')).not_to_be_checked()
     initial(p)
     expect(p.locator('#revision-stage')).to_be_hidden()
     lock(p)
+    expect(p.locator('#registration-heading')).to_be_focused()
     first = copy.deepcopy(fix.last_record()['initialPlan'])
     expect(p.locator('#original-plan')).to_contain_text(SECRET)
     expect(p.locator('#revision-stage')).to_contain_text('16')
@@ -582,15 +596,31 @@ def lost_final_receipt(browser):
     return 'Receipt appears only after acknowledgement; dropped final response retries one exact request and one durable receipt.'
 
 
-def zero_grade(browser):
+def student_grade_privacy(browser):
     ctx, p, fix = page_for(browser)
     start(p); initial(p); lock(p); final_fields(p); submit(p)
     fix.last_record()['review'] = {'scores': [0, 0, 0, 0], 'total': 0, 'notes': 'SYNTHETIC PRIVATE INSTRUCTOR NOTE', 'reviewedAt': '2026-10-07T12:00:00Z'}
-    reload_resume(p)
-    expect(p.locator('#receipt-score')).to_contain_text(re.compile(r'0\s*/\s*10'))
-    assert not re.search('pending|not yet', p.locator('#receipt-score').inner_text(), re.I)
+    public = fix.project(fix.last_record(), student=True)['submission']
+    assert public['reviewStatus'] == 'reviewed'
+    for key in ['review', 'finalGrade', 'scores', 'notes']:
+        assert key not in public
+    for legacy_response in [False, True]:
+        # The second pass also models an old unsanitized response: the view must ignore it.
+        fix.inject_legacy_grade = legacy_response
+        reload_resume(p)
+        expect(p.locator('#receipt-score')).to_contain_text(re.compile('review|instructor|recorded', re.I))
+        assert not re.search(r'\b\d+\s*/\s*10', p.locator('#receipt-score').inner_text())
+        assert 'SYNTHETIC PRIVATE INSTRUCTOR NOTE' not in p.locator('body').inner_text()
+        with p.expect_download() as download:
+            p.locator('#download-receipt').click()
+        dest = OUTPUT / f'{ENGINE}-student-grade-private-{legacy_response}.txt'
+        download.value.save_as(dest)
+        text = dest.read_text()
+        assert 'SYNTHETIC PRIVATE INSTRUCTOR NOTE' not in text
+        assert 'Instructor score:' not in text
+        assert not re.search(r'\b\d+\s*/\s*10', text)
     ctx.close()
-    return 'An explicit manual zero renders as 0/10 after resume rather than as pending.'
+    return 'Student resume/export exposes only review status; actual 0/10 and private notes remain instructor-only, including ignored legacy grade fields.'
 
 
 def storage_failure(browser):
@@ -906,7 +936,7 @@ def main():
         suites = [('Live identity validation', identity_validation), ('Completion and runner-up validation', completion_validation), ('Complete student flow and durable receipt', student_flow),
           ('All proposals and budget caps', feasible_choices), ('Unknown-outcome start retry and reload', unknown_start),
           ('Autosave lost acknowledgement with newer queued edit', autosave_queue), ('Offline writing and save recovery', offline_recovery),
-          ('Final submit lost acknowledgement', lost_final_receipt), ('Actual manual zero versus pending grade', zero_grade),
+          ('Final submit lost acknowledgement', lost_final_receipt), ('Student receipt and export keep grades instructor-only', student_grade_privacy),
           ('Storage failure and export', storage_failure), ('Version conflict preserves both drafts', version_conflict),
           ('Shared-device clearing confirmation', clear_shared_device), ('Native DOM injection resistance', dom_injection), ('Browser-local ungraded pilot', pilot_local),
           ('Guest privacy, markup and stale recovery', guest_privacy),

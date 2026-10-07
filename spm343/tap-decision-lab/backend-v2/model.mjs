@@ -1,4 +1,4 @@
-export const VERSION='2.0.0', CLASS_RUN='tap-events-2026-10', MAX_SCORES=[2,3,3,2];
+export const VERSION='2.0.1', CLASS_RUN='tap-events-2026-10', MAX_SCORES=[2,3,3,2];
 export const CHOICES=['cup','open','showcase'], ADJUSTMENTS=['orientation','extra_host','rotations'], PRIORITIES=['newcomers','club','operator'];
 export const TEST_IDENTITY={firstName:'Synthetic',lastName:'Fixture',email:'tap-v2@example.invalid',individualWork:true};
 export class InputError extends Error {constructor(code,message,status=400){super(message);this.code=code;this.status=status;}}
@@ -17,6 +17,18 @@ export function validateInitial(v){if(!CHOICES.includes(v.initialChoice))fail('I
 export function validateFinal(v){validateInitial(v);if(!CHOICES.includes(v.finalChoice)||!CHOICES.includes(v.runnerUp)||v.finalChoice===v.runnerUp||!ADJUSTMENTS.includes(v.adjustment)||!PRIORITIES.includes(v.priority))fail('INVALID_INPUT','Complete the final choices and select a different runner-up.');for(const field of ['finalReason','tradeoff'])clean(v[field],1800,40);if(({cup:280,open:180,showcase:240}[v.finalChoice]+(v.adjustment==='extra_host'?75:0))>300)fail('BUDGET_EXCEEDED','This combination exceeds the $300 incremental cap. Choose another adjustment or proposal.');}
 export function summary(state){const names={cup:'Rivalry Mini-Cup',open:'Play & Connect',showcase:'Campus Showcase'}, adjustments={orientation:'a 10-minute orientation',extra_host:'one extra host',rotations:'scheduled station rotations'}, priorities={newcomers:'newcomer access',club:'the esports club’s competitive finish',operator:'operational feasibility'};const a=state.answers;if(state.status!=='submitted')return '';return `${names[a.initialChoice]} → ${names[a.finalChoice]}. The final proposal adds ${adjustments[a.adjustment]}, prioritizes ${priorities[a.priority]}, and names ${names[a.runnerUp]} as runner-up. This structured summary does not quote or paraphrase the student’s written responses.`;}
 export function projection(state){return {attemptId:state.attemptId,mode:state.mode,classRun:CLASS_RUN,synthetic:state.mode==='test',firstName:state.firstName,lastName:state.lastName,email:state.email,identityVerified:false,individualWork:state.individualWork,answers:state.answers,initialPlan:state.initialPlan,status:state.status,version:state.version,receipt:state.receipt,createdAt:state.createdAt,submittedAt:state.submittedAt,review:state.review,finalGrade:state.review?.total??null,guest:{consent:state.answers.guestConsent,published:state.guestPublished,template:'decision',summary:summary(state)}};}
+// Separate boundary allowlist applies even to older durable operation responses.
+// Never reuse the full instructor projection in a student response.
+export function studentResponse(response){
+ const s=response.submission;
+ const allowed=['attemptId','mode','classRun','synthetic','firstName','lastName','email','identityVerified','individualWork','status','version','receipt','createdAt','submittedAt'];
+ const submission=Object.fromEntries(allowed.filter(k=>Object.hasOwn(s,k)).map(k=>[k,s[k]]));
+ submission.answers=Object.fromEntries(Object.keys(EMPTY_ANSWERS).map(k=>[k,s.answers[k]]));
+ submission.initialPlan=s.initialPlan?{initialChoice:s.initialPlan.initialChoice,initialPosition:s.initialPlan.initialPosition,lockedAt:s.initialPlan.lockedAt}:null;
+ submission.reviewStatus=s.review?'reviewed':'pending';
+ submission.guest={consent:s.guest.consent,published:s.guest.published,template:s.guest.template,summary:s.guest.summary};
+ return {ok:true,mode:response.mode,submission};
+}
 export function safePublication(state){return {mode:state.mode,stage:state.status,initial_choice:state.initialPlan?.initialChoice||null,final_choice:state.status==='submitted'?state.answers.finalChoice:null,adjustment:state.status==='submitted'?state.answers.adjustment:null,priority:state.status==='submitted'?state.answers.priority:null,runner_up:state.status==='submitted'?state.answers.runnerUp:null,published:state.guestPublished===true&&state.answers.guestConsent===true&&state.status==='submitted'};}
 export function transition(current,cmd,{now=new Date().toISOString(),receiptId=crypto.randomUUID()}={}){let state=current?structuredClone(current):null;
  if(cmd.action==='start'){if(state)fail('STATE_CONFLICT','This attempt already exists. Resume it.',409);state={attemptId:cmd.attemptId,mode:cmd.mode,classRun:CLASS_RUN,...identity(cmd.identity,cmd.mode),answers:{...EMPTY_ANSWERS},initialPlan:null,status:'draft',version:0,receipt:null,createdAt:now,submittedAt:null,review:null,guestPublished:false};}

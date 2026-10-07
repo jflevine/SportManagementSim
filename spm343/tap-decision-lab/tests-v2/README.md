@@ -20,7 +20,7 @@ TAP_BROWSERS=chromium,firefox,webkit TAP_QA_OUTPUT=tap-v2-qa-results \
   python spm343/tap-decision-lab/tests-v2/browser_live.py
 ```
 
-The suite starts a local HTTP server rooted at the checkout. `TAP_BASE_URL` can supply an already running local server. `TAP_BROWSER_EXECUTABLE` is optional and is intended for a single selected engine. Output includes source hashes, every assertion result, failure traces and mobile/desktop screenshots. A failed or blocked check exits nonzero. Runtime checks that cannot execute are **BLOCKED**, never passed by source inspection.
+The suite starts a local HTTP server rooted at the checkout. `TAP_BASE_URL` can supply an already running local server. `TAP_BROWSER_EXECUTABLE` is optional and is intended for a single selected engine. Output includes source hashes, every assertion result, failure traces and mobile/desktop screenshots. Four Chromium viewport JPEGs are also emitted as TAP_VISUAL log lines for remote pixel review; these contain synthetic fixtures only. A failed or blocked check exits nonzero. Runtime checks that cannot execute are **BLOCKED**, never passed by source inspection.
 
 ## Deployed test-mode API smoke
 
@@ -39,7 +39,8 @@ The default URL is the v2 function; `TAP_API_ENDPOINT` can override it. Opt-in i
 - All three proposals can be defended within $300 with valid adjustments; Cup plus host ($355) and Showcase plus host ($315) are rejected; Open plus host ($255) is accepted
 - Unknown-outcome start retry, autosave queue edits, lost acknowledgements, offline recovery, storage failure and pending-state reload
 - Exact request-ID and payload replay, version conflicts, duplicate final submission and durable receipt resume
-- Pending grade is distinct from an actual 0/10; bounded integer instructor criteria are 2/3/3/2
+- Student receipts and exports show only pending/reviewed status; numeric scores and private feedback remain instructor-only
+- The instructor view distinguishes ungraded from actual 0/10; bounded integer criteria are 2/3/3/2
 - Default opt-out, private identity/answers/grades, safe-template release, guest markup rendered as text
 - Pilot remains browser-local; mobile 390px and desktop 1440px, keyboard entry, accessible labels and no horizontal overflow
 

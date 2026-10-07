@@ -8,7 +8,7 @@ globalThis.crypto ||= webcrypto;
 const directory = process.env.TAP_BACKEND_DIR || fileURLToPath(new URL('../backend-v2/', import.meta.url));
 const {createHandler} = await import(pathToFileURL(path.join(directory, 'handler.mjs')));
 const {VERSION, sha256, InputError, transition, projection, safePublication} = await import(pathToFileURL(path.join(directory, 'model.mjs')));
-assert.equal(VERSION, '2.0.0', 'Independent tests must point to the v2 backend');
+assert.equal(VERSION, '2.0.1', 'Independent tests must point to the v2 backend');
 const API_URL = 'https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm343-tap-lab2-v2';
 const KEY = 'SYNTHETIC_IN_MEMORY_KEY_NEVER_A_REAL_CREDENTIAL';
 const IDENTITY = {firstName: 'Synthetic', lastName: 'Fixture', email: 'tap-v2@example.invalid', individualWork: true};
@@ -55,8 +55,9 @@ async function setup(){
 }
 function operation(a,action,extra={},version=a.version){return {action,mode:a.mode,attemptId:a.id,requestId:randomUUID(),expectedVersion:version,...extra};}
 function ok(result){assert.equal(result.status,200,JSON.stringify(result));return result.data;}
+function studentPrivate(state){ for(const field of ['review','finalGrade','scores','notes','feedback'])assert(!Object.hasOwn(state,field), `Student projection leaked ${field}`);assert(!JSON.stringify(state).includes('SYNTHETIC PRIVATE FEEDBACK')); }
 function denied(result,status,code){assert.equal(result.status,status,JSON.stringify(result));if(code)assert.equal(result.data.error.code,code);}
-async function act(env,a,action,extra={}){const body=operation(a,action,extra);const result=ok(await env.call(body,{token:a.token}));a.version=result.submission.version;a.state=result.submission;a.last=body;return result;}
+async function act(env,a,action,extra={}){const body=operation(a,action,extra);const result=ok(await env.call(body,{token:a.token}));studentPrivate(result.submission);a.version=result.submission.version;a.state=result.submission;a.last=body;return result;}
 async function start(env,mode='test') {const a={id:randomUUID(),token:randomBytes(32).toString('base64url'),mode,version:0};await act(env,a,'start',{identity:mode==='test'?IDENTITY:{firstName:'Synthetic',lastName:'InMemory',email:'synthetic-in-memory@lasalle.edu',individualWork:true}});return a;}
 async function complete(env,mode='test',consent=false){const a=await start(env,mode);await act(env,a,'save',{answers:INITIAL});await act(env,a,'lockPlan');await act(env,a,'save',{answers:{...INITIAL,...FINAL,guestConsent:consent}});await act(env,a,'submit');return a;}
 
@@ -114,7 +115,7 @@ test('all three formats can submit while Cup/Showcase plus host exceed budget',a
   const env=await setup(),a=await start(env);const initial={...INITIAL,initialChoice:choice};await act(env,a,'save',{answers:initial});await act(env,a,'lockPlan');
   const final={...initial,...FINAL,finalChoice:choice,runnerUp:choice==='showcase'?'cup':'showcase'};
   if(choice!=='open'){await act(env,a,'save',{answers:{...final,adjustment:'extra_host'}});denied(await env.call(operation(a,'submit'),{token:a.token}),400,'BUDGET_EXCEEDED');}
-  await act(env,a,'save',{answers:{...final,adjustment}});await act(env,a,'submit');assert.equal(a.state.status,'submitted');assert.equal(a.state.finalGrade,null);assert.match(a.state.receipt,/^TAP2-TEST-/);
+  await act(env,a,'save',{answers:{...final,adjustment}});await act(env,a,'submit');assert.equal(a.state.status,'submitted');studentPrivate(a.state);assert.equal(a.state.reviewStatus,'pending');assert.match(a.state.receipt,/^TAP2-TEST-/);
  }
 });
 
@@ -128,19 +129,24 @@ test('CAS rejects stale writes; old idempotent replies do not replace current se
 
 test('submitted receipt replays durably; student cannot mutate final answers',async()=>{
  const env=await setup(),a=await complete(env);const receipt=clone(a.state),body=a.last;
- assert.equal(receipt.finalGrade,null);assert.equal(receipt.review,null);assert.equal(receipt.guest.consent,false);assert.equal(receipt.guest.published,false);
+ studentPrivate(receipt);assert.equal(receipt.reviewStatus,'pending');assert.equal(receipt.guest.consent,false);assert.equal(receipt.guest.published,false);
  assert.deepEqual(ok(await env.call(body,{token:a.token})).submission,receipt);
  denied(await env.call(operation(a,'submit'),{token:a.token}),409,'STATE_CONFLICT');
  denied(await env.call(operation(a,'save',{answers:{...INITIAL,...FINAL}}),{token:a.token}),409,'STATE_CONFLICT');
  assert.deepEqual(ok(await env.call({action:'resume',mode:'test',attemptId:a.id},{token:a.token})).submission,receipt);
 });
 
-test('private instructor scoring enforces 2/3/3/2 whole integers and preserves actual zero',async()=>{
+test('instructor-only scoring preserves zero while student resume/replay redact scores and feedback',async()=>{
  const env=await setup(),a=await complete(env),locked=clone(a.state);
  for(const scores of [[3,3,3,2],[-1,0,0,0],[1.5,2,2,1],[0,4,0,0],[0,0,4,0],[0,0,0,3],[0,0,0]])denied(await env.call(operation(a,'instructorReview',{scores,notes:''}),{key:KEY}),400,'INVALID_INPUT');
  const zero=ok(await env.call(operation(a,'instructorReview',{scores:[0,0,0,0],notes:'SYNTHETIC PRIVATE FEEDBACK'}),{key:KEY})).submission;
  assert.equal(zero.finalGrade,0);assert.equal(zero.review.total,0);assert.equal(zero.receipt,locked.receipt);assert.deepEqual(zero.answers,locked.answers);assert.deepEqual(zero.initialPlan,locked.initialPlan);
- const resume=ok(await env.call({action:'resume',mode:'test',attemptId:a.id},{token:a.token})).submission;assert.equal(resume.finalGrade,0);assert.equal(resume.review.notes,'SYNTHETIC PRIVATE FEEDBACK');
+ const resume=ok(await env.call({action:'resume',mode:'test',attemptId:a.id},{token:a.token})).submission;studentPrivate(resume);assert.equal(resume.reviewStatus,'reviewed');
+ const replay=ok(await env.call(a.last,{token:a.token})).submission;studentPrivate(replay);assert.equal(replay.receipt,locked.receipt);
+ const historical=env.store.ops.get(`test:${a.id}:${a.last.requestId}`);historical.response.submission.review=clone(zero.review);historical.response.submission.finalGrade=0;historical.response.privateDebug='SYNTHETIC PRIVATE FEEDBACK';
+ const oldFullReplay=ok(await env.call(a.last,{token:a.token}));studentPrivate(oldFullReplay.submission);assert(!Object.hasOwn(oldFullReplay,'privateDebug'));assert(!JSON.stringify(oldFullReplay).includes('SYNTHETIC PRIVATE FEEDBACK'));
+ const detail=ok(await env.call({action:'instructorDetail',mode:'test',attemptId:a.id},{key:KEY})).submission;assert.equal(detail.finalGrade,0);assert.deepEqual(detail.review.scores,[0,0,0,0]);assert.equal(detail.review.notes,'SYNTHETIC PRIVATE FEEDBACK');
+ const listed=ok(await env.call({action:'instructorList',mode:'test'},{key:KEY})).submissions;assert.equal(listed[0].finalGrade,0);
  denied(await env.call({action:'instructorList',mode:'test'}),401,'UNAUTHORIZED');denied(await env.call({action:'instructorList',mode:'test'},{key:'fake-wrong-key'}),401,'UNAUTHORIZED');
 });
 

@@ -18,9 +18,9 @@ POST JSON requests:
 
 Initial/final/runner-up choices: cup, open, showcase. Adjustments: orientation, extra_host, rotations. Priority: newcomers, club, operator. All fields should be included in each save. Empty strings are valid for drafts. guestConsent defaults false and must be boolean. Three response strings are initialPosition, finalReason, tradeoff, each capped at 1800 characters. InitialPosition must have at least 40 characters to lock; all three must have at least 40 characters to submit. Final choices and explanations cannot be saved before locking. Initial fields cannot change after locking. Final proposal must differ from runnerUp. Costs cup280/open180/showcase240 plus75 for extra_host; total must not exceed300. Other adjustments cost0. No automatic grade or fabricated outcome score.
 
-Every successful student mutation/resume returns {ok:true,mode,submission:{attemptId,mode,classRun:'tap-events-2026-10',synthetic,firstName,lastName,email,identityVerified:false,answers,initialPlan:null|{initialChoice,initialPosition,lockedAt},status:'draft'|'plan_locked'|'submitted',version,receipt:null|string,createdAt,submittedAt:null|string,review:null|{scores,total,notes,reviewedAt},finalGrade:null|number,guest:{consent,published,template:'decision',summary}}}.
+Every successful student mutation/resume returns {ok:true,mode,submission:{attemptId,mode,classRun:'tap-events-2026-10',synthetic,firstName,lastName,email,identityVerified:false,answers,initialPlan:null|{initialChoice,initialPosition,lockedAt},status:'draft'|'plan_locked'|'submitted',version,receipt:null|string,createdAt,submittedAt:null|string,reviewStatus:'pending'|'reviewed',guest:{consent,published,template:'decision',summary}}}.
 
-A missing grade is null, not zero. A real zero review is finalGrade:0. A student's resume exposes only their own review and comments. Submitted answers and receipt never change through instructor review/publication.
+Student responses expose no numeric grade, rubric scores, review object or feedback. reviewStatus is pending for unreviewed work (including drafts) and reviewed after instructor scoring. This allowlist applies to every student mutation/resume and to older idempotency replays. Numeric assessment and feedback are instructor-only. Submitted answers and receipt never change through instructor review/publication.
 
 Use the returned version. Queue operations one at a time. On uncertain transport or 503, retry the EXACT request body and requestId. Identical idempotency replay returns the original response even after later changes. A changed body reusing the requestId yields REQUEST_CONFLICT. A stale version yields VERSION_CONFLICT; resume, surface the conflict, do not silently overwrite. After receiving an older replay, resume for current state before further edits.
 
@@ -28,10 +28,12 @@ Use the returned version. Queue operations one at a time. On uncertain transport
 
 Existing x-instructor-key in memory only; never URL, localStorage, exports or public source. Default mode live. Test rows only when explicitly mode:'test'.
 
-- {action:'instructorList',mode:'live'} returns {ok:true,mode,classRun,submissions:[same private submission shape],maxScore:10}
-- {action:'instructorDetail',mode,attemptId} returns standard submission
+- {action:'instructorList',mode:'live'} returns {ok:true,mode,classRun,submissions:[full instructor submission shape],maxScore:10}
+- {action:'instructorDetail',mode,attemptId} returns the full instructor submission
 - {action:'instructorReview',mode,attemptId,requestId,expectedVersion,scores:[2,3,3,2],notes:'...'} uses integer scores within maxima2/3/3/2, notes max4000; server computes total
 - {action:'instructorPublish',mode,attemptId,requestId,expectedVersion,template:'decision',published:true|false} explicitly releases/hides a safe structured template. Release requires submitted status AND student opt-in. No freeform publication summary accepted. UI must preview guest.summary and require an explicit release click. The structured template reflects actual final choices and contains no response text
+
+The full instructor projection includes review:null|{scores,total,notes,reviewedAt} and finalGrade:null|number. A missing grade is null, not zero; a reviewed zero is finalGrade:0. These assessment fields are never returned by student actions.
 
 CSV is generated from the authorized list in the instructor browser; neutralize spreadsheet formula prefixes in all free text. Never include tokens. Hold key in memory only.
 

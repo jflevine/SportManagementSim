@@ -61,7 +61,12 @@ async function check(name, fn) {
 function expectStatus(result, status, code) {
   assert.equal(result.status, status, JSON.stringify(result));
   if (code) assert.equal(result.data.error?.code, code, JSON.stringify(result));
+  if (status === 200 && result.data.submission) studentPrivate(result.data.submission);
   return result.data;
+}
+
+function studentPrivate(state) {
+  for (const field of ['review', 'finalGrade', 'scores', 'notes', 'feedback']) assert(!Object.hasOwn(state, field), `Student projection leaked ${field}`);
 }
 
 function operation(attempt, action, fields = {}, version = attempt.version) {
@@ -133,6 +138,7 @@ async function main() {
   }
   await check('Health, live availability and manual rubric', async () => {
     const data = expectStatus(await request(), 200);
+    assert.equal(data.version, '2.0.1');
     assert.equal(data.liveEnabled, true);
     assert.equal(data.studentStorage, 'private-server');
     assert.equal(data.grading, 'instructor-only');
@@ -163,8 +169,7 @@ async function main() {
     await check(`Durable ${choice} lifecycle, replay, immutability and receipt`, async () => {
       const a = await newAttempt();
       assert.equal(a.state.status, 'draft');
-      assert.equal(a.state.finalGrade, null);
-      assert.equal(a.state.review, null);
+      studentPrivate(a.state);
       assert.equal(a.state.answers.guestConsent, false);
       const startRequest = a.lastOperation;
       const startState = structuredClone(a.state);
@@ -198,8 +203,8 @@ async function main() {
       const submitRequest = a.lastOperation;
       assert.equal(submitted.status, 'submitted');
       assert.match(submitted.receipt, /^TAP2-TEST-/);
-      assert.equal(submitted.finalGrade, null);
-      assert.equal(submitted.review, null);
+      studentPrivate(submitted);
+      assert.equal(submitted.reviewStatus, 'pending');
       assert.deepEqual(submitted.initialPlan, snapshot);
       assert.equal(submitted.guest.published, false);
       assert.deepEqual(expectStatus(await request(submitRequest, {token: a.token}), 200).submission, submitted);
@@ -207,7 +212,7 @@ async function main() {
       expectStatus(await request(operation(a, 'submit'), {token: a.token}), 409, 'STATE_CONFLICT');
       expectStatus(await request(operation(a, 'save', {answers: finalAnswer}), {token: a.token}), 409, 'STATE_CONFLICT');
       report.attempts.find(row => row.attemptId === a.attemptId).receipt = submitted.receipt;
-      return {attemptId: a.attemptId, receipt: submitted.receipt, choice, adjustment, version: submitted.version, grade: 'pending manual review'};
+      return {attemptId: a.attemptId, receipt: submitted.receipt, choice, adjustment, version: submitted.version, reviewStatus: 'pending manual review; scores remain instructor-only'};
     });
   }
   await check('Guest projection excludes all identity, response and grade fields', async () => {

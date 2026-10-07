@@ -37,7 +37,7 @@ These are manually assigned reasoning points. Validation and completion are not 
 
 Open the instructor page with the existing OFF SCRIPT / Legal Literacy Check 2 instructor key. The key stays only in tab memory. Class records are the default; isolated synthetic tests require an explicit record-set selection.
 
-Review the initial and final writing, enter four bounded rubric scores and optional private feedback, then choose Save score. The server calculates the total. A student can resume their own attempt to see its grade. CSV exports contain private identity/work and neutralize spreadsheet formula prefixes; keep the downloaded file secure.
+Review the initial and final writing, enter four bounded rubric scores and optional private feedback, then choose Save score. The server calculates the total. A student can resume their own attempt to see only its receipt and review status. Numeric scores and grading notes remain instructor-only. CSV exports contain private identity/work and neutralize spreadsheet formula prefixes; keep the downloaded file secure.
 
 Names and La Salle emails are self-reported rather than institutional SSO-verified. Duplicate email attempts are flagged for roster review. No one is emailed. Losing browser data loses self-service resume access; the student should contact the instructor rather than create repeated attempts. No student-record deletion endpoint is provided.
 
