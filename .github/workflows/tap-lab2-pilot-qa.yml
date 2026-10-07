@@ -1,0 +1,39 @@
+name: TAP Decision Lab 2 pilot QA
+on:
+  push:
+    branches: [tap-lab2-pilot-20261007]
+    paths:
+      - 'spm343/tap-decision-lab/**'
+      - '.github/workflows/tap-lab2-pilot-qa.yml'
+permissions:
+  contents: read
+jobs:
+  pilot-quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check syntax and backend invariants
+        run: |
+          node --check spm343/tap-decision-lab/app.js
+          node --check spm343/tap-decision-lab/guest/guest.js
+          node --check spm343/tap-decision-lab/instructor/instructor.js
+          node --test spm343/tap-decision-lab/backend/security.test.mjs
+      - name: Install pinned browser runtime
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Browser and privacy verification with synthetic fixtures
+        env:
+          TAP_QA_OUTPUT: tap-qa-results
+          TAP_BROWSERS: chromium,firefox,webkit
+        run: python spm343/tap-decision-lab/tests/browser_pilot.py
+      - name: Verify live synthetic guest loop
+        run: node spm343/tap-decision-lab/tests/live-api.mjs
+      - name: Capture review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tap-decision-lab2-pilot-qa
+          path: tap-qa-results
+          if-no-files-found: warn
