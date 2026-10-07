@@ -10,7 +10,7 @@ Individual decision lab · 10–15 minutes · 10 points assigned by the instruct
 - Guest preview: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/guest/?mode=pilot
 - Private instructor review: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/instructor/
 
-Publication of this revised interface is verified separately in QA.md. The previous synthetic pilot endpoint remains unchanged.
+This revised interface is released through PR #31. The final three-engine/browser and deployed-API verification is recorded in QA.md. The previous synthetic pilot endpoint remains unchanged.
 
 ## What students do
 
