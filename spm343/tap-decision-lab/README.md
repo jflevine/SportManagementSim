@@ -1,59 +1,56 @@
-# SPM 343 Decision Lab 2: A first visit to TAP
+# SPM 343 Decision Lab 2 — Which esports event should TAP host?
 
-**Instructor-review pilot, October 7, 2026. Real class submissions are closed.**
+Individual decision lab · 10–15 minutes · 10 points assigned by the instructor.
 
-This isolated addition does not change any other assignment or either lecture deck.
+## Student and review access
 
-## Review links
+- Class: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/
+- Ungraded local preview: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/?mode=pilot
+- Guest: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/guest/
+- Guest preview: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/guest/?mode=pilot
+- Private instructor review: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/instructor/
 
-- Student pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/
-- Auto-refreshing guest pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/guest/
-- Private instructor pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/instructor/
+This revised interface is released through PR #31. The final three-engine/browser and deployed-API verification is recorded in QA.md. The previous synthetic pilot endpoint remains unchanged.
 
-These are planned publication addresses, not live pilot links yet. The tested source is in draft PR #30 awaiting explicit approval to publish. Real class submissions remain closed; use invented practice answers only.
+## What students do
 
-## Classroom concept
+1. Read a fictional venue brief: 24 visitors, 12 PC stations, two included hosts, a 90-minute slot, and a $300 incremental budget. The total occupancy limit is 27 people, including up to three staff; the off-station area has 16 visitor places. All figures are classroom inputs, never claims about TAP’s real capacity or rates
+2. Compare Rivalry Mini-Cup ($280, 12 stations), Play & Connect ($180, 10), and Campus Showcase ($240, 8). Save an initial choice and a short position before seeing the registration update
+3. Read the new information: 16 visitors are new to gaming PCs and 8 are experienced. The organizer wants supported hands-on participation, while the club still wants a competitive finish
+4. Keep or change the proposal, select one adjustment and stakeholder priority, explain adaptation and a risk/response, then explain why the runner-up loses despite its benefit
+5. Submit and keep the server-confirmed receipt. The grade remains pending until the instructor evaluates the reasoning
 
-Students independently propose a hypothetical 90-minute welcome event for 24 first-time college visitors. They choose a beginner-friendly mini-tournament or guided play with a short exhibition, explain an audience tradeoff, connect access/layout and technical requirements to venue fit, build a 90-minute operating sequence with a responsibility and success measure, then use one real interview insight to reconsider a decision. No Andrew quote or TAP business claim is invented.
+There are three written responses, not a full event plan. A 10-minute orientation replaces main-program time; an extra host costs $75; more rotations reduce uninterrupted play/exhibition time. The app checks the supplied budget, but does not invent outcome scores. Every proposal can earn full credit with defensible reasoning. Keeping the initial proposal can earn full credit too.
 
-Suggested pacing replaces the existing seven-minute practice block: one minute of introduction and six minutes for prompts 1–3 before the guest. During the October 8, 11:45 a.m.–12:15 p.m. Eastern interview, listen and capture one useful point. Allow three minutes near the end or afterward for the revision. An optional guest reaction must fit the remaining time; it does not add a separate 30-minute lab.
+All case information is provided by the activity. Andrew’s interview is optional enrichment and has no scoring dependency. The lab can run as one 10–15-minute block; the lecture launch uses a 12-minute block before the guest.
 
-The goal, format choices, duration, and attendance are classroom assumptions, not facts about TAP's capacity, services, availability, or priorities. Real implementation would require checking permissions, safety, usable equipment, staffing, access, site availability, and cost.
+## Rubric: 10 points
 
-## What this pilot does
+- Initial position (2): reasonable choice; relevant venue/audience fact used to justify it
+- Event/venue fit (3): feasible final plan; purposeful adjustment; explains how resources support it
+- Tradeoff/risk (3): fair runner-up comparison; stakeholder tradeoff; concrete risk with practical response
+- Adaptation (2): uses the new information; explains changed/retained decision and consequence
 
-- Student typed answers and the original-plan snapshot stay in local browser storage
-- Reloading the same browser resumes the practice; a local download preserves the text if storage fails or the device is shared
-- Finishing produces a clearly labeled local practice confirmation, not a class receipt or grade
-- Only the structured format and progress stage reach a shared synthetic server demonstration
-- The guest page polls every 10 seconds while visible and shows those saved updates, not keystrokes
-- Guest example prose is fixed synthetic content, never a paraphrase of the reviewer's private typing
-- Other pilot testers can overwrite the one shared demonstration; this is disclosed in both views
-- Existing instructor authentication gates fixed synthetic private records, test receipts, manual grades, and explicit release/hide controls for screened synthetic summaries
-- Private tests are isolated from all existing course submissions and are idempotent
-- No new API keys or instructor credentials are created; no email is sent
+These are manually assigned reasoning points. Validation and completion are not grades. Blank/ungraded is distinct from an instructor-entered 0/10.
 
-## Proposed grade: 10 points, assigned by the instructor
+## Private instructor workflow
 
-1. Event (2): audience/goal fit; genuine tradeoff
-2. Venue (3): access or layout need with reason; technology or reliability need with reason; concrete fact to verify
-3. Operations (3): usable sequence totaling 90 minutes; responsible role and task; measurable target and collection method
-4. Interview (2): specific actual insight; reasoned revision or retention with practical consequence
+Open the instructor page with the existing OFF SCRIPT / Legal Literacy Check 2 instructor key. The key stays only in tab memory. Class records are the default; isolated synthetic tests require an explicit record-set selection.
 
-A well-supported decision to keep the original plan can earn full credit. No AI or client-side grade is assigned. Writing polish and a particular format choice are not the scoring target.
+Review the initial and final writing, enter four bounded rubric scores and optional private feedback, then choose Save score. The server calculates the total. A student can resume their own attempt to see only its receipt and review status. Numeric scores and grading notes remain instructor-only. CSV exports contain private identity/work and neutralize spreadsheet formula prefixes; keep the downloaded file secure.
 
-## Privacy and live-class launch
+Names and La Salle emails are self-reported rather than institutional SSO-verified. Duplicate email attempts are flagged for roster review. No one is emailed. Losing browser data loses self-service resume access; the student should contact the instructor rather than create repeated attempts. No student-record deletion endpoint is provided.
 
-This draft deliberately cannot accept real student submissions. Backend student actions return `LIVE_DISABLED` regardless of client flags. Pilot private records use fixed invented names and `example.invalid` email addresses. The public demo endpoint accepts only enumerated format/stage values and rejects additional fields.
+## Guest privacy
 
-Before a live class launch, implement and test the authorized real-student identity and submission path, confirm retention and instructor access, test at least one real classroom device/network, and review the live guest-sharing policy. A student opt-in alone does not guarantee anonymous free text: screen or paraphrase it separately before publication. Automatic aggregate format/stage progress can remain separate from free-text releases. A future live guest view must never query private student rows directly.
+The guest view refreshes every 10 seconds while visible. It reads only aggregate stages and structured choices. An individual proposal requires the student’s optional opt-in plus the instructor’s explicit release. Its summary is built solely from selected options. Names, emails, session tokens, grades, comments, and raw written answers are excluded from the guest API. No freeform publication field exists.
 
-The instructor page displays a future guest-sharing workflow and allows only fixed, already-redacted synthetic summaries to be released in this pilot. Student names, email addresses, raw answers, grades, and instructor notes are not part of the guest API response.
+The guest URL is a public presentation view, not a confidentiality control. Only the whitelisted anonymous structure is available there. Isolated test records never affect guest counts.
 
-## Development and verification
+## Saving, recovery, and testing
 
-Static HTML/CSS/JavaScript is deployed on the existing GitHub Pages platform. Supabase resources are additive and narrowly prefixed `spm343_tap_lab2_*`. See `backend/CONTRACT.md` for API details and `QA.md` for checks actually completed and their limits.
+Live and test attempts have separate storage and scoped random resume sessions. The browser persists the token and exact pending request before transmission. Operations are serialized, version-checked, and idempotent; the initial position and final receipt become immutable. After a conflict, the student can download local writing and explicitly load the current server version. Shared-device cleanup removes only the browser copy, never the server record.
 
-Hosted verification passed 30 browser cases across Chromium, Firefox, and WebKit at mobile/desktop sizes, 24 backend tests, and the live synthetic guest loop. See [the verified run](https://github.com/jflevine/SportManagementSim/actions/runs/37629471680).
+`?mode=pilot` is local practice only. `?mode=test` uses a fixed Synthetic Fixture identity at example.invalid in a separate table; it is for end-to-end checks, not course credit. No real classroom rows are created by tests. Test fixtures are retained without deletion.
 
-Browser tests live in `tests/`; backend tests live in `backend/`. Keep fixtures synthetic. Do not delete any test or user record without approval.
+Source: `backend-v2/`, `tests-v2/`; the earlier pilot implementation remains in `backend/`. See QA.md for actual test scope and remaining limits.

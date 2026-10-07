@@ -1,36 +1,27 @@
-# TAP Decision Lab 2 pilot verification
+# Decision Lab 2 live-release verification
 
-Date: October 7, 2026. Scope: instructor-review pilot only.
+October 7, 2026. Revised self-contained events-and-venues decision lab.
 
-## Backend checks completed
+## Completed before browser CI
 
-- 24 automated unit/security tests passed
-- 20 deployed HTTP smoke checks passed against `spm343-tap-lab2`
-- Real-student start/resume/save/lock/submit routes each reject with `LIVE_DISABLED`
-- Missing/wrong instructor keys cannot list, grade, release, or create private fixture records
-- Public demonstration accepts only two format values and three stage values; extra identity, text, or identifier fields are rejected
-- Public save → guest read matched draft, plan-locked, and completed states across independent requests
-- Identical enum retries preserved the same server timestamp
-- Guest payload whitelist contained no names, emails, IDs, grades, receipts, comments, or raw answers
-- PostgreSQL transaction test verified atomic start/save/lock/revision/submit, unchanged initial snapshot, immutable final receipt, exact retry, manual grade, and separate publication; fixture transaction rolled back
-- All four new tables have ENABLE and FORCE RLS; browser roles have no table privileges; all three new RPCs are service-role-only, security-invoker, and use an empty search path
-- Security advisor findings for these resources are informational no-policy notices, intentional for tables with no browser-role privileges
-- No existing course records were read, altered, or removed; no credentials created or changed
+- 18 source/content checks passed: three responses, native labels, locked new-information stage, character caps, optional sharing, supplied resource tradeoffs, and no guest dependency
+- 12 independent handler/protocol/security tests passed
+- 9 deployed API groups passed using three retained, isolated synthetic attempts: Cup/orientation, Open/extra host, Showcase/rotations
+- Real PostgreSQL rollback checks verified seven storage/review/publication transitions, immutable initial snapshot, stable receipt replay, grade null versus zero, and test exclusion
+- New live/test/operations/guest-projection tables enforce RLS and FORCE RLS; browser roles have no direct privileges. RPCs are security invoker with empty search paths and no browser execution privilege
+- The old synthetic pilot endpoint is unchanged
+- Existing instructor verification was reused without retrieving a raw key or creating credentials
 
-## Browser checks
+## Browser release gate
 
-The local sandbox could not launch a browser because socket creation was unavailable. No local browser pass is claimed. The portable deterministic suite runs on a GitHub-hosted runner with pinned Playwright 1.57.0 and Chromium, Firefox, and WebKit. It covers desktop/mobile layout, labels, complete student flow, reload and history, original-plan retention, repeated completion, blocked storage/download/retry, multi-tab conflicts, enum-only guest updates, guest XSS/privacy/stale recovery, and private instructor scoring/release controls.
+Local Chromium cannot create sockets in this execution environment. No local runtime/layout pass is claimed. The portable hosted suite runs against the exact release commit with Chromium, Firefox, and WebKit, using synthetic fixtures for student/instructor UI and a separate deployed test-mode API smoke check.
 
-The instructor success-path browser tests use synthetic fixtures and a mock key. Real deployed access-denial and database operations are verified separately. No actual valid instructor key was accessed; the instructor must confirm successful login with the existing OFF SCRIPT / Legal Literacy Check 2 key.
-
-Hosted verification passed: [TAP pilot QA run 37629471680](https://github.com/jflevine/SportManagementSim/actions/runs/37629471680), tested commit `b97a5e842d983fd5adf9f4be70357760ae0655af`. All 30 browser cases passed (10 cases in each engine), including 390px and 1440px layouts, with zero failed or blocked cases. The same run passed all 24 backend tests and the live synthetic API loop. Screenshot artifacts are attached to that run. An earlier run identified long-text overflow in the mobile private view; wrapping was corrected and verified in all three engines.
-
-The planned deployment targets are listed in README.md. GitHub Pages publication has not occurred: draft PR #30 awaits explicit approval to mark it ready and merge. The additive, synthetic-only Supabase backend is deployed; that does not publish the student/guest/instructor pages.
+The suite exercises identity validation, unknown-success/retry, serialized saving, interrupted/offline edits, immutable initial position, budget constraints, repeated submit/receipt, explicit conflict reconciliation, grade zero versus pending, instructor score/release controls, CSV safety, guest privacy, keyboard labels, and mobile/desktop layouts. Full hosted run [37684074430](https://github.com/jflevine/SportManagementSim/actions/runs/37684074430) passed all 60 browser scenarios (20 per engine), 12 backend tests, 18 static checks, and deployed synthetic API checks on commit ccd1f0252a420447d87a671e60c6a16f0d1d17c6. Mobile/desktop screenshot pixels were inspected. Visual review then clarified that the fictional 27-person total occupancy includes 24 visitors and up to three staff, and simplified the program-time display to avoid double-counting arrival/closing. Final hosted run [37684991056](https://github.com/jflevine/SportManagementSim/actions/runs/37684991056) passed all 60 browser scenarios, 12 backend checks, 18 source checks, and 9 live synthetic API groups on final behavioral commit 35aa937dd26948ad0784e54cf4f269d0e120acb2. Updated landing and revision screenshots were visually inspected; occupancy and time displays are now consistent. All test writes remained in isolated test storage and did not affect guest counts. No live student identity, instructor credential, or irreversible deletion was used.
 
 ## Remaining limits
 
-- This is not a live classroom collection system. Student answers stay on-device and real submission routes are disabled
-- The shared public demo is one synthetic record; other testers can overwrite it. It does not represent actual enrollment or attendance
-- Guest free-text example content is fixed synthetic copy, not student typing
-- Physical phone/tablet, assistive-technology screen reader, campus Wi-Fi, and first-time student trial remain unverified
-- Course launch requires a reviewed real-student identity/submission implementation and a practical screened/opt-in guest text workflow
+- Actual valid-key instructor browser login requires the instructor’s existing key; no real key was retrieved or used in QA
+- Self-reported student identity is not institutional email verification
+- No physical-device, screen-reader, campus-network, or first-time-student trial is claimed
+- 10–15 minutes is a designed scope, not a measured classroom timing result
+- Guest summaries are selected-option summaries, not students’ free-text explanations

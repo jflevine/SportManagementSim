@@ -1,0 +1,54 @@
+# Reference only. Copy to .github/workflows/tap-lab2-live-qa.yml in the release branch.
+# This file does not publish, commit, deploy, or use a real instructor key.
+name: TAP Decision Lab 2 live QA
+on:
+  push:
+    branches: [tap-lab2-live-20261007]
+    paths:
+      - 'spm343/tap-decision-lab/**'
+      - '.github/workflows/tap-lab2-live-qa.yml'
+  workflow_dispatch:
+    inputs:
+      live_test_api:
+        description: Run deployed v2 API smoke using retained segregated synthetic test attempts
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  live-quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check student and view syntax
+        run: |
+          node --check spm343/tap-decision-lab/app.js
+          node --check spm343/tap-decision-lab/guest/guest.js
+          node --check spm343/tap-decision-lab/instructor/instructor.js
+          node --test spm343/tap-decision-lab/tests-v2/backend-independent.test.mjs
+          python spm343/tap-decision-lab/tests-v2/static-review.py
+          python -m py_compile spm343/tap-decision-lab/tests-v2/browser_live.py
+      - name: Install pinned browser test runtime
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Browser interrupted-flow, privacy and layout checks
+        env:
+          TAP_QA_OUTPUT: tap-v2-qa-results
+          TAP_BROWSERS: chromium,firefox,webkit
+        run: python spm343/tap-decision-lab/tests-v2/browser_live.py
+      - name: Deployed test-mode persistence and denial checks
+        if: github.event_name == 'push' || inputs.live_test_api
+        env:
+          TAP_LIVE_API_TEST: '1'
+          TAP_QA_OUTPUT: tap-v2-qa-results
+        run: node spm343/tap-decision-lab/tests-v2/live-api.mjs
+      - name: Preserve exact-commit QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tap-decision-lab2-live-qa-${{ github.sha }}
+          path: tap-v2-qa-results
+          if-no-files-found: error
+          retention-days: 14

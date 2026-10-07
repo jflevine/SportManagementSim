@@ -5,183 +5,166 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#142c3b">
-  <meta name="description" content="A practice-only SPM 343 decision lab: design a first visit, consider venue fit, and revisit one decision after the guest interview.">
+  <meta name="description" content="An individual SPM 343 decision lab. Choose an event, respond to new information, and defend a practical tradeoff.">
   <title>A first visit to TAP · Decision Lab 2 · SPM 343</title>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="app.js"></script>
 </head>
-<body>
+<body class="student-app">
   <a class="skip-link" href="#main">Skip to the lab</a>
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="./" aria-label="TAP Decision Lab 2 home"><span class="brand-course">SPM 343</span><span class="brand-divider" aria-hidden="true"></span><span>Decision Lab 2</span></a>
-      <span class="pilot-pill">Pilot · practice only</span>
+      <span id="mode-pill" class="mode-pill">Individual · 10 points</span>
     </div>
   </header>
-  <div class="pilot-notice"><span>Pilot · practice only.</span> Your writing stays in this browser. Your format choice and stage update a shared synthetic guest demonstration; no real class submission is sent.</div>
+  <div id="pilot-notice" class="pilot-notice" role="status" hidden><strong>Pilot mode · practice only.</strong> Use the assigned mock identity. Practice stays separate from real student work and does not receive a course grade.</div>
 
   <main id="main">
-    <section id="landing" class="landing page-shell" aria-labelledby="landing-title">
-      <div class="hero-copy">
-        <p class="eyebrow">Events × venues</p>
-        <h1 id="landing-title">A first visit<br>to <em>TAP.</em></h1>
-        <p class="hero-question">What would make a newcomer<br class="desktop-break"> want to come back?</p>
-        <p class="hero-description">Plan a welcome event for students who have never visited. Then use one insight from Andrew to take a second look at your decisions.</p>
-        <div class="case-stats" aria-label="Hypothetical case inputs">
-          <div><strong>24</strong><span>first-time college visitors</span></div>
-          <div><strong>90</strong><span>minutes to welcome them</span></div>
+    <section id="landing" class="lab-landing page-shell" aria-labelledby="landing-title">
+      <div class="lab-hero">
+        <div class="lab-hero-copy">
+          <p class="eyebrow">Events × venues × judgment</p>
+          <h1 id="landing-title">A first visit<br>to <em>TAP.</em></h1>
+          <p class="hero-question">Three good ideas.<br>One decision to defend.</p>
+          <p class="hero-description">Choose an event for 24 college visitors. Then new information arrives. Keep your choice or change it, and make the tradeoff clear.</p>
+          <div class="lab-meta" aria-label="Activity details"><span><strong>10–15</strong> minutes</span><span><strong>Individual</strong> work</span><span><strong>10</strong> points</span></div>
+          <p class="case-boundary">A fictional classroom case. All costs, capacities, and resources here are provided assumptions, not actual TAP facts.</p>
         </div>
-        <p class="case-boundary">Classroom assumptions, not TAP’s actual goals, capacity, resources, or commitments.</p>
-      </div>
-
-      <div class="hero-side">
-        <figure class="journey-card">
-          <figcaption><span class="eyebrow">Your design challenge</span><h2>One visit. Three moments.</h2></figcaption>
-          <svg class="journey-art" viewBox="0 0 560 230" role="img" aria-labelledby="journey-title journey-description">
-            <title id="journey-title">Arrival, play, and a reason to return</title>
-            <desc id="journey-description">An open entrance leads to shared gaming stations, followed by a return arrow. Design a welcoming arrival, comfortable participation, and a closing that gives visitors a reason to come back. This is a concept diagram, not a TAP floor plan.</desc>
-            <defs><marker id="route-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0 6 3.5 0 7" fill="none" stroke="#d8b875" stroke-width="1.3"/></marker></defs>
-            <path d="M122 101 H208 M348 101 H411" stroke="#d8b875" stroke-width="2" stroke-dasharray="3 6" fill="none" marker-end="url(#route-arrow)"/>
-            <g stroke="#d8b875" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M48 130 V53 H105 V130 M35 131 H117"/>
-              <path d="M62 63 96 76 V132 L62 117 Z" fill="#223f4b"/>
-              <path d="M89 98 v6"/>
+        <figure class="venue-board">
+          <figcaption><span class="eyebrow">The room you have</span><h2>Make the pieces fit.</h2></figcaption>
+          <svg class="venue-art" viewBox="0 0 440 215" role="img" aria-labelledby="venue-art-title venue-art-desc">
+            <title id="venue-art-title">Twelve PC stations and a separate social area</title>
+            <desc id="venue-art-desc">A concept graphic for the fictional case, not a floor plan. Twelve PC stations sit beside an off-station area with sixteen visitor places. This fictional case admits twenty-four visitors plus up to three staff within a twenty-seven-person total occupancy limit.</desc>
+            <defs><g id="pc-station"><rect width="33" height="24" rx="3"/><path d="M16.5 24v6m-9 0h18"/></g></defs>
+            <rect x="11" y="13" width="418" height="182" rx="9" fill="none" stroke="#50646a" stroke-width="1"/>
+            <g fill="none" stroke="#a8c7ba" stroke-width="1.7" stroke-linecap="round">
+              <use href="#pc-station" x="32" y="33"/><use href="#pc-station" x="85" y="33"/><use href="#pc-station" x="138" y="33"/><use href="#pc-station" x="191" y="33"/>
+              <use href="#pc-station" x="32" y="81"/><use href="#pc-station" x="85" y="81"/><use href="#pc-station" x="138" y="81"/><use href="#pc-station" x="191" y="81"/>
+              <use href="#pc-station" x="32" y="129"/><use href="#pc-station" x="85" y="129"/><use href="#pc-station" x="138" y="129"/><use href="#pc-station" x="191" y="129"/>
             </g>
-            <g fill="#9bc2b7" stroke="#9bc2b7" stroke-width="2.5" stroke-linejoin="round">
-              <rect x="226" y="60" width="41" height="31" rx="4" fill="none"/>
-              <rect x="291" y="60" width="41" height="31" rx="4" fill="none"/>
-              <path d="M247 92 V101 M232 102 H261 M312 92 V101 M297 102 H326 M221 110 H337" fill="none"/>
-              <circle cx="247" cy="127" r="8"/><circle cx="312" cy="127" r="8"/>
-              <path d="M232 151 Q232 137 247 137 Q262 137 262 151 M297 151 Q297 137 312 137 Q327 137 327 151" fill="none"/>
-            </g>
-            <g stroke="#d8b875" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M496 76 A36 36 0 1 1 450 69 M451 57 V74 H468"/>
-              <path d="m451 101 12 12 24-28"/>
-            </g>
-            <g fill="#f6f1e7" font-family="Times New Roman, Times, serif" font-size="23" text-anchor="middle">
-              <text x="78" y="187">Arrive</text><text x="279" y="187">Play</text><text x="470" y="187">Return</text>
-            </g>
-            <g fill="#c7d5d8" font-family="Times New Roman, Times, serif" font-size="16" text-anchor="middle">
-              <text x="78" y="211">Feel welcome</text><text x="279" y="211">Find a way in</text><text x="470" y="211">Leave with a reason</text>
-            </g>
+            <path d="M250 32v143" stroke="#50646a" stroke-dasharray="3 5"/>
+            <rect x="275" y="52" width="130" height="98" rx="36" fill="#233f49" stroke="#d8b875" stroke-width="1.2"/>
+            <g fill="#d8b875"><circle cx="301" cy="39" r="5"/><circle cx="327" cy="36" r="5"/><circle cx="353" cy="36" r="5"/><circle cx="379" cy="39" r="5"/><circle cx="301" cy="164" r="5"/><circle cx="327" cy="167" r="5"/><circle cx="353" cy="167" r="5"/><circle cx="379" cy="164" r="5"/></g>
+            <text x="340" y="94" text-anchor="middle" fill="#f6f3eb" font-family="Times New Roman, Times, serif" font-size="19">Off-station</text><text x="340" y="118" text-anchor="middle" fill="#d8b875" font-family="Times New Roman, Times, serif" font-size="16">16 visitor places</text>
           </svg>
-          <p class="journey-caption">Your event choices shape what the venue needs to deliver.</p>
+          <div class="venue-numbers"><div><strong>12</strong><span>PC stations</span></div><div><strong>2</strong><span>floor hosts</span></div><div><strong>$300</strong><span>budget ceiling</span></div></div>
+          <div class="time-track" aria-label="90 minutes total: 10 arrival, 70 program, 10 close"><span>10 <small>arrive</small></span><span>70 <small>program</small></span><span>10 <small>close</small></span></div>
+          <p class="venue-caption">24 visitors + up to 3 staff · 27-person total limit · 90 minutes</p>
         </figure>
-        <div class="start-card">
-          <div><p class="eyebrow">Before you begin</p><h2>Small plan. Clear reasoning.</h2></div>
-          <p>Work individually. Short bullets are enough: about <strong>150–200 words total</strong>, as a guide. No outside research, full budget, or new facility design.</p>
-          <button class="button button-primary" id="start-lab" type="button">Start the practice lab <span aria-hidden="true">↗</span></button>
-          <p class="entry-note">A synthetic practice identity is assigned automatically. The shared guest demonstration can change when another tester uses it. No real name or email is needed.</p>
-        </div>
       </div>
 
-      <section class="runway" aria-label="Guest-day sequence">
-        <div class="runway-heading"><p class="eyebrow">Thursday, October 8</p><h2>Plan. Listen. Reconsider.</h2></div>
-        <ol class="runway-steps">
-          <li><span class="runway-number">01</span><div><strong>Before the guest · 7 min</strong><p>1-minute introduction, then 6 minutes for your initial plan: prompts 1–3.</p></div></li>
-          <li><span class="runway-number">02</span><div><strong>Guest window · 11:45–12:15 Eastern</strong><p>Listen. Capture one useful point from Andrew, rather than writing a full plan.</p></div></li>
-          <li><span class="runway-number">03</span><div><strong>Near the end or afterward · 3 min</strong><p>Complete prompt 4. If the conversation uses the full window, revise after the guest leaves.</p></div></li>
-        </ol>
-      </section>
+      <div class="lab-entry-grid">
+        <section class="lab-runway" aria-labelledby="runway-title">
+          <p class="eyebrow">Your next 10–15 minutes</p><h2 id="runway-title">Choose. Reconsider. Defend.</h2>
+          <ol class="lab-steps">
+            <li><span>01</span><div><strong>Make your first call</strong><p>Read the brief, choose a proposal, and explain its fit in 1–2 sentences. Lock that starting point.</p></div></li>
+            <li><span>02</span><div><strong>Meet the new information</strong><p>Revisit your choice, make one practical adjustment, and decide whose needs come first.</p></div></li>
+            <li><span>03</span><div><strong>Show your judgment</strong><p>Explain your final plan and the benefit you give up. Submit, then keep your receipt.</p></div></li>
+          </ol>
+          <p class="runway-note">Everything you need is supplied. No outside research or guest interview is required. There is no single correct format.</p>
+        </section>
+
+        <section class="identity-card" aria-labelledby="identity-title">
+          <p class="eyebrow">Before you begin</p><h2 id="identity-title">Make this your work.</h2>
+          <div id="resume-panel" class="resume-panel" hidden><strong>A draft is saved on this device.</strong><p id="resume-detail">Resume only if it is yours. On a shared device, do not open someone else’s work.</p><div class="inline-actions"><button id="resume-attempt" type="button" class="button button-secondary button-small">Resume my draft</button><button id="discard-draft" type="button" class="text-button">Clear saved draft</button></div></div>
+          <form id="identity-form" novalidate>
+            <fieldset id="identity-fields" class="identity-fields">
+              <legend class="visually-hidden">Your student identity</legend>
+              <div class="identity-names"><div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" maxlength="80" required></div><div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" maxlength="80" required></div></div>
+              <div class="field"><label for="email">La Salle email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@lasalle.edu" maxlength="180" aria-describedby="email-help" required><p id="email-help" class="field-help">Use your La Salle email so your instructor can match the submission to you.</p></div>
+            </fieldset>
+            <div id="pilot-identity" class="pilot-identity" hidden><span class="eyebrow">Assigned practice identity</span><strong id="demo-identity">Practice student</strong><p>No real name or email is needed in pilot mode.</p></div>
+            <label class="individual-check"><input id="individualWork" name="individualWork" type="checkbox" required><span>I will complete this lab individually and submit my own reasoning.</span></label>
+            <p class="identity-privacy"><strong>Your work is private to your instructor.</strong> A draft is also kept in this browser so you can resume. On a shared device, download your receipt and clear your local copy when finished.</p>
+            <div id="identity-feedback" class="form-feedback" role="alert" tabindex="-1" hidden></div>
+            <button class="button button-primary" id="start-lab" type="submit">Enter the decision lab <span aria-hidden="true">↗</span></button>
+          </form>
+        </section>
+      </div>
     </section>
 
     <section id="workspace" class="workspace page-shell" aria-labelledby="workspace-title" hidden>
       <div class="workspace-heading">
-        <div><p class="eyebrow">SPM 343 · Individual decision lab</p><h1 id="workspace-title" tabindex="-1">Design the first visit.</h1><p class="workspace-subtitle">24 first-time college visitors. 90 minutes. A reason to return.</p></div>
-        <div class="identity-chip"><span class="eyebrow">Synthetic practice identity</span><strong id="demo-identity">Practice visitor · demo only</strong></div>
+        <div><p class="eyebrow">SPM 343 · Individual decision lab</p><h1 id="workspace-title" tabindex="-1">Make the call.</h1><p class="workspace-subtitle">A workable event. A clear priority. A tradeoff you can defend.</p></div>
+        <div class="identity-chip"><span class="eyebrow">Your submission</span><strong id="student-identity">Student identity</strong></div>
       </div>
       <div class="work-layout">
-        <aside class="work-sidebar" aria-label="Brief and saving status">
-          <div class="sidebar-brief">
-            <p class="eyebrow">Keep this in view</p>
-            <h2>Welcome comes first.</h2>
-            <p>Mixed gaming experience. Choose an event that helps newcomers feel comfortable joining in and interested in returning.</p>
-            <p class="sidebar-boundary">These are hypothetical case inputs. Confirm real venue capabilities before planning a real event.</p>
-          </div>
-          <nav class="step-nav" aria-label="Lab sections">
-            <a href="#step-format"><span>01</span>Choose the event</a>
-            <a href="#step-venue"><span>02</span>Make the venue fit</a>
-            <a href="#step-operations"><span>03</span>Make it work</a>
-            <a href="#revision-stage" id="revision-nav" hidden><span>04</span>Use what you heard</a>
-          </nav>
-          <div class="status-panel" aria-label="Draft saving">
+        <aside class="work-sidebar" aria-label="Brief, saving, and scoring">
+          <div class="sidebar-brief"><p class="eyebrow">The challenge</p><h2>A reason to return.</h2><p>Bring 24 college visitors through a first visit that fits the room, the budget, and the people.</p></div>
+          <nav class="step-nav" aria-label="Lab stages"><a href="#initial-stage"><span>01</span>Your first decision</a><a id="revision-nav" href="#revision-stage" hidden><span>02</span>Your final decision</a></nav>
+          <div class="status-panel" aria-label="Draft and submission status">
             <p class="status-title"><span class="status-dot" aria-hidden="true"></span><strong id="save-status" role="status" aria-live="polite">No draft saved yet</strong></p>
-            <p id="save-detail">Local draft status will appear here as you work. Download a copy before leaving a shared device.</p>
-            <p class="live-status" id="live-status">Writing stays in this browser · no live class submission</p>
-            <p id="guest-sync-status" role="status" aria-live="polite">Guest demo sync has not started.</p>
-            <div class="save-actions"><button id="retry-save" class="button button-secondary button-small" type="button" hidden>Retry save</button><button id="download-draft" class="text-button" type="button">Download draft</button></div>
+            <p id="save-detail">Saving status will appear here as you work.</p>
+            <p id="live-status" class="live-status" role="status" aria-live="polite">Not submitted to your instructor</p>
+            <div class="save-actions"><button id="retry-save" type="button" class="button button-secondary button-small" hidden>Retry save</button><button id="download-draft" type="button" class="text-button">Download draft</button></div>
           </div>
-          <div class="word-guide"><strong id="word-count" aria-live="off">0 words</strong><span>150–200 total is a guide,<br>not a submission limit.</span></div>
-          <details class="rubric"><summary>How the 10 points work</summary><ul><li><strong>2</strong> Event fit and tradeoff</li><li><strong>3</strong> Venue needs and verification</li><li><strong>3</strong> Operations and evaluation</li><li><strong>2</strong> Interview insight and consequence</li></ul><p>Instructor judgment, with no automatic scoring. A well-supported decision to keep your plan can earn full credit.</p></details>
+          <details class="rubric"><summary>How the 10 points work</summary><ul><li><strong>2</strong><span>Initial position</span></li><li><strong>3</strong><span>Event–venue fit</span></li><li><strong>3</strong><span>Tradeoff and risk</span></li><li><strong>2</strong><span>Adaptation to new information</span></li></ul><p>Your instructor scores the reasoning. The app checks completion and practical limits; it does not assign your grade.</p><p>Keeping your original format can earn full credit if you explain it well.</p></details>
+          <p class="sidebar-boundary">All venue figures are fictional classroom assumptions, not verified TAP facts.</p>
         </aside>
 
         <div class="response-column">
-          <p class="privacy-reminder"><strong>Keep responses anonymous.</strong> Don’t enter names, emails, student IDs, or other personal details. Use invented responses in this pilot.</p>
           <form id="decision-form" novalidate>
-            <fieldset id="initial-fields" class="stage-fieldset">
-              <legend class="visually-hidden">Initial plan: prompts 1 through 3</legend>
-              <section id="step-format" class="response-card" aria-labelledby="format-heading">
-                <div class="section-heading"><span class="section-number">01</span><div><p class="eyebrow">Event purpose</p><h2 id="format-heading">Choose your event.</h2></div><span class="point-label">2 points</span></div>
-                <p class="section-intro">Which format better serves these first-time visitors? Neither choice is automatically better.</p>
-                <fieldset class="format-fieldset"><legend class="field-label">Choose one format</legend><div class="format-options">
-                  <label class="format-option"><input type="radio" name="format" value="tournament" required><span><strong>Beginner-friendly mini-tournament</strong><small>A shared competitive structure</small></span></label>
-                  <label class="format-option"><input type="radio" name="format" value="guided" required><span><strong>Guided play + short team exhibition</strong><small>Explore together, then share a finish</small></span></label>
-                </div></fieldset>
-                <div class="field"><label class="field-label" for="format-reason">Audience fit + one tradeoff</label><p class="field-help" id="format-help">Why does this fit newcomers? What benefit or opportunity does your choice give up?</p><textarea id="format-reason" name="formatReason" rows="3" aria-describedby="format-help" placeholder="It fits because… The tradeoff is…" required></textarea></div>
+            <section id="initial-stage" class="initial-stage" aria-labelledby="initial-heading">
+              <div class="stage-title"><span class="stage-kicker">Stage 01</span><h2 id="initial-heading">Your first decision</h2><p>Choose with the information you have now.</p></div>
+              <section class="case-brief" aria-labelledby="brief-heading">
+                <div class="brief-heading"><p class="eyebrow">The case brief</p><h3 id="brief-heading">One room. Several priorities.</h3></div>
+                <div class="brief-facts"><div><strong>24</strong><span>college visitors</span></div><div><strong>12</strong><span>PC stations</span></div><div><strong>2</strong><span>floor hosts</span></div><div><strong>$300</strong><span>incremental budget</span></div></div>
+                <p><strong>You have 90 minutes:</strong> 10 for arrival, 70 for the program, and 10 to close. The case admits 24 visitors plus up to 3 staff within a 27-person total room limit. The off-station area has 16 visitor places, with staff circulation kept clear. One additional floor host is available for $75 if your budget allows.</p>
+                <p><strong>The audience’s gaming experience is not yet confirmed.</strong> The venue operator wants repeat visits, the gaming club wants competition, and student affairs wants a welcoming, accessible experience.</p>
+                <p class="brief-assumption">The three base proposals fit the supplied limits. Each has something useful to offer and something to give up.</p>
               </section>
+              <fieldset id="initial-fields" class="stage-fieldset">
+                <legend class="visually-hidden">Choose and explain your initial proposal</legend>
+                <fieldset class="proposal-fieldset"><legend class="field-label proposal-legend">Which proposal would you take forward?</legend>
+                  <div class="proposal-grid">
+                    <label class="proposal-card"><input type="radio" name="initialChoice" value="cup" required><span class="proposal-content"><span class="proposal-code">01 / Competition</span><strong class="proposal-name">Rivalry <br>Mini-Cup</strong><span class="proposal-spec"><b>$280</b><span>12 stations</span></span><span class="proposal-description">Timeboxed play rotations build toward a competitive finish, with prizes in the spotlight.</span><span class="proposal-tension"><b>The tension</b> A clear contest can give people a reason to care; the pace and prize focus may make a first timer hesitate.</span><span class="proposal-select">Choose Mini-Cup <span aria-hidden="true">↗</span></span></span></label>
+                    <label class="proposal-card"><input type="radio" name="initialChoice" value="open" required><span class="proposal-content"><span class="proposal-code">02 / Connection</span><strong class="proposal-name">Play &amp; <br>Connect</strong><span class="proposal-spec"><b>$180</b><span>10 stations</span></span><span class="proposal-description">Guided rotations and social play help visitors try games and get to know one another.</span><span class="proposal-tension"><b>The tension</b> A flexible welcome leaves room in the budget; the club may want a more distinctive competitive finish.</span><span class="proposal-select">Choose Play &amp; Connect <span aria-hidden="true">↗</span></span></span></label>
+                    <label class="proposal-card"><input type="radio" name="initialChoice" value="showcase" required><span class="proposal-content"><span class="proposal-code">03 / Spectacle</span><strong class="proposal-name">Campus <br>Showcase</strong><span class="proposal-spec"><b>$240</b><span>8 stations</span></span><span class="proposal-description">An exhibition, demos, and social time show visitors what the venue and experienced players can do.</span><span class="proposal-tension"><b>The tension</b> A shared spectacle can spark interest; hands-on opportunities are limited in the base proposal.</span><span class="proposal-select">Choose Showcase <span aria-hidden="true">↗</span></span></span></label>
+                  </div>
+                </fieldset>
+                <div class="response-card initial-writing"><div class="field"><label class="field-label" for="initial-position">Why is this your best starting point?</label><p id="initial-position-help" class="field-help">1–2 sentences. Connect the audience or a stakeholder priority to a concrete feature of the venue or proposal.</p><textarea id="initial-position" name="initialPosition" rows="3" maxlength="1800" aria-describedby="initial-position-help" placeholder="I would start with… because…" required></textarea></div></div>
+              </fieldset>
+              <div id="lock-panel" class="stage-action"><div><strong>Commit to a starting point.</strong><p>Your initial choice and reasoning will be kept as a read-only snapshot. The next stage reveals new information.</p></div><button id="lock-initial" type="button" class="button button-primary">Lock first decision <span aria-hidden="true">→</span></button></div>
+            </section>
 
-              <section id="step-venue" class="response-card" aria-labelledby="venue-heading">
-                <div class="section-heading"><span class="section-number">02</span><div><p class="eyebrow">Venue fit</p><h2 id="venue-heading">Make the venue fit.</h2></div><span class="point-label">3 points</span></div>
-                <p class="section-intro">Name two requirements and why they matter. Treat venue resources as questions to verify.</p>
-                <div class="field-grid">
-                  <div class="field"><label class="field-label" for="access-requirement">Access or layout requirement + reason</label><textarea id="access-requirement" name="accessRequirement" rows="3" placeholder="We need… because…" required></textarea></div>
-                  <div class="field"><label class="field-label" for="tech-requirement">Technology or reliability requirement + reason</label><textarea id="tech-requirement" name="techRequirement" rows="3" placeholder="We need… because…" required></textarea></div>
-                </div>
-                <div class="field"><label class="field-label" for="verify-question">One concrete question to verify with TAP</label><textarea id="verify-question" name="verifyQuestion" rows="2" placeholder="Before going ahead, I would ask…" required></textarea></div>
-              </section>
-
-              <section id="step-operations" class="response-card" aria-labelledby="operations-heading">
-                <div class="section-heading"><span class="section-number">03</span><div><p class="eyebrow">Operations + evaluation</p><h2 id="operations-heading">Make it work.</h2></div><span class="point-label">3 points</span></div>
-                <p class="section-intro">Give the 90 minutes a usable sequence, then say who helps and how you will judge success.</p>
-                <fieldset class="time-fieldset"><legend class="field-label">Allocate all 90 minutes</legend><div class="time-inputs">
-                  <div><label for="arrival-minutes">Arrival</label><div class="number-wrap"><input id="arrival-minutes" name="arrivalMinutes" type="number" inputmode="numeric" min="1" max="88" step="1" aria-describedby="time-help" required><span>min</span></div></div>
-                  <div><label for="play-minutes">Play</label><div class="number-wrap"><input id="play-minutes" name="playMinutes" type="number" inputmode="numeric" min="1" max="88" step="1" aria-describedby="time-help" required><span>min</span></div></div>
-                  <div><label for="closing-minutes">Closing</label><div class="number-wrap"><input id="closing-minutes" name="closingMinutes" type="number" inputmode="numeric" min="1" max="88" step="1" aria-describedby="time-help" required><span>min</span></div></div>
-                </div><div class="time-summary"><span id="time-help">Arrival + play + closing must total 90.</span><output id="time-total" for="arrival-minutes play-minutes closing-minutes" aria-live="polite">0 / 90 min</output></div></fieldset>
-                <div class="field"><label class="field-label" for="operations-role">One operating role + its task</label><textarea id="operations-role" name="operationsRole" rows="2" placeholder="A proposed staff or volunteer role would…" required></textarea></div>
-                <div class="field"><label class="field-label" for="success-metric">One measurable target + how you’ll check it</label><p class="field-help" id="metric-help">Connect your measure to comfort participating or interest in returning. A target is a proposal, not a predicted result.</p><textarea id="success-metric" name="successMetric" rows="3" aria-describedby="metric-help" placeholder="My target is… I would check it by…" required></textarea></div>
-              </section>
-            </fieldset>
-
-            <div id="initial-save-panel" class="stage-action"><div><strong>Ready for the conversation?</strong><p>Save a snapshot of prompts 1–3. Your original plan stays visible when you reconsider it.</p></div><button id="save-initial" type="button" class="button button-primary">Save initial plan <span aria-hidden="true">→</span></button></div>
+            <section id="initial-snapshot" class="initial-snapshot" aria-labelledby="snapshot-heading" hidden><div class="snapshot-heading"><span class="eyebrow">Locked starting point</span><h2 id="snapshot-heading">Your first decision is preserved.</h2></div><div id="original-plan" class="original-plan"></div><p>You can now change your plan without rewriting where you started.</p></section>
 
             <fieldset id="revision-stage" class="stage-fieldset" hidden>
-              <legend class="visually-hidden">Prompt 4: use the interview</legend>
-              <section class="response-card revision-card" aria-labelledby="revision-heading">
-                <div class="section-heading"><span class="section-number">04</span><div><p class="eyebrow">Listen, then reconsider</p><h2 id="revision-heading">Use what you heard.</h2></div><span class="point-label">2 points</span></div>
-                <p class="section-intro">Take 3 minutes near the end or after the guest leaves. Use an actual point from the interview; don’t invent a quote or a TAP capability.</p>
-                <details class="original-snapshot" open><summary>Your original plan is retained</summary><div id="original-plan" class="original-plan"></div></details>
-                <div class="field"><label class="field-label" for="andrew-insight">One specific point from Andrew, in your own words</label><textarea id="andrew-insight" name="andrewInsight" rows="3" placeholder="One useful point I heard was…" required></textarea></div>
-                <div class="field"><label class="field-label" for="revision-action">What will you do with one earlier decision?</label><select id="revision-action" name="revisionAction" required><option value="">Choose an approach</option><option value="revise">Revise it</option><option value="keep">Keep it, with a reason</option></select></div>
-                <div class="field"><label class="field-label" for="revision-decision">The decision + your reason</label><textarea id="revision-decision" name="revisionDecision" rows="3" placeholder="I would change / keep… because…" required></textarea></div>
-                <div class="field"><label class="field-label" for="revision-consequence">The practical consequence for your event or venue plan</label><textarea id="revision-consequence" name="revisionConsequence" rows="2" placeholder="This means the plan now needs…" required></textarea></div>
-                <p class="quiet-note">If your question wasn’t addressed, use another relevant point and keep your verification question open. Keeping a well-supported decision can earn full credit.</p>
-                <div class="sharing-choice"><label><input id="guest-consent" name="guestConsent" type="checkbox"><span>I’m willing for an anonymous, completed version to be considered for the guest view.</span></label><p>Optional and off by default. The instructor must separately screen the text for personal details and approve it before release. This pilot uses synthetic practice material only.</p></div>
-                <button id="submit-final" type="submit" class="button button-primary">Finish practice <span aria-hidden="true">→</span></button>
+              <legend class="visually-hidden">Reconsider and defend your final decision</legend>
+              <div class="stage-title"><span class="stage-kicker">Stage 02</span><h2 id="revision-heading" tabindex="-1">Now the audience comes into focus.</h2><p>Keep or switch your format. Either can be a strong decision.</p></div>
+              <section class="registration-update" aria-labelledby="registration-heading"><div class="update-label"><span class="update-dot" aria-hidden="true"></span><span>New registration information</span></div><div class="registration-content"><div class="registration-number"><strong>16<span> / 24</span></strong><span>are new to gaming PCs</span></div><div><h3 id="registration-heading" tabindex="-1">Every visitor needs a way in.</h3><p>Eight visitors are experienced. The organizer now wants everyone to have a supported hands-on turn. The gaming club still wants a competitive finish.</p></div></div><p class="update-question">What changes in your plan, and what are you willing to give up?</p></section>
+
+              <section class="response-card decision-controls" aria-labelledby="final-choice-heading">
+                <fieldset class="choice-fieldset"><legend id="final-choice-heading" class="field-label numbered-label"><span>1</span>Your final format</legend><p class="field-help">Keep your original format or choose another.</p><div class="final-options"><label class="compact-option"><input type="radio" name="finalChoice" value="cup" required><span><strong>Rivalry Mini-Cup</strong><small>$280 · 12 stations</small></span></label><label class="compact-option"><input type="radio" name="finalChoice" value="open" required><span><strong>Play &amp; Connect</strong><small>$180 · 10 stations</small></span></label><label class="compact-option"><input type="radio" name="finalChoice" value="showcase" required><span><strong>Campus Showcase</strong><small>$240 · 8 stations</small></span></label></div></fieldset>
+                <fieldset class="choice-fieldset adjustment-fieldset"><legend class="field-label numbered-label"><span>2</span>Make one practical adjustment</legend><p class="field-help">Choose one. You will explain how the resulting plan responds to the new audience.</p><div class="adjustment-options"><label class="adjustment-option"><input type="radio" name="adjustment" value="orientation" required><span><strong>Add a guided PC introduction</strong><small>Replace 10 minutes of the main program with orientation. 60 minutes of main program remain.</small></span><b>+$0</b></label><label class="adjustment-option"><input type="radio" name="adjustment" value="extra_host" required><span><strong>Add a third floor host</strong><small>More support during the program. Only available if the total stays at or below $300.</small></span><b>+$75</b></label><label class="adjustment-option"><input type="radio" name="adjustment" value="rotations" required><span><strong>Rework the hands-on rotations</strong><small>Plan supported turns for everyone. Give up some uninterrupted play or exhibition time.</small></span><b>+$0</b></label></div></fieldset>
+                <div id="fit-strip" class="fit-strip" aria-label="Your current plan against the case limits" aria-live="polite"><div><span>Total cost</span><strong id="fit-cost">—</strong><small id="fit-budget">$300 budget limit</small></div><div><span>PC stations</span><strong id="fit-stations">—</strong><small id="fit-spare-stations">12 available</small></div><div><span>Main program</span><strong id="fit-time">70 min</strong><small id="fit-time-detail">+ 10 arrive · 10 close</small></div><div><span>Floor hosts</span><strong id="fit-hosts">2</strong><small>Support has limits</small></div><p id="fit-message">Choose your final format and adjustment to check the practical fit. These are resource checks, not a grade or a prediction.</p></div>
+                <fieldset class="choice-fieldset priority-fieldset"><legend class="field-label numbered-label"><span>3</span>Whose needs come first in your decision?</legend><div class="priority-options"><label class="compact-option"><input type="radio" name="priority" value="newcomers" required><span><strong>Newcomers</strong><small>Welcome and supported access</small></span></label><label class="compact-option"><input type="radio" name="priority" value="club" required><span><strong>Gaming club</strong><small>A competitive finish</small></span></label><label class="compact-option"><input type="radio" name="priority" value="operator" required><span><strong>Venue operator</strong><small>A reason to visit again</small></span></label></div><p class="field-help priority-help">Prioritize one without ignoring the others.</p></fieldset>
+              </section>
+
+              <section class="response-card defend-card" aria-labelledby="defend-heading"><div class="defend-heading"><p class="eyebrow">Make your reasoning visible</p><h2 id="defend-heading">Defend the decision.</h2></div>
+                <div class="field"><label class="field-label" for="final-reason">How does your revised plan work?</label><p id="final-reason-help" class="field-help">2–3 sentences. Explain how the plan responds to 16 PC newcomers, serves your priority stakeholder, and manages one specific risk. Refer to the room, hosts, time, or budget.</p><textarea id="final-reason" name="finalReason" rows="4" maxlength="1800" aria-describedby="final-reason-help" placeholder="With this adjustment, I would… My priority is… I would manage the risk of…" required></textarea></div>
+                <div class="field runnerup-field"><label class="field-label" for="runner-up">Which other format was your runner-up?</label><select id="runner-up" name="runnerUp" required><option value="">Choose another format</option><option value="cup">Rivalry Mini-Cup</option><option value="open">Play &amp; Connect</option><option value="showcase">Campus Showcase</option></select></div>
+                <div class="field"><label class="field-label" for="tradeoff">What worthwhile benefit are you giving up?</label><p id="tradeoff-help" class="field-help">1 sentence. Explain why you rejected the runner-up and name a real benefit you lose by doing so.</p><textarea id="tradeoff" name="tradeoff" rows="3" maxlength="1800" aria-describedby="tradeoff-help" placeholder="I passed on… because… even though it would have…" required></textarea></div>
+                <div class="sharing-choice"><label><input id="guest-consent" name="guestConsent" type="checkbox"><span>I’m willing to include my anonymous choices in a guest summary if my instructor releases it.</span></label><p>Optional and off by default. Only structured choices and progress may appear. Your name, email, written responses, grade, and feedback never appear in the guest view.</p></div>
+                <div class="submit-row"><div><strong>Ready to stand behind your plan?</strong><p>Your instructor reviews the reasoning and scores it out of 10.</p></div><button id="submit-final" type="submit" class="button button-primary">Submit final decision <span aria-hidden="true">→</span></button></div>
               </section>
             </fieldset>
             <div id="form-feedback" class="form-feedback" role="alert" tabindex="-1" hidden></div>
           </form>
 
-          <section id="submission-receipt" class="receipt card" aria-labelledby="receipt-heading" tabindex="-1" hidden>
-            <p class="eyebrow">Practice completion receipt</p><h2 id="receipt-heading">Your practice plan is complete.</h2><p id="receipt-status">This is a local practice completion receipt. Your writing has not been sent to the instructor and no graded submission was made.</p><dl class="receipt-details"><div><dt>Receipt</dt><dd id="receipt-id"></dd></div><div><dt>Recorded</dt><dd id="receipt-time"></dd></div></dl><p>Keep a downloaded copy of your original plan and revision.</p><div class="receipt-actions"><button id="download-receipt" type="button" class="button button-secondary">Download completed plan</button><button id="start-over" type="button" class="text-button">Start a new practice</button></div>
+          <section id="receipt" class="receipt card" aria-labelledby="receipt-heading" tabindex="-1" hidden>
+            <p class="eyebrow">Submission receipt</p><h2 id="receipt-heading">Your decision is recorded.</h2><p id="receipt-status">Submitted · awaiting instructor review. Numeric scores and grading notes stay in the instructor’s records.</p>
+            <dl id="receipt-details" class="receipt-details"><div><dt>Receipt</dt><dd id="receipt-id"></dd></div><div><dt>Recorded</dt><dd id="receipt-time"></dd></div><div><dt>Review</dt><dd id="receipt-score">Pending review · not yet scored</dd></div></dl>
+            <p>Keep a copy of your initial decision, final reasoning, and submission receipt.</p><div class="receipt-actions"><button id="download-receipt" type="button" class="button button-secondary">Download my receipt</button><button id="clear-device" type="button" class="text-button">Clear this shared device</button></div>
+            <div id="clear-confirmation" class="clear-confirmation" hidden><strong>Keep your copy before clearing.</strong><p>This removes the draft and identity from this browser. It does not withdraw a submission already received by your instructor.</p><label class="individual-check"><input id="confirm-clear" type="checkbox"><span>I have downloaded my receipt and saved it somewhere I can access.</span></label><div class="inline-actions"><button id="confirm-clear-device" type="button" class="button button-secondary button-small">Clear local copy</button><button id="cancel-clear" type="button" class="text-button">Keep it here</button></div></div>
           </section>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer page-shell"><p>SPM 343 · TAP Decision Lab 2 <span>· Pilot / practice only</span></p><nav aria-label="Related views"><a href="guest/" target="_blank" rel="noopener">Live guest demo <span class="visually-hidden">(opens in a new tab)</span></a><a href="instructor/">Instructor review</a></nav></footer>
-  <noscript><div class="noscript-notice">JavaScript is needed to start and save this practice lab. The brief above is still available to read. Do not enter real student information.</div></noscript>
+  <footer class="site-footer page-shell"><p>SPM 343 · TAP Decision Lab 2 <span>· A fictional classroom case</span></p><nav aria-label="Related views"><a id="pilot-link" href="?mode=pilot">Try the practice version</a><a id="guest-link" href="guest/" target="_blank" rel="noopener">Guest view <span class="visually-hidden">(opens in a new tab)</span></a><a id="instructor-link" href="instructor/">Instructor review</a></nav></footer>
+  <noscript><div class="noscript-notice">JavaScript is required to save and submit this lab. Please enable it before entering personal information or starting the activity.</div></noscript>
 </body>
 </html>
