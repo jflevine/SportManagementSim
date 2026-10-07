@@ -25,7 +25,7 @@ The instructor success-path browser tests use synthetic fixtures and a mock key.
 
 Hosted verification passed: [TAP pilot QA run 37629471680](https://github.com/jflevine/SportManagementSim/actions/runs/37629471680), tested commit `b97a5e842d983fd5adf9f4be70357760ae0655af`. All 30 browser cases passed (10 cases in each engine), including 390px and 1440px layouts, with zero failed or blocked cases. The same run passed all 24 backend tests and the live synthetic API loop. Screenshot artifacts are attached to that run. An earlier run identified long-text overflow in the mobile private view; wrapping was corrected and verified in all three engines.
 
-The deployment targets are listed in README.md. GitHub Pages publication is a separate build from this QA run.
+The planned deployment targets are listed in README.md. GitHub Pages publication has not occurred: draft PR #30 awaits explicit approval to mark it ready and merge. The additive, synthetic-only Supabase backend is deployed; that does not publish the student/guest/instructor pages.
 
 ## Remaining limits
 

@@ -10,7 +10,7 @@ This isolated addition does not change any other assignment or either lecture de
 - Auto-refreshing guest pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/guest/
 - Private instructor pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/instructor/
 
-This pilot is published separately from the existing assignments. Real class submissions remain closed; use invented practice answers only.
+These are planned publication addresses, not live pilot links yet. The tested source is in draft PR #30 awaiting explicit approval to publish. Real class submissions remain closed; use invented practice answers only.
 
 ## Classroom concept
 
