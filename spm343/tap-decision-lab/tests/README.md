@@ -14,7 +14,7 @@ The script starts a local HTTP server rooted at the repository. `TAP_BASE_URL` c
 
 Results, fixture-only downloads, and screenshots go to `TAP_QA_OUTPUT` (default `/tmp/tap-qa`). A failed or blocked check exits nonzero. Results include source hashes and clearly distinguish PASS, FAIL, and BLOCKED.
 
-`--live-auth` additionally makes two read-only requests to the configured public endpoint: guest GET and instructor-list POST with an intentionally invalid, synthetic key. It never uses a real credential or mutates live records. This check verifies denial only; successful private authentication, real grading persistence, and backend idempotency require separate authorized verification.
+Live API denial and persistence checks belong in the separate `live-api.mjs` suite. The browser suite does not call the production API: its CORS policy intentionally excludes localhost. Successful private authentication, database persistence, and backend idempotency require separate authorized verification.
 
 ## Coverage
 

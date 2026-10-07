@@ -1,6 +1,6 @@
 """Independent deterministic browser QA. Does not use real student or instructor data.
 Auto-starts repository server, or uses TAP_BASE_URL. Endpoint requests are mocked,
-except explicitly labelled read-only live auth checks (enabled with --live-auth).
+with no live network mutation or production authorization claims.
 """
 import copy, datetime, functools, hashlib, http.server, json, os, pathlib, sys, threading, traceback
 from playwright.sync_api import sync_playwright, expect
@@ -165,7 +165,7 @@ def instructor_flow(browser):
     ctx.close();return 'Mock-only: bounded integer scoring, 10-point save, screening gate, publish/hide, single fixture, key absent from storage, pagehide/logout locking.'
 
 def instructor_unauthorized_refresh(browser):
-    ctx,p,fix=page_for(browser);login(p);fix.unauthorized=True;p.locator('#reload').click();expect(p.locator('#private-workspace')).to_be_hidden();expect(p.locator('#records')).to_be_empty();ctx.close();return 'Private view clears on auth rejection during refresh.'
+    ctx,p,fix=page_for(browser);login(p);fix.unauthorized=True;p.locator('#reload').click();expect(p.locator('#private-workspace')).to_be_hidden();expect(p.locator('#instructor-status')).to_contain_text('locked');expect(p.locator('#records')).to_be_empty();ctx.close();return 'Private view clears on auth rejection during refresh.'
 
 def instructor_retry(browser):
     ctx,p,fix=page_for(browser);login(p)
@@ -183,7 +183,7 @@ def responsive_labels(browser):
         assert labels==[],labels
         p.locator('#save-initial').click();finish(p);report.append({'view':'finished','width':width,**check_no_overflow(p)});p.screenshot(path=str(ROOT/f'{ENGINE}-student-complete-{width}.png'),full_page=True)
         p.goto(BASE+'guest/');expect(p.locator('#started')).to_have_text('2');report.append({'view':'guest','width':width,**check_no_overflow(p)});p.screenshot(path=str(ROOT/f'{ENGINE}-guest-{width}.png'),full_page=True)
-        login(p);report.append({'view':'instructor','width':width,**check_no_overflow(p)});p.screenshot(path=str(ROOT/f'{ENGINE}-instructor-{width}.png'),full_page=True)
+        login(p);p.locator('.review-record details > summary').click();report.append({'view':'instructor-expanded','width':width,**check_no_overflow(p)});p.screenshot(path=str(ROOT/f'{ENGINE}-instructor-{width}.png'),full_page=True)
         labels=p.locator('input,textarea,select').evaluate_all("els=>els.filter(e=>!e.labels?.length&&!e.getAttribute('aria-label')&&!e.getAttribute('aria-labelledby')).map(e=>e.id||e.name)")
         assert labels==[],labels
         ctx.close()
@@ -195,12 +195,6 @@ def guest_retry(browser):
     fix.fail=False;p.evaluate("window.dispatchEvent(new Event('online'))");expect(p.locator('#guest-sync-status')).to_contain_text('updated:',timeout=5000)
     ctx.close();return 'Guest sync failure leaves local draft intact; online event retries successfully.'
 
-def live_auth(browser):
-    ctx=browser.new_context();p=ctx.new_page();p.goto(BASE)
-    data=p.evaluate('''async endpoint=>{const r=await fetch(endpoint+'?view=guest'); const text=await r.text();const auth=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','x-instructor-key':'SYNTHETIC_INVALID_KEY_QA_ONLY'},body:JSON.stringify({action:'instructorList'})});return {guestStatus:r.status,guest:text,authStatus:auth.status,authBody:await auth.text()}}''',ENDPOINT)
-    assert data['authStatus']==401,data
-    body=json.loads(data['authBody']);assert body.get('ok') is False and 'submissions' not in body,data
-    REQUESTS.append({'mock':False,'actions':['GET view=guest','POST instructorList with invalid synthetic key'],'result':data});ctx.close();return data
 
 def main():
     global BASE, ENGINE
@@ -226,7 +220,6 @@ def main():
                 for name,fn in suites:
                     record(name,lambda f=fn:f(browser))
                     for context in browser.contexts:context.close()
-                if '--live-auth' in sys.argv and ENGINE=='chromium':record('LIVE endpoint invalid-key auth denied',lambda:live_auth(browser))
                 browser.close()
     finally:
         if server:server.shutdown()
