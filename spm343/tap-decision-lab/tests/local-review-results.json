@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-07",
+  "browserExecution": "BLOCKED",
+  "reason": "Chromium cannot open required OS socket: Operation not permitted. No local browser pass is claimed.",
+  "syntaxCompile": "PASS",
+  "staticFindings": [
+    {
+      "priority": "P1",
+      "finding": "Instructor refresh left records visible after unauthorized response",
+      "resolution": "Parent added lock and record clearing; regression included in browser_pilot.py; runtime awaits CI"
+    },
+    {
+      "priority": "P2",
+      "finding": "Downloaded draft asserted guest demo updated even when not confirmed",
+      "resolution": "Parent changed wording to can update; runtime awaits CI"
+    }
+  ],
+  "coverage": "Browser suite uses mocked synthetic endpoint data only. Read-only live API checks are a separate parent-owned suite."
+}
