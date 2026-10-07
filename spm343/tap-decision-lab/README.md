@@ -10,7 +10,7 @@ This isolated addition does not change any other assignment or either lecture de
 - Auto-refreshing guest pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/guest/
 - Private instructor pilot: https://jflevine.github.io/SportManagementSim/spm343/tap-decision-lab/instructor/
 
-These links are deployment targets until the publication check in `QA.md` confirms them.
+This pilot is published separately from the existing assignments. Real class submissions remain closed; use invented practice answers only.
 
 ## Classroom concept
 
@@ -53,5 +53,7 @@ The instructor page displays a future guest-sharing workflow and allows only fix
 ## Development and verification
 
 Static HTML/CSS/JavaScript is deployed on the existing GitHub Pages platform. Supabase resources are additive and narrowly prefixed `spm343_tap_lab2_*`. See `backend/CONTRACT.md` for API details and `QA.md` for checks actually completed and their limits.
+
+Hosted verification passed 30 browser cases across Chromium, Firefox, and WebKit at mobile/desktop sizes, 24 backend tests, and the live synthetic guest loop. See [the verified run](https://github.com/jflevine/SportManagementSim/actions/runs/37629471680).
 
 Browser tests live in `tests/`; backend tests live in `backend/`. Keep fixtures synthetic. Do not delete any test or user record without approval.
