@@ -1,0 +1,38 @@
+name: SPM 343 Event Designer QA
+on:
+  push:
+    branches: [spm343-event-designer-20261008]
+    paths:
+      - 'spm343/event-designer/**'
+      - '.github/workflows/spm343-event-designer-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the calculator and exported proposal
+        run: |
+          node --input-type=module --check < spm343/event-designer/app.js
+          node --test spm343/event-designer/tests/model.test.mjs
+          python -m py_compile spm343/event-designer/tests/browser_test.py
+      - name: Install browser test runtime
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Test the complete anonymous student flow
+        env:
+          EVENT_BROWSERS: chromium,firefox,webkit
+          EVENT_QA_OUTPUT: event-designer-qa
+        run: python spm343/event-designer/tests/browser_test.py
+      - name: Preserve test results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: event-designer-qa-${{ github.sha }}
+          path: event-designer-qa
+          if-no-files-found: warn
+          retention-days: 14
