@@ -1,0 +1,29 @@
+name: Before You Sign lesson QA
+on:
+  push:
+    branches: [spm370-before-you-sign-20261008]
+    paths:
+      - 'spm370/before-you-sign/**'
+      - '.github/workflows/before-you-sign-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  student-flow:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser test runtime
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Exercise the student workflow
+        run: python spm370/before-you-sign/qa/browser_test.py
+      - name: Retain test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: before-you-sign-qa
+          path: before-you-sign-qa/
+          retention-days: 7
