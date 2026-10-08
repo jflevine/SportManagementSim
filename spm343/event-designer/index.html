@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An ungraded SPM 343 event design activity: create an event, choose a venue, and defend one shared plan.">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#173d48">
+  <title>Design an esports event · SPM 343</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23173d48'/%3E%3Cpath d='M8 9h16v12H8zM12 25h8M16 21v4' fill='none' stroke='%23fff9ed' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css?v=1"><script type="module" src="app.js?v=1"></script>
+</head>
+<body>
+  <a class="skip-link" href="#planner">Skip to the planner</a>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="./">SPM 343 <span>Events &amp; Venues</span></a><a href="instructor.html">Teaching guide</a></div></header>
+  <main class="shell">
+    <section class="brief" aria-labelledby="page-title">
+      <p class="eyebrow">Ungraded class activity · 30 minutes · pods of 2–3 or solo</p>
+      <h1 id="page-title">Design an esports event.</h1>
+      <p class="lead">Give students a reason to choose your event over another night playing at home.</p>
+      <p>In this fictional brief, La Salle’s student activities team wants a gaming event that strengthens student engagement. Your pod will design the experience, choose a venue, and explain how the pieces fit.</p>
+      <ul class="case-numbers" aria-label="Your planning limits"><li><strong>30</strong>student attendees</li><li><strong>120 min</strong>public event</li><li><strong>$1,000</strong>confirmed funding</li><li><strong>3</strong>student organizers</li></ul>
+      <div class="task-line"><strong>Your task:</strong> complete the five sections, download one shared proposal, and prepare a 60-second pitch. Use one device per pod. Everyone helps make and explain the choices.</div>
+      <p class="small-note">Your classroom pod may have 1–3 people. The fictional event has three organizers whose jobs you assign.</p>
+      <p class="small-note">Use your chapters, slides, and notes. No outside research is needed. Your plan stays on this device; there is no sign-in, online submission, or course grade.</p>
+    </section>
+
+    <div id="draft-banner" class="notice" hidden><span>Your last plan is restored on this device. Keep working below, or start fresh.</span><button type="button" id="reset-restored" class="text-button">Start fresh</button></div>
+    <div id="storage-warning" class="notice warning" role="status" hidden></div>
+    <noscript><div class="notice warning">This planner needs JavaScript for its calculator and downloads. You can still use the questions and venue information below to write your plan on paper.</div></noscript>
+
+    <div class="workspace">
+      <form id="planner" novalidate>
+        <section class="panel" id="purpose-section" aria-labelledby="purpose-heading">
+          <div class="section-heading"><span class="step-number">1</span><div><p class="eyebrow">Purpose &amp; audience</p><h2 id="purpose-heading">What are you creating, and for whom?</h2></div></div>
+          <div class="field-row"><div class="field"><label for="eventName">Event name</label><input id="eventName" name="eventName" maxlength="160" placeholder="Give your event a name" required></div><div class="field"><label for="podName">Pod name <span class="optional">optional</span></label><input id="podName" name="podName" maxlength="160" placeholder="No student names required"></div></div>
+          <div class="field"><label for="audience">Who are your 30 attendees?</label><p class="help" id="audience-help">Choose a specific audience within the student population. For example, newcomers, club competitors, or students looking to meet people.</p><input id="audience" name="audience" maxlength="160" aria-describedby="audience-help" required></div>
+          <div class="field"><label for="purpose">What should your event accomplish?</label><p class="help" id="purpose-help">In one or two sentences, explain the result you want for that audience.</p><textarea id="purpose" name="purpose" rows="3" maxlength="2400" aria-describedby="purpose-help" required></textarea></div>
+        </section>
+
+        <section class="panel" id="experience-section" aria-labelledby="experience-heading">
+          <div class="section-heading"><span class="step-number">2</span><div><p class="eyebrow">Format &amp; experience</p><h2 id="experience-heading">What will people actually do?</h2></div></div>
+          <div class="field"><label for="format">Event format</label><select id="format" name="format" required><option value="">Choose a format</option><option value="tournament">Tournament</option><option value="social">Social gaming</option><option value="beginner">Beginner session</option><option value="showcase">Showcase or exhibition</option><option value="other">Our own format</option></select></div>
+          <div class="field"><label for="experience">Describe the experience</label><p class="help" id="experience-help">Explain the main activity and what people do when they are not at a PC. You may name a game or describe the type of play. A detailed tournament bracket or rotation timetable is not needed.</p><textarea id="experience" name="experience" rows="4" maxlength="2400" aria-describedby="experience-help" required></textarea></div>
+          <fieldset class="schedule"><legend>A simple run of show</legend><p class="help" id="schedule-help">Keep the suggested 15/90/15-minute plan or adjust the three durations. They must total 120 minutes. Setup and teardown happen outside this window.</p><div class="schedule-fields"><div class="field"><label for="openingMinutes">Welcome &amp; briefing</label><div class="number-field"><input id="openingMinutes" name="openingMinutes" type="number" min="1" max="120" step="1" value="15" aria-describedby="schedule-help" required><span>min</span></div></div><div class="field"><label for="mainMinutes">Main experience</label><div class="number-field"><input id="mainMinutes" name="mainMinutes" type="number" min="1" max="120" step="1" value="90" aria-describedby="schedule-help" required><span>min</span></div></div><div class="field"><label for="closingMinutes">Close &amp; feedback</label><div class="number-field"><input id="closingMinutes" name="closingMinutes" type="number" min="1" max="120" step="1" value="15" aria-describedby="schedule-help" required><span>min</span></div></div></div><p class="inline-status" id="schedule-status" aria-live="polite"><strong id="schedule-total">120 / 120 minutes</strong><span id="schedule-message">The three blocks fit the event window.</span></p></fieldset>
+        </section>
+
+        <section class="panel" id="venue-section" aria-labelledby="venue-heading">
+          <div class="section-heading"><span class="step-number">3</span><div><p class="eyebrow">Venue selection</p><h2 id="venue-heading">Which space fits your event?</h2></div></div>
+          <p class="section-intro">Compare the two offers. Either can support a strong plan; explain how your choice serves the experience you designed.</p>
+          <fieldset class="venue-options"><legend class="sr-only">Choose a venue</legend><div class="venue-grid">
+            <label class="venue-card" for="venue-lounge"><span class="card-top"><input type="radio" name="venue" id="venue-lounge" value="lounge"><span class="eyebrow">Option A</span></span><strong class="venue-title">Gaming lounge</strong><span class="venue-price">$650 <small>complete venue offer</small></span><span class="venue-fact"><b>20</b> gaming PCs</span><span class="venue-fact"><b>10</b> social-area places</span><span class="venue-description">A dedicated gaming environment inspired by TAP. More attendees can play at once.</span><span class="venue-tradeoff">Leaves $350 for enhancements.</span></label>
+            <label class="venue-card" for="venue-campus"><span class="card-top"><input type="radio" name="venue" id="venue-campus" value="campus"><span class="eyebrow">Option B</span></span><strong class="venue-title">Campus activity room</strong><span class="venue-price">$350 <small>complete venue offer</small></span><span class="venue-fact"><b>10</b> gaming PCs</span><span class="venue-fact"><b>20</b> social-area places</span><span class="venue-description">A flexible campus space with gaming equipment. More room for conversation and group activities.</span><span class="venue-tradeoff">Leaves $650 for enhancements.</span></label>
+          </div></fieldset>
+          <details class="case-details" open><summary>What both offers include</summary><p>Each offer includes the room, ready-to-use PCs, a shared viewing screen, setup and teardown time, and one venue technician for equipment problems. The technician does not run your event. Both spaces have 30 attendee places across PC seats and social seating, with a <strong>40-person total occupancy limit</strong> that includes staff.</p><p>For this case, game permissions, network readiness, accessible routes, and travel arrangements are already confirmed. No extra venue or transport costs are required. Your three student organizers are unpaid. Attendees may play, watch, and socialize; not everyone must use a PC at the same time.</p><p class="case-label">These are fictional classroom offers. They do not describe TAP’s actual prices, equipment, capacity, or services, and do not imply TAP endorsement.</p></details>
+          <div class="field"><label for="venueReason">Why this venue?</label><p class="help" id="venue-help">Use two features of your chosen offer to support your event. Name one disadvantage you accept.</p><textarea id="venueReason" name="venueReason" rows="4" maxlength="2400" aria-describedby="venue-help" required></textarea></div>
+        </section>
+
+        <section class="panel" id="operations-section" aria-labelledby="operations-heading">
+          <div class="section-heading"><span class="step-number">4</span><div><p class="eyebrow">Resources &amp; risk</p><h2 id="operations-heading">Make the plan workable.</h2></div></div>
+          <fieldset class="enhancements"><legend>Where would you use the remaining budget?</legend><p class="help">Choose any enhancements that serve your purpose. You may choose none. Unspent funding is acceptable; you do not need ticket or sponsorship revenue.</p>
+            <label class="extra-option" for="extra-coach"><input type="checkbox" id="extra-coach" name="extras" value="coach"><span><strong>Beginner coach</strong><small>One additional person guides first-time players during the main activity.</small></span><b>$150</b></label>
+            <label class="extra-option" for="extra-prizes"><input type="checkbox" id="extra-prizes" name="extras" value="prizes"><span><strong>Prize package</strong><small>Small prizes for a competitive element you design.</small></span><b>$200</b></label>
+            <label class="extra-option" for="extra-refreshments"><input type="checkbox" id="extra-refreshments" name="extras" value="refreshments"><span><strong>Snacks and drinks</strong><small>Refreshments for the 30 attendees.</small></span><b>$100</b></label>
+          </fieldset>
+          <div class="budget-panel" id="budget-panel" tabindex="-1"><dl class="budget-lines"><div><dt>Venue</dt><dd id="cost-venue">Choose a venue</dd></div><div><dt>Enhancements</dt><dd id="cost-extras">$0</dd></div><div class="budget-total"><dt>Planned spending</dt><dd id="cost-total">$0</dd></div><div><dt id="remaining-label">Budget remaining</dt><dd id="budget-remaining">$1,000</dd></div></dl><p id="budget-message" class="help" aria-live="polite">Choose a venue to complete the budget.</p></div>
+          <div class="field"><label for="operations">Who will do what, and what could go wrong?</label><p class="help" id="operations-help">In a few sentences, assign work to Organizers 1, 2, and 3. Explain how your spending supports the event. Then name one realistic operating problem and who will respond. The venue technician handles equipment; a paid coach, if selected, handles beginner guidance.</p><textarea id="operations" name="operations" rows="5" maxlength="2400" aria-describedby="operations-help" required></textarea></div>
+        </section>
+
+        <section class="panel" id="success-section" aria-labelledby="success-heading">
+          <div class="section-heading"><span class="step-number">5</span><div><p class="eyebrow">Evaluation</p><h2 id="success-heading">How will you know it worked?</h2></div></div>
+          <div class="field"><label for="success">One measurable success target</label><p class="help" id="success-help">Connect the target to your purpose. Give a number, the evidence you would collect, and when you would check it. “Everyone has fun” needs a way to be measured.</p><textarea id="success" name="success" rows="4" maxlength="2400" aria-describedby="success-help" required></textarea></div>
+          <details id="optional-update" class="optional-update"><summary>Optional two-minute challenge · only if your instructor asks</summary><p><strong>One organizer is unavailable.</strong> You now have two student organizers instead of three. The venue technician and any paid coach remain available, and the budget is unchanged.</p><label for="updateResponse">What would you change or retain, and why?</label><p class="help" id="update-help">Add two sentences. You may keep the original plan above to show the change. This extension is optional.</p><textarea id="updateResponse" name="updateResponse" rows="3" maxlength="2400" aria-describedby="update-help"></textarea></details>
+        </section>
+      </form>
+
+      <aside class="plan-sidebar" aria-labelledby="plan-heading"><div class="sidebar-inner">
+        <p class="eyebrow">Your shared plan</p><h2 id="plan-heading">Five decisions. One event.</h2>
+        <nav aria-label="Planning sections"><ol id="progress-list"><li><a href="#purpose-section">1. Purpose &amp; audience</a></li><li><a href="#experience-section">2. Event experience</a></li><li><a href="#venue-section">3. Venue choice</a></li><li><a href="#operations-section">4. Resources &amp; risk</a></li><li><a href="#success-section">5. Success measure</a></li></ol></nav>
+        <p class="progress-summary" id="completion-summary" role="status">0 of 5 sections filled</p>
+        <dl class="quick-totals"><div><dt>Venue</dt><dd id="quick-venue">Not chosen</dd></div><div><dt>Spending</dt><dd id="quick-cost">Choose a venue</dd></div><div><dt>Time</dt><dd id="quick-time">120 / 120 min</dd></div></dl>
+        <p class="help">Keep the five written responses concise—about 150–250 words combined is enough. Clear bullets are welcome.</p>
+        <p class="save-status" id="save-status" role="status">Your draft saves in this browser.</p>
+        <a class="button button-primary" href="#proposal">Review &amp; download</a>
+        <button class="text-button" type="button" id="reset-plan">Start a new plan</button>
+      </div></aside>
+    </div>
+
+    <section class="panel proposal" id="proposal" aria-labelledby="proposal-heading">
+      <p class="eyebrow">Bring it together</p><h2 id="proposal-heading">Your event proposal</h2>
+      <p>Before your pitch, check that the audience, activity, venue, spending, and success target make sense together. Everyone in the pod should be able to explain one choice.</p>
+      <div id="review-status" class="review-status" role="status"></div><ul id="remaining-checks" class="remaining-checks"></ul>
+      <p class="small-note">These checks confirm entries and arithmetic. Your pod still needs to judge whether the event will work.</p>
+      <div class="proposal-actions"><button id="download-plan" class="button button-primary" type="button">Download proposal (.txt)</button><button id="print-plan" class="button button-secondary" type="button">Print / Save PDF</button></div>
+      <p id="download-status" class="help" role="status">Downloads stay on your device. Nothing is sent to an instructor.</p>
+      <details class="proposal-details"><summary>Read your assembled proposal</summary><pre id="proposal-preview"></pre></details>
+      <div class="pitch"><strong>Your 60-second pitch</strong><p>“Our event is … for … We chose … because … The biggest tradeoff we accepted is …”</p></div>
+    </section>
+  </main>
+  <footer class="shell footer"><span>SPM 343 · Events &amp; Venues · Ungraded planning exercise</span><a href="instructor.html">Teaching guide &amp; chapter connections</a></footer>
+  <article id="print-proposal" aria-hidden="true"></article>
+</body>
+</html>
