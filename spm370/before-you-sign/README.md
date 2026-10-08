@@ -1,23 +1,30 @@
-# Before You Sign
+# Before You Sign + Legal Literacy Check 3
 
-SPM 370 individual asynchronous contracts lesson for October 8, 2026. A 45-minute learning module follows Maya, an adult creator considering a six-month agreement. Five files teach formation, obligations, identity and content permissions, AI and sponsor conflicts, and breach and remedies.
+SPM 370 individual asynchronous class for October 8, 2026. The five-file lesson takes approximately 45 minutes. The separate 20-point Legal Literacy Check 3 takes approximately 15 minutes.
 
-The module provides ten retryable practice decisions, five individual case notes, and a final recommendation. It saves to this browser when storage is available and offers JSON progress backups, a plain-text report, copy fallback, and print-to-PDF support. It has no server, analytics, external dependencies, or student-data transmission. The report must be submitted in Canvas. Browser completion does not assert an authenticated submission or assign a grade.
+Students enter their own full name and La Salle email, complete the activity, select Submit activity, and receive a server-confirmed receipt. They then take and submit the check on this same GitHub Pages site. No GitHub account or LMS upload is needed.
 
-The separate Legal Literacy Check 3 is delivered privately as a Canvas QTI package, with an instructor answer key. Neither is part of this public folder. A browser practice answer key is inherently visible and is not used as a secure graded assessment.
+## Private persistence
 
-## Source alignment
+The existing course Supabase project serves the `spm370-before-you-sign` function. Isolated `spm370_bys_*` tables have RLS enabled, no browser-role grants, and no public policies. A private 192-bit resume code scopes access to one attempt; only its SHA-256 digest is stored. Email is unique per assignment. Identity is self-reported, not email-verified. Losing browser access is recoverable with a saved code or an instructor-issued replacement.
 
-- Jeffrey Levine, Contracts in Esports: Fundamental Concepts, supplied October 5, 2026 manuscript
-- SPM370 Contracts 2026 Professional Rebuild, supplied 39-slide deck
-- Chapter 5 NIL Branding Lecture Ready Notes, supplied course deck
-- SPM 370 Fall 2026 syllabus
-- Linked primary references in Course reference
+Activity and quiz have separate immutable submission timestamps and receipts. Identical retries return the existing submission; resubmission never silently overwrites it. Draft quiz saves use optimistic concurrency. The server validates completion and computes the 12 multiple-choice points. Activity writing and two 4-point short responses require instructor review. Student responses omit official keys, models, and scores.
 
-All characters and draft clauses are fictional. File 5 explicitly changes the facts for a guaranteed-pay damages exercise. Original draft facts govern the final recommendation. This module covers the core concepts; named cases and specialized industry dispute forums remain supporting slide material.
+`instructor/` uses the existing SPM 370 instructor access key, checked on the server before records are read. It lists identified progress, reviews answers, saves activity/essay grades, exports a CSV, opens/closes submissions, and generates private recovery codes. Instructor credentials are held in memory only. The table can be viewed only through authenticated instructor routes or authorized project administration.
 
-## Verification
+Private grading keys and model responses are in the restricted settings table, not this public repository. The deployed entrypoint reuses existing private instructor verification and server credentials. `backend/index.example.ts` is documentation only; never commit production keys or verification digests. Test fixtures contain synthetic question keys, not the official graded assessment.
 
-The browser workflow in `qa/browser_test.py` exercises retries, progression gates, word-count checks, local recovery, report download, backup restoration, mobile layout, and storage denial in Chromium, Firefox, and WebKit. It uses synthetic inputs only. A GitHub Actions workflow runs it on the isolated lesson branch.
+## Files and verification
 
-The Canvas quiz package is validated separately. An actual import into the institution's Canvas instance is still required before publishing the quiz.
+- `index.html`: lesson and activity submission
+- `check/`: Legal Literacy Check 3
+- `instructor/`: private instructor dashboard
+- `connection.js`: attempt access and retry handling
+- `backend/`: validation, authorization, database adapter, schema, synthetic tests
+- `qa/`: complete browser flow using an isolated synthetic API
+
+Run `node --test spm370/before-you-sign/backend/server.test.mjs` and `python spm370/before-you-sign/qa/browser_test.py` from the repository root. Browser QA covers activity and quiz submission, lost acknowledgements, draft recovery, instructor access and grading, downloads, and mobile/enlarged layout in Chromium, Firefox, and WebKit. Live database verification uses synthetic records, then removes only those test records.
+
+## Teaching sources
+
+Jeffrey Levine's supplied Contracts in Esports chapter, 39-slide Contracts deck, Chapter 5 NIL deck, and SPM 370 Fall 2026 syllabus. Characters and clauses are fictional. File 5 explicitly changes the facts for a guaranteed-pay damages exercise; the original unsigned draft governs the final recommendation. This covers core concepts; named cases and specialist dispute forums remain supporting slide material.
