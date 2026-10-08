@@ -48,8 +48,8 @@ def walk(p,engine):
   p.locator('input[name=answer][value="0"]').check();p.locator('#next').click();expect(p.locator('[aria-current=step]')).to_have_text(str(i+2))
   if i==4:p.reload();expect(p.locator('#next')).to_be_visible()
  for i in range(2):
-  p.locator('#essay').fill(ESSAY);p.locator('#next').click()
- expect(p.locator('#submitQuiz')).to_be_visible();p.locator('#submitQuiz').click();expect(p.locator('#notice')).to_contain_text('Confirm');p.locator('#attestQuiz').check();p.locator('#submitQuiz').click();expect(p.locator('#submitQuiz')).to_be_enabled();p.locator('#submitQuiz').click();expect(p.locator('h1')).to_have_text('Your work is submitted.')
+  p.locator('#essay').fill(ESSAY);p.locator('#next').click();expect(p.locator('[aria-current=step]')).to_have_text('14' if i==0 else 'Review')
+ expect(p.locator('#submitQuiz')).to_be_enabled();p.locator('#submitQuiz').click();expect(p.locator('#notice')).to_contain_text('Confirm');p.locator('#attestQuiz').check();p.locator('#submitQuiz').click();expect(p.locator('#submitQuiz')).to_be_enabled();p.locator('#submitQuiz').click();expect(p.locator('h1')).to_have_text('Your work is submitted.')
  with p.expect_download() as d:p.locator('#receiptDownload').click()
  txt=Path(d.value.path()).read_text();assert 'BYS-' in txt and 'LLC3-' in txt and 'synthetic-'+engine+'@lasalle.edu' in txt
  p.reload();expect(p.locator('h1')).to_have_text('Your work is submitted.');overflow(p);p.screenshot(path=str(OUT/(engine+'-both-receipts.png')),full_page=True)
