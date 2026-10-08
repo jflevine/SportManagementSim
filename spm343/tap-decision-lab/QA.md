@@ -1,27 +1,25 @@
-# Decision Lab 2 live-release verification
+# TAP Decision Lab 2: October 8 clarity revision
 
-October 7, 2026. Revised self-contained events-and-venues decision lab.
+This revision supplies explicit event plans, a 220–320-word individual brief, and secure access to each student's own instructor-reviewed score. It preserves the existing live/test data separation and submission protocol.
 
-## Completed before browser CI
+## Verification
 
-- 18 source/content checks passed: three responses, native labels, locked new-information stage, character caps, optional sharing, supplied resource tradeoffs, and no guest dependency
-- 12 independent handler/protocol/security tests passed
-- 9 deployed API groups passed using three retained, isolated synthetic attempts: Cup/orientation, Open/extra host, Showcase/rotations
-- Real PostgreSQL rollback checks verified seven storage/review/publication transitions, immutable initial snapshot, stable receipt replay, grade null versus zero, and test exclusion
-- New live/test/operations/guest-projection tables enforce RLS and FORCE RLS; browser roles have no direct privileges. RPCs are security invoker with empty search paths and no browser execution privilege
-- The old synthetic pilot endpoint is unchanged
-- Existing instructor verification was reused without retrieving a raw key or creating credentials
+- 19 source checks: response fields, native labels, character limits, stage order, course independence, individual timing, supplied timetable, and the hands-on requirement
+- 14 backend tests: immutable initial plans, version conflicts, durable retries, budget constraints, separate test identities, authenticated access to one's own grade, zero versus pending, grade corrections, and private-note exclusion
+- Three browser engines (Chromium, Firefox, WebKit): complete student submission, interrupted/offline saving, resuming, receipt download, own-grade refresh, instructor scoring/CSV, anonymous guest view, keyboard completion, and 390/1440-pixel layouts
+- Deployed API smoke uses only retained synthetic attempts in the separate test table; classroom records and guest totals are excluded
+- A separate deployed owner-grade check submitted a synthetic attempt, added an 8/10 review fixture through a narrowly scoped test-table update, and verified the owning token returned the rubric points, preserved the receipt, excluded private notes, and rejected a different token. This tests actual grade retrieval; it does not claim a real instructor-key login
+- All supplied format/adjustment schedules total 90 minutes and provide at least 15 minutes of hands-on play per visitor. A third host is affordable only with Play & Connect
 
-## Browser release gate
+The release workflow and exact-commit evidence are linked from [PR 32](https://github.com/jflevine/SportManagementSim/pull/32). The first run passed 60 of 63 browser scenarios; the remaining three used a stale expected label, `spare of 12`, after the display correctly changed to `not reserved of 12`. The corrected test retains the numeric budget and submission assertions. The final release requires the corrected hosted workflow to pass before merging.
 
-Local Chromium cannot create sockets in this execution environment. No local runtime/layout pass is claimed. The portable hosted suite runs against the exact release commit with Chromium, Firefox, and WebKit, using synthetic fixtures for student/instructor UI and a separate deployed test-mode API smoke check.
+## Deliberate boundaries
 
-The suite exercises identity validation, unknown-success/retry, serialized saving, interrupted/offline edits, immutable initial position, budget constraints, repeated submit/receipt, explicit conflict reconciliation, grade zero versus pending, instructor score/release controls, CSV safety, guest privacy, keyboard labels, and mobile/desktop layouts. Full hosted run [37684074430](https://github.com/jflevine/SportManagementSim/actions/runs/37684074430) passed all 60 browser scenarios (20 per engine), 12 backend tests, 18 static checks, and deployed synthetic API checks on commit ccd1f0252a420447d87a671e60c6a16f0d1d17c6. Mobile/desktop screenshot pixels were inspected. Visual review then clarified that the fictional 27-person total occupancy includes 24 visitors and up to three staff, and simplified the program-time display to avoid double-counting arrival/closing. Final hosted run [37684991056](https://github.com/jflevine/SportManagementSim/actions/runs/37684991056) passed all 60 browser scenarios, 12 backend checks, 18 source checks, and 9 live synthetic API groups on final behavioral commit 35aa937dd26948ad0784e54cf4f269d0e120acb2. Updated landing and revision screenshots were visually inspected; occupancy and time displays are now consistent. All test writes remained in isolated test storage and did not affect guest counts. No live student identity, instructor credential, or irreversible deletion was used.
-
-## Remaining limits
-
-- Actual valid-key instructor browser login requires the instructor’s existing key; no real key was retrieved or used in QA
-- Self-reported student identity is not institutional email verification
-- No physical-device, screen-reader, campus-network, or first-time-student trial is claimed
-- 10–15 minutes is a designed scope, not a measured classroom timing result
-- Guest summaries are selected-option summaries, not students’ free-text explanations
+- Instructor grading is manual using the 2/3/3/2 rubric. Completion checks never award points
+- Students see only their own reviewed points, using their private attempt session. Instructor notes stay private; Canvas is the official course record
+- The existing instructor verification digest is preserved. A real instructor key was not retrieved or used in QA
+- Student names and La Salle emails are self-reported, not verified through university SSO
+- Browser testing is automated; no actual first-time student, physical-device, screen-reader, or campus-network trial is claimed
+- 25–30 minutes is the designed scope, not a measured class result
+- The existing guest-day lecture and guest fill 75 minutes. Use the seven-minute practice slot for launch and allow independent completion by the announced Canvas deadline
+- The instructor guide, replacement launch slide, and complete fallback response document accompany the release

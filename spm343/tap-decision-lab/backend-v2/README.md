@@ -6,7 +6,7 @@ API contract: CONTRACT.md. Status: https://havsvkhddvdbzbsmhqbr.supabase.co/func
 
 ## Learning record
 
-Names, La Salle email, individual-work acknowledgment, the three brief written responses and final selections are private. Identity is explicitly self-reported, not university-verified. A fixed class-run identifier separates this case from other work. Initial choice/position lock before the audience update; submitted answers and stable receipt cannot be overwritten. The instructor alone applies the 2/3/3/2 rubric with private feedback. Ungraded is null; zero is an actual grade. Students can resume only their own attempt and see a receipt plus pending/reviewed status. Numeric grades, rubric scores and instructor feedback remain instructor-only. An explicit allowlist filters every student response, including historical idempotency replays.
+Names, La Salle email, individual-work acknowledgment, the three brief written responses and final selections are private. Identity is explicitly self-reported, not university-verified. A fixed class-run identifier separates this case from other work. Initial choice/position lock before the audience update; submitted answers and stable receipt cannot be overwritten. The instructor alone applies the 2/3/3/2 rubric with private feedback. Ungraded is null; zero is an actual grade. Students can resume only their own attempt and see its receipt, pending/reviewed status, numeric grade and rubric points after instructor review. Private instructor notes remain instructor-only; no grade enters the guest view. An explicit allowlist filters every student response, including historical idempotency replays.
 
 This is an individual graded decision exercise. No automated content grade or predicted operational outcome is generated. All three proposals can be defended within constraints. The server checks required fields, immutable phases and the $300 cap, not whether the reasoning is pedagogically strong.
 
@@ -31,7 +31,7 @@ Every table has ENABLE and FORCE RLS. PUBLIC, anon and authenticated have no pri
 
 The guest RPC reads only the dedicated projection table, restricted to live mode. The edge function then allowlists each field again. Public data consists of aggregate stage/choice counts and explicitly released structured summaries, with no names, emails, attempts, receipts, raw response text, grades, comments or timestamps. Optional student consent defaults false. Instructor release is a separate explicit action, allowed only for submitted opt-in work. Publication accepts only the fixed structured decision template based on actual choices; arbitrary free text is rejected.
 
-## Verification
+## Prior-release verification (version 2.0.1)
 
 - 12/12 independent Node handler tests passed: authorization boundaries, strict identity/input validation, mode/attempt-bound session, exact retry, immutable phases, stale CAS, three valid proposal paths, invalid budget rejection, stable receipts, manual score bounds and null versus zero for instructors, student assessment-field exclusion on resume and historical replay, opt-in/template release, guest segregation and safe errors
 - Real PostgreSQL service-role RPC verification passed seven workflow/review/publication transitions in a rollback transaction, retaining no fixture rows; checked original snapshot, original receipt replay, manual zero and test exclusion from guest output
@@ -53,6 +53,8 @@ Supabase changelog was read on2026-10-07 including the recent PostgreSQL minor b
 
 No new package dependency or runtime credential was installed. schema.sql is the exact additive schema. generate-sql-verification.mjs regenerates a random isolated rollback test. Keep tests confined to mode:test; never populate live-mode students as a test, and do not delete retained evidence automatically.
 
-## Privacy narrowing, version2.0.1
+## Own-attempt grade return, version 2.0.2
 
-Student responses are explicitly allowlisted on all success exits, including durable idempotency replays created by earlier versions. Numeric grades and feedback remain instructor-only. Fresh student resume reports only pending/reviewed status. No schema or existing record changes were needed.
+Student responses remain explicitly allowlisted on all success exits, including durable idempotency replays. The authenticated owner receives grade:null until reviewed, then an object containing total, maximum, four criterion scores, criterion maxima and review timestamp. Private notes and all other instructor fields remain excluded. The instructor is still the only party who assigns or changes points. Guest responses and cross-attempt authorization are unchanged. No schema or stored-answer changes are required.
+
+Current local validation: 14/14 independent Node handler tests pass, including null versus zero, owner-only grade reads, invalid score bounds, grade corrections preserving submitted work, historical replay filtering, and exclusion of grades from public/guest responses. Deployment verification is recorded separately in the final QA report.

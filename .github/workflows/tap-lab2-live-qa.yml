@@ -3,7 +3,7 @@
 name: TAP Decision Lab 2 live QA
 on:
   push:
-    branches: [tap-lab2-live-20261007]
+    branches: [tap-lab2-clear-20261008]
     paths:
       - 'spm343/tap-decision-lab/**'
       - '.github/workflows/tap-lab2-live-qa.yml'

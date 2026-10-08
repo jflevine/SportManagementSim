@@ -149,8 +149,8 @@ class Fixture:
         if req.method == 'GET':
             if 'view=guest' in req.url:
                 return self.answer(route, 200, self.guest())
-            return self.answer(route, 200, {'ok': True, 'version': '2.0.1', 'mode': 'live', 'liveEnabled': True,
-                'studentStorage': 'private-server', 'identityVerification': 'self-reported', 'grading': 'instructor-only', 'maxScore': 10, 'rubricMax': [2,3,3,2]})
+            return self.answer(route, 200, {'ok': True, 'version': '2.0.2', 'mode': 'live', 'liveEnabled': True,
+                'studentStorage': 'private-server', 'identityVerification': 'self-reported', 'grading': 'instructor-only', 'gradeAccess': 'own-attempt-only', 'maxScore': 10, 'rubricMax': [2,3,3,2]})
         action = data.get('action')
         if action.startswith('instructor'):
             return self.instructor(route, data)
@@ -176,6 +176,7 @@ class Fixture:
         v.pop('guestPublished', None)
         if student:
             v['reviewStatus'] = 'reviewed' if v.get('review') else 'pending'
+            v['grade'] = {'total': v['review']['total'], 'maxScore': 10, 'scores': list(v['review']['scores']), 'maxima': [2, 3, 3, 2], 'reviewedAt': v['review']['reviewedAt']} if v.get('review') else None
             if not self.inject_legacy_grade:
                 v.pop('review', None)
                 v.pop('finalGrade', None)
@@ -489,7 +490,7 @@ def feasible_choices(browser):
         expect(p.locator('#fit-cost')).to_contain_text(str(amount))
         expect(p.locator('#fit-time')).to_have_text('60 min' if adjustment == 'orientation' else '70 min')
         expect(p.locator('#fit-time-detail')).to_contain_text('10 arrive')
-        expect(p.locator('#fit-spare-stations')).to_contain_text('spare of 12')
+        expect(p.locator('#fit-spare-stations')).to_contain_text('not reserved of 12')
         if adjustment == 'orientation': expect(p.locator('#fit-time-detail')).to_contain_text('10 orientation')
         p.locator('#submit-final').click()
         if accepted:
@@ -603,28 +604,36 @@ def lost_final_receipt(browser):
 def student_grade_privacy(browser):
     ctx, p, fix = page_for(browser)
     start(p); initial(p); lock(p); final_fields(p); submit(p)
-    fix.last_record()['review'] = {'scores': [0, 0, 0, 0], 'total': 0, 'notes': 'SYNTHETIC PRIVATE INSTRUCTOR NOTE', 'reviewedAt': '2026-10-07T12:00:00Z'}
-    public = fix.project(fix.last_record(), student=True)['submission']
-    assert public['reviewStatus'] == 'reviewed'
-    for key in ['review', 'finalGrade', 'scores', 'notes']:
-        assert key not in public
-    for legacy_response in [False, True]:
-        # The second pass also models an old unsanitized response: the view must ignore it.
+    expect(p.locator('#receipt-score')).to_contain_text(re.compile('pending|awaiting|review', re.I))
+    assert not re.search(r'\b0\s*/\s*10', p.locator('#receipt-score').inner_text()), 'Pending must not look like a zero grade'
+    expect(p.locator('#refresh-grade')).to_be_visible()
+    for scores, legacy_response in [([0, 0, 0, 0], False), ([2, 3, 2, 1], True)]:
+        total = sum(scores)
+        fix.last_record()['review'] = {'scores': scores, 'total': total, 'notes': 'SYNTHETIC PRIVATE INSTRUCTOR NOTE', 'reviewedAt': '2026-10-07T12:00:00Z'}
+        public = fix.project(fix.last_record(), student=True)['submission']
+        assert public['reviewStatus'] == 'reviewed'
+        assert public['grade'] == {'total': total, 'maxScore': 10, 'scores': scores, 'maxima': [2, 3, 3, 2], 'reviewedAt': '2026-10-07T12:00:00Z'}
+        for key in ['review', 'finalGrade', 'scores', 'notes']:
+            assert key not in public
+        # The second pass includes unwanted legacy fields: only the approved own-grade object may be used.
         fix.inject_legacy_grade = legacy_response
-        reload_resume(p)
-        expect(p.locator('#receipt-score')).to_contain_text(re.compile('review|instructor|recorded', re.I))
-        assert not re.search(r'\b\d+\s*/\s*10', p.locator('#receipt-score').inner_text())
+        p.locator('#refresh-grade').click()
+        expect(p.locator('#receipt-score')).to_contain_text(re.compile(rf'\b{total}\s*/\s*10'))
+        expect(p.locator('#receipt-grade-details')).to_be_visible()
         assert 'SYNTHETIC PRIVATE INSTRUCTOR NOTE' not in p.locator('body').inner_text()
+        reload_resume(p)
+        expect(p.locator('#receipt-score')).to_contain_text(re.compile(rf'\b{total}\s*/\s*10'))
         with p.expect_download() as download:
             p.locator('#download-receipt').click()
-        dest = OUTPUT / f'{ENGINE}-student-grade-private-{legacy_response}.txt'
+        dest = OUTPUT / f'{ENGINE}-student-own-grade-{total}.txt'
         download.value.save_as(dest)
         text = dest.read_text()
         assert 'SYNTHETIC PRIVATE INSTRUCTOR NOTE' not in text
-        assert 'Instructor score:' not in text
-        assert not re.search(r'\b\d+\s*/\s*10', text)
+        assert re.search(rf'\b{total}\s*/\s*10', text), 'Own reviewed grade missing from receipt export'
+        assert all(token not in text for token in fix.tokens.values())
+    shot(p, 'student-own-reviewed-grade')
     ctx.close()
-    return 'Student resume/export exposes only review status; actual 0/10 and private notes remain instructor-only, including ignored legacy grade fields.'
+    return 'Pending is distinct from zero; Check my grade retrieves own 0/10 and revised 8/10 with criteria; reload/export preserve own grade and exclude private instructor notes and tokens.'
 
 
 def storage_failure(browser):
@@ -928,6 +937,36 @@ def responsive_labels(browser):
     return report
 
 
+def keyboard_student_flow(browser):
+    ctx, p, fix = page_for(browser)
+    def tab_to(selector):
+        for _ in range(100):
+            if p.evaluate("selector => document.activeElement?.matches(selector)", selector):
+                return
+            p.keyboard.press('Tab')
+        raise AssertionError('Keyboard could not reach ' + selector)
+    tab_to('#individualWork'); p.keyboard.press('Space')
+    tab_to('#start-lab'); p.keyboard.press('Enter')
+    expect(p.locator('#workspace-title')).to_be_focused()
+    tab_to('input[name="initialChoice"][value="cup"]'); p.keyboard.press('Space')
+    tab_to('#initial-position'); p.keyboard.insert_text('I recommend the Cup because 12 stations fit the existing room and the club wants a competitive event within the $300 cap.')
+    tab_to('#lock-initial'); p.keyboard.press('Enter')
+    expect(p.locator('#registration-heading')).to_be_focused()
+    tab_to('input[name="finalChoice"][value="cup"]'); p.keyboard.press('Space')
+    tab_to('input[name="adjustment"][value="orientation"]'); p.keyboard.press('Space')
+    tab_to('input[name="priority"][value="newcomers"]'); p.keyboard.press('Space')
+    tab_to('#final-reason'); p.keyboard.insert_text('The 16 newcomers get a ten-minute introduction. Two hosts each support a six-PC area and run two rounds so all 24 get a turn; the rest wait in the social area. Short rounds prevent long waits but reduce competitive depth.')
+    tab_to('#runner-up'); p.keyboard.press('ArrowDown'); p.keyboard.press('ArrowDown'); p.keyboard.press('Enter')
+    expect(p.locator('#runner-up')).to_have_value('open')
+    tab_to('#tradeoff'); p.keyboard.insert_text('Play & Connect would leave more money and social time, but I retain a short competition to respect the gaming club while accepting a less relaxed welcome.')
+    tab_to('#submit-final'); p.keyboard.press('Enter')
+    expect(p.locator('#receipt')).to_be_visible()
+    expect(p.locator('#receipt')).to_be_focused()
+    assert fix.last_record()['status'] == 'submitted'
+    ctx.close()
+    return 'A complete single-student attempt reaches every required control with Tab, native Space/Arrow/Enter keys, submits, and focuses the confirmed receipt.'
+
+
 def main():
     global BASE, ENGINE
     server = None
@@ -940,12 +979,12 @@ def main():
         suites = [('Live identity validation', identity_validation), ('Completion and runner-up validation', completion_validation), ('Complete student flow and durable receipt', student_flow),
           ('All proposals and budget caps', feasible_choices), ('Unknown-outcome start retry and reload', unknown_start),
           ('Autosave lost acknowledgement with newer queued edit', autosave_queue), ('Offline writing and save recovery', offline_recovery),
-          ('Final submit lost acknowledgement', lost_final_receipt), ('Student receipt and export keep grades instructor-only', student_grade_privacy),
+          ('Final submit lost acknowledgement', lost_final_receipt), ('Student own grade, zero, refresh and private-note exclusion', student_grade_privacy),
           ('Storage failure and export', storage_failure), ('Version conflict preserves both drafts', version_conflict),
           ('Shared-device clearing confirmation', clear_shared_device), ('Native DOM injection resistance', dom_injection), ('Browser-local ungraded pilot', pilot_local),
           ('Guest privacy, markup and stale recovery', guest_privacy),
           ('Instructor score bounds, zero and key lifetime', instructor_review), ('Instructor lost-ack retry and safe release', instructor_replay_and_release),
-          ('Instructor unauthorized refresh clears private data', instructor_unauthorized), ('Private CSV formula neutralization', instructor_csv), ('390/1440 layout and accessible labels', responsive_labels)]
+          ('Instructor unauthorized refresh clears private data', instructor_unauthorized), ('Private CSV formula neutralization', instructor_csv), ('Full keyboard student flow', keyboard_student_flow), ('390/1440 layout and accessible labels', responsive_labels)]
         if os.environ.get('TAP_SUITES'):
             selected = [value.strip().lower() for value in os.environ['TAP_SUITES'].split(',')]
             suites = [(name, fn) for name, fn in suites if any(value in name.lower() for value in selected)]
