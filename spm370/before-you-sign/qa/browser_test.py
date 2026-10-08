@@ -59,7 +59,7 @@ def walk(page,engine):
  c2=page.context.browser.new_context(viewport={'width':390,'height':844},accept_downloads=True)
  p2=c2.new_page();p2.goto(URL);p2.locator('#resourcesButton').click()
  p2.on('dialog',lambda d:d.accept())
- p2.locator('#restoreFile').set_input_files(str(backup));assert p2.locator('#downloadReport').is_visible();overflow(p2)
+ p2.locator('#restoreFile').set_input_files(str(backup));p2.locator('#downloadReport').wait_for(state='visible');overflow(p2)
  p2.locator('#editFinal').click();assert p2.locator('#recommendation').input_value()==BRIEF
  p2.locator('[data-stage="2"]').click();overflow(p2)
  p2.screenshot(path=str(OUT/(engine+'-mobile.png')),full_page=True)
