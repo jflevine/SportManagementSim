@@ -67,6 +67,9 @@ function expectStatus(result, status, code) {
 
 function studentPrivate(state) {
   for (const field of ['review', 'finalGrade', 'scores', 'notes', 'feedback']) assert(!Object.hasOwn(state, field), `Student projection leaked ${field}`);
+  assert(Object.hasOwn(state, 'grade'), 'Student projection must include explicit own grade or null');
+  if(state.reviewStatus==='pending') assert.equal(state.grade,null,'Pending grade must be null rather than zero');
+  if(state.grade){assert.deepEqual(Object.keys(state.grade).sort(), ['total','maxScore','scores','maxima','reviewedAt'].sort());assert.equal(state.grade.maxScore,10);assert.deepEqual(state.grade.maxima,[2,3,3,2]);assert.equal(state.grade.total,state.grade.scores.reduce((a,b)=>a+b,0));}
 }
 
 function operation(attempt, action, fields = {}, version = attempt.version) {
@@ -109,7 +112,7 @@ function final(choice, adjustment = 'rotations') {
 function checkGuestProjection(data) {
   assert.equal(data.mode, 'live');
   const forbidden = new Set(['attemptId', 'firstName', 'lastName', 'email', 'identity', 'answers', 'responses',
-    'initialPosition', 'finalReason', 'tradeoff', 'review', 'notes', 'finalGrade', 'score', 'scores', 'receipt', 'token', 'tokenHash', 'requestId']);
+    'initialPosition', 'finalReason', 'tradeoff', 'review', 'notes', 'finalGrade', 'grade', 'score', 'scores', 'receipt', 'token', 'tokenHash', 'requestId']);
   function walk(value) {
     if (!value || typeof value !== 'object') return;
     for (const [key, child] of Object.entries(value)) {
@@ -138,7 +141,8 @@ async function main() {
   }
   await check('Health, live availability and manual rubric', async () => {
     const data = expectStatus(await request(), 200);
-    assert.equal(data.version, '2.0.1');
+    assert.equal(data.version, '2.0.2');
+    assert.equal(data.gradeAccess, 'own-attempt-only');
     assert.equal(data.liveEnabled, true);
     assert.equal(data.studentStorage, 'private-server');
     assert.equal(data.grading, 'instructor-only');
@@ -212,7 +216,7 @@ async function main() {
       expectStatus(await request(operation(a, 'submit'), {token: a.token}), 409, 'STATE_CONFLICT');
       expectStatus(await request(operation(a, 'save', {answers: finalAnswer}), {token: a.token}), 409, 'STATE_CONFLICT');
       report.attempts.find(row => row.attemptId === a.attemptId).receipt = submitted.receipt;
-      return {attemptId: a.attemptId, receipt: submitted.receipt, choice, adjustment, version: submitted.version, reviewStatus: 'pending manual review; scores remain instructor-only'};
+      return {attemptId: a.attemptId, receipt: submitted.receipt, choice, adjustment, version: submitted.version, reviewStatus: 'pending manual review; student may later retrieve their own grade'};
     });
   }
   await check('Guest projection excludes all identity, response and grade fields', async () => {

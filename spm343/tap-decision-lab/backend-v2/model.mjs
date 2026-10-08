@@ -1,4 +1,4 @@
-export const VERSION='2.0.1', CLASS_RUN='tap-events-2026-10', MAX_SCORES=[2,3,3,2];
+export const VERSION='2.0.2', CLASS_RUN='tap-events-2026-10', MAX_SCORES=[2,3,3,2];
 export const CHOICES=['cup','open','showcase'], ADJUSTMENTS=['orientation','extra_host','rotations'], PRIORITIES=['newcomers','club','operator'];
 export const TEST_IDENTITY={firstName:'Synthetic',lastName:'Fixture',email:'tap-v2@example.invalid',individualWork:true};
 export class InputError extends Error {constructor(code,message,status=400){super(message);this.code=code;this.status=status;}}
@@ -15,10 +15,16 @@ export const EMPTY_ANSWERS={initialChoice:'',initialPosition:'',finalChoice:'',a
 export function answers(value){objectOnly(value,Object.keys(EMPTY_ANSWERS));const v={...EMPTY_ANSWERS,...value};for(const [field,options] of [['initialChoice',CHOICES],['finalChoice',CHOICES],['runnerUp',CHOICES],['adjustment',ADJUSTMENTS],['priority',PRIORITIES]])if(v[field]!==''&&!options.includes(v[field]))fail('INVALID_INPUT','Choose a listed option.');for(const field of ['initialPosition','finalReason','tradeoff'])v[field]=clean(v[field]);if(typeof v.guestConsent!=='boolean')fail('INVALID_INPUT','Guest consent must be true or false.');return v;}
 export function validateInitial(v){if(!CHOICES.includes(v.initialChoice))fail('INVALID_INPUT','Choose an initial proposal.');clean(v.initialPosition,1800,40);}
 export function validateFinal(v){validateInitial(v);if(!CHOICES.includes(v.finalChoice)||!CHOICES.includes(v.runnerUp)||v.finalChoice===v.runnerUp||!ADJUSTMENTS.includes(v.adjustment)||!PRIORITIES.includes(v.priority))fail('INVALID_INPUT','Complete the final choices and select a different runner-up.');for(const field of ['finalReason','tradeoff'])clean(v[field],1800,40);if(({cup:280,open:180,showcase:240}[v.finalChoice]+(v.adjustment==='extra_host'?75:0))>300)fail('BUDGET_EXCEEDED','This combination exceeds the $300 incremental cap. Choose another adjustment or proposal.');}
-export function summary(state){const names={cup:'Rivalry Mini-Cup',open:'Play & Connect',showcase:'Campus Showcase'}, adjustments={orientation:'a 10-minute orientation',extra_host:'one extra host',rotations:'scheduled station rotations'}, priorities={newcomers:'newcomer access',club:'the esports club’s competitive finish',operator:'operational feasibility'};const a=state.answers;if(state.status!=='submitted')return '';return `${names[a.initialChoice]} → ${names[a.finalChoice]}. The final proposal adds ${adjustments[a.adjustment]}, prioritizes ${priorities[a.priority]}, and names ${names[a.runnerUp]} as runner-up. This structured summary does not quote or paraphrase the student’s written responses.`;}
+export function summary(state){const names={cup:'Rivalry Mini-Cup',open:'Play & Connect',showcase:'Campus Showcase'}, adjustments={orientation:'a 10-minute orientation',extra_host:'one extra host',rotations:'coaching during the first 5 minutes of each turn'}, priorities={newcomers:'newcomer access',club:'the esports club’s competitive finish',operator:'TAP repeat visits'};const a=state.answers;if(state.status!=='submitted')return '';return `${names[a.initialChoice]} → ${names[a.finalChoice]}. The final proposal adds ${adjustments[a.adjustment]}, prioritizes ${priorities[a.priority]}, and names ${names[a.runnerUp]} as runner-up. This structured summary does not quote or paraphrase the student’s written responses.`;}
 export function projection(state){return {attemptId:state.attemptId,mode:state.mode,classRun:CLASS_RUN,synthetic:state.mode==='test',firstName:state.firstName,lastName:state.lastName,email:state.email,identityVerified:false,individualWork:state.individualWork,answers:state.answers,initialPlan:state.initialPlan,status:state.status,version:state.version,receipt:state.receipt,createdAt:state.createdAt,submittedAt:state.submittedAt,review:state.review,finalGrade:state.review?.total??null,guest:{consent:state.answers.guestConsent,published:state.guestPublished,template:'decision',summary:summary(state)}};}
 // Separate boundary allowlist applies even to older durable operation responses.
 // Never reuse the full instructor projection in a student response.
+export function studentGrade(review){
+ if(!review||!Array.isArray(review.scores)||review.scores.length!==MAX_SCORES.length||review.scores.some((n,i)=>!Number.isInteger(n)||n<0||n>MAX_SCORES[i]))return null;
+ const total=review.scores.reduce((a,b)=>a+b,0);
+ if(review.total!==total)return null;
+ return {total,maxScore:10,scores:[...review.scores],maxima:[...MAX_SCORES],reviewedAt:review.reviewedAt};
+}
 export function studentResponse(response){
  const s=response.submission;
  const allowed=['attemptId','mode','classRun','synthetic','firstName','lastName','email','identityVerified','individualWork','status','version','receipt','createdAt','submittedAt'];
@@ -26,6 +32,7 @@ export function studentResponse(response){
  submission.answers=Object.fromEntries(Object.keys(EMPTY_ANSWERS).map(k=>[k,s.answers[k]]));
  submission.initialPlan=s.initialPlan?{initialChoice:s.initialPlan.initialChoice,initialPosition:s.initialPlan.initialPosition,lockedAt:s.initialPlan.lockedAt}:null;
  submission.reviewStatus=s.review?'reviewed':'pending';
+ submission.grade=studentGrade(s.review);
  submission.guest={consent:s.guest.consent,published:s.guest.published,template:s.guest.template,summary:s.guest.summary};
  return {ok:true,mode:response.mode,submission};
 }

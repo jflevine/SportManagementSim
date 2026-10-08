@@ -1,170 +1,162 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#142c3b">
-  <meta name="description" content="An individual SPM 343 decision lab. Choose an event, respond to new information, and defend a practical tradeoff.">
-  <title>A first visit to TAP · Decision Lab 2 · SPM 343</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module" src="app.js"></script>
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="noindex,nofollow" name="robots"/>
+<meta content="#142c3b" name="theme-color"/>
+<meta content="An individual event-management decision brief: compare three supplied plans, adapt to an audience update, and receive your own instructor-reviewed grade." name="description"/>
+<title>TAP: A first visit worth repeating · SPM 343 Decision Lab 2</title>
+<link href="styles.css" rel="stylesheet"/>
+<script src="app.js?v=20261008" type="module"></script>
+<script src="plan-preview.js?v=20261008" type="module"></script><link href="clarity.css?v=20261008" rel="stylesheet"/></head>
 <body class="student-app">
-  <a class="skip-link" href="#main">Skip to the lab</a>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="./" aria-label="TAP Decision Lab 2 home"><span class="brand-course">SPM 343</span><span class="brand-divider" aria-hidden="true"></span><span>Decision Lab 2</span></a>
-      <span id="mode-pill" class="mode-pill">Individual · 10 points</span>
-    </div>
-  </header>
-  <div id="pilot-notice" class="pilot-notice" role="status" hidden><strong>Pilot mode · practice only.</strong> Use the assigned mock identity. Practice stays separate from real student work and does not receive a course grade.</div>
+<a class="skip-link" href="#main">Skip to the lab</a>
+<header class="site-header">
+<div class="header-inner">
+<a aria-label="TAP Decision Lab 2 home" class="brand" href="./"><span class="brand-course">SPM 343</span><span aria-hidden="true" class="brand-divider"></span><span>Decision Lab 2</span></a>
+<span class="mode-pill" id="mode-pill">Individual · 10 points</span>
+</div>
+</header>
+<div class="pilot-notice" hidden="" id="pilot-notice" role="status"><strong>Pilot mode · practice only.</strong> Use the assigned mock identity. Practice stays separate from real student work and does not receive a course grade.</div>
+<main id="main">
+<section aria-labelledby="landing-title" class="lab-landing page-shell" id="landing">
+<div class="lab-hero">
+<div class="lab-hero-copy">
+<p class="eyebrow">Events × venues × judgment</p>
+<h1 id="landing-title">A first visit<br/>worth <em>repeating.</em></h1>
+<p class="hero-question">Your recommendation to the TAP venue manager</p>
+<p class="hero-description">You are the event coordinator for a 90-minute welcome event at a venue modeled on TAP Esports. Choose a plan for 24 college visitors, adapt it when new information arrives, and explain your decision.</p>
+<div aria-label="Activity details" class="lab-meta"><span><strong>25–30</strong> minutes</span><span><strong>Individual</strong> brief</span><span><strong>10</strong> points</span></div>
+<p class="case-boundary">TAP Esports is a gaming venue in Philadelphia. Every event proposal, cost, capacity, and staffing figure in this lab is a fictional classroom assumption.</p>
+</div>
+<figure class="venue-board">
+<figcaption><span class="eyebrow">The room you have</span><h2>Make the pieces fit.</h2></figcaption>
+<svg aria-labelledby="venue-art-title venue-art-desc" class="venue-art" role="img" viewbox="0 0 440 215">
+<title id="venue-art-title">Twelve PC stations and a separate social area</title>
+<desc id="venue-art-desc">A concept graphic for the fictional case, not a floor plan. Twelve PC stations sit beside an off-station area with sixteen visitor places. This fictional case admits twenty-four visitors plus up to three staff within a twenty-seven-person total occupancy limit.</desc>
+<defs><g id="pc-station"><rect height="24" rx="3" width="33"></rect><path d="M16.5 24v6m-9 0h18"></path></g></defs>
+<rect fill="none" height="182" rx="9" stroke="#50646a" stroke-width="1" width="418" x="11" y="13"></rect>
+<g fill="none" stroke="#a8c7ba" stroke-linecap="round" stroke-width="1.7">
+<use href="#pc-station" x="32" y="33"></use><use href="#pc-station" x="85" y="33"></use><use href="#pc-station" x="138" y="33"></use><use href="#pc-station" x="191" y="33"></use>
+<use href="#pc-station" x="32" y="81"></use><use href="#pc-station" x="85" y="81"></use><use href="#pc-station" x="138" y="81"></use><use href="#pc-station" x="191" y="81"></use>
+<use href="#pc-station" x="32" y="129"></use><use href="#pc-station" x="85" y="129"></use><use href="#pc-station" x="138" y="129"></use><use href="#pc-station" x="191" y="129"></use>
+</g>
+<path d="M250 32v143" stroke="#50646a" stroke-dasharray="3 5"></path>
+<rect fill="#233f49" height="98" rx="36" stroke="#d8b875" stroke-width="1.2" width="130" x="275" y="52"></rect>
+<g fill="#d8b875"><circle cx="301" cy="39" r="5"></circle><circle cx="327" cy="36" r="5"></circle><circle cx="353" cy="36" r="5"></circle><circle cx="379" cy="39" r="5"></circle><circle cx="301" cy="164" r="5"></circle><circle cx="327" cy="167" r="5"></circle><circle cx="353" cy="167" r="5"></circle><circle cx="379" cy="164" r="5"></circle></g>
+<text fill="#f6f3eb" font-family="Times New Roman, Times, serif" font-size="19" text-anchor="middle" x="340" y="94">Off-station</text><text fill="#d8b875" font-family="Times New Roman, Times, serif" font-size="16" text-anchor="middle" x="340" y="118">16 visitor places</text>
+</svg>
+<div class="venue-numbers"><div><strong>12</strong><span>PC stations</span></div><div><strong>2</strong><span>floor hosts</span></div><div><strong>$300</strong><span>budget ceiling</span></div></div>
+<div aria-label="90 minutes total: 10 arrival, 70 program, 10 close" class="time-track"><span>10 <small>arrive</small></span><span>70 <small>program</small></span><span>10 <small>close</small></span></div>
+<p class="venue-caption">24 visitors + up to 3 staff · 27-person total limit · 90 minutes</p>
+</figure>
+</div>
+<div class="lab-entry-grid">
+<section aria-labelledby="runway-title" class="lab-runway">
+<p class="eyebrow">One individual decision brief</p><h2 id="runway-title">A clear task. A decision you can defend.</h2>
+<ol class="lab-steps"><li><span>01</span><div><strong>Choose a starting plan</strong><p>Compare three complete proposals. Explain your choice using two supplied facts, then save it.</p></div></li><li><span>02</span><div><strong>Respond to the audience update</strong><p>Keep or change your format. Choose one adjustment and use the supplied operating schedule.</p></div></li><li><span>03</span><div><strong>Submit your recommendation</strong><p>Explain the plan, a success measure, and the tradeoff and risk. Your instructor grades your own reasoning.</p></div></li></ol>
+<p class="runway-note"><strong>Your work product:</strong> three responses, about 220–320 words total. Use the case, slides, readings, and your own notes. No outside research or guest interview is required. Submit by the deadline your instructor announces in Canvas.</p><p class="runway-note">Write your own responses. Course rules on generative AI apply. You do not need a partner or group agreement.</p>
+</section>
+<section aria-labelledby="identity-title" class="identity-card">
+<p class="eyebrow">Before you begin</p><h2 id="identity-title">Make this your work.</h2>
+<div class="resume-panel" hidden="" id="resume-panel"><strong>A draft is saved on this device.</strong><p id="resume-detail">Resume only if it is yours. On a shared device, do not open someone else’s work.</p><div class="inline-actions"><button class="button button-secondary button-small" id="resume-attempt" type="button">Resume my draft</button><button class="text-button" id="discard-draft" type="button">Clear saved draft</button></div></div>
+<form id="identity-form" novalidate="">
+<fieldset class="identity-fields" id="identity-fields">
+<legend class="visually-hidden">Your student identity</legend>
+<div class="identity-names"><div class="field"><label for="firstName">First name</label><input autocomplete="given-name" id="firstName" maxlength="80" name="firstName" required="" type="text"/></div><div class="field"><label for="lastName">Last name</label><input autocomplete="family-name" id="lastName" maxlength="80" name="lastName" required="" type="text"/></div></div>
+<div class="field"><label for="email">La Salle email</label><input aria-describedby="email-help" autocomplete="email" id="email" inputmode="email" maxlength="180" name="email" placeholder="you@lasalle.edu" required="" type="email"/><p class="field-help" id="email-help">Use your La Salle email so your instructor can match the submission to you.</p></div>
+</fieldset>
+<div class="pilot-identity" hidden="" id="pilot-identity"><span class="eyebrow">Assigned practice identity</span><strong id="demo-identity">Practice student</strong><p>No real name or email is needed in pilot mode.</p></div>
+<label class="individual-check"><input id="individualWork" name="individualWork" required="" type="checkbox"/><span>I will complete this lab individually and submit my own reasoning.</span></label>
+<p class="identity-privacy">Your name, email, and written work are saved for instructor review. Your own grade appears here after review. A draft stays in this browser so you can resume on the same device.</p>
+<div class="form-feedback" hidden="" id="identity-feedback" role="alert" tabindex="-1"></div>
+<button class="button button-primary" id="start-lab" type="submit">Enter the decision lab <span aria-hidden="true">↗</span></button>
+</form>
+</section>
+</div>
+</section>
+<section aria-labelledby="workspace-title" class="workspace page-shell" hidden="" id="workspace">
+<div class="workspace-heading">
+<div><p class="eyebrow">SPM 343 · Individual decision lab</p><h1 id="workspace-title" tabindex="-1">Your event recommendation</h1><p class="workspace-subtitle">Choose a workable plan and explain why it fits this audience.</p></div>
+<div class="identity-chip"><span class="eyebrow">Your submission</span><strong id="student-identity">Student identity</strong></div>
+</div>
+<div class="work-layout">
+<aside aria-label="Brief, saving, and scoring" class="work-sidebar">
+<div class="sidebar-brief"><p class="eyebrow">The challenge</p><h2>A reason to return</h2><p>Your manager wants a successful first visit that encourages repeat visits. Work with 24 visitors, a 90-minute booking, and a $300 spending limit.</p></div>
+<nav aria-label="Lab stages" class="step-nav"><a href="#initial-stage"><span>01</span>Your first decision</a><a hidden="" href="#revision-stage" id="revision-nav"><span>02</span>Your final decision</a></nav>
+<div aria-label="Draft and submission status" class="status-panel">
+<p class="status-title"><span aria-hidden="true" class="status-dot"></span><strong aria-live="polite" id="save-status" role="status">No draft saved yet</strong></p>
+<p id="save-detail">Saving status will appear here as you work.</p>
+<p aria-live="polite" class="live-status" id="live-status" role="status">Not submitted to your instructor</p>
+<div class="save-actions"><button class="button button-secondary button-small" hidden="" id="retry-save" type="button">Retry save</button><button class="text-button" id="download-draft" type="button">Download draft</button></div>
+</div>
+<details class="rubric" open=""><summary>How your 10 points are graded</summary><ul><li><strong>2</strong><span>Initial position: purpose, priority, and two case facts</span></li><li><strong>3</strong><span>Event–venue fit: workable schedule, resources, and success measure</span></li><li><strong>3</strong><span>Tradeoff and risk: fair alternative comparison and a specific response</span></li><li><strong>2</strong><span>Adaptation: clear use of the new audience information</span></li></ul><p>Your instructor scores the reasoning. Resource checks and word counts do not assign points.</p><p>Keeping your original format can earn full credit. Your initial position is judged only on information available at that stage.</p></details>
+<p class="sidebar-boundary">All venue figures are fictional classroom assumptions, not verified TAP facts.</p>
+</aside>
+<div class="response-column">
+<form id="decision-form" novalidate="">
+<section aria-labelledby="initial-heading" class="initial-stage" id="initial-stage">
+<div class="stage-title"><span class="stage-kicker">Stage 01</span><h2 id="initial-heading">1. Choose your starting plan</h2><p>Read the brief and compare the proposals before writing. Allow about 7 minutes.</p></div>
+<section aria-labelledby="brief-heading" class="case-brief">
+<div class="brief-heading"><p class="eyebrow">The case brief</p><h3 id="brief-heading">The manager’s brief</h3></div>
+<div class="brief-facts"><div><strong>24</strong><span>college visitors</span></div><div><strong>12</strong><span>PC stations</span></div><div><strong>2</strong><span>floor hosts</span></div><div><strong>$300</strong><span>incremental budget</span></div></div>
 
-  <main id="main">
-    <section id="landing" class="lab-landing page-shell" aria-labelledby="landing-title">
-      <div class="lab-hero">
-        <div class="lab-hero-copy">
-          <p class="eyebrow">Events × venues × judgment</p>
-          <h1 id="landing-title">A first visit<br>to <em>TAP.</em></h1>
-          <p class="hero-question">Three good ideas.<br>One decision to defend.</p>
-          <p class="hero-description">Choose an event for 24 college visitors. Then new information arrives. Keep your choice or change it, and make the tradeoff clear.</p>
-          <div class="lab-meta" aria-label="Activity details"><span><strong>10–15</strong> minutes</span><span><strong>Individual</strong> work</span><span><strong>10</strong> points</span></div>
-          <p class="case-boundary">A fictional classroom case. All costs, capacities, and resources here are provided assumptions, not actual TAP facts.</p>
-        </div>
-        <figure class="venue-board">
-          <figcaption><span class="eyebrow">The room you have</span><h2>Make the pieces fit.</h2></figcaption>
-          <svg class="venue-art" viewBox="0 0 440 215" role="img" aria-labelledby="venue-art-title venue-art-desc">
-            <title id="venue-art-title">Twelve PC stations and a separate social area</title>
-            <desc id="venue-art-desc">A concept graphic for the fictional case, not a floor plan. Twelve PC stations sit beside an off-station area with sixteen visitor places. This fictional case admits twenty-four visitors plus up to three staff within a twenty-seven-person total occupancy limit.</desc>
-            <defs><g id="pc-station"><rect width="33" height="24" rx="3"/><path d="M16.5 24v6m-9 0h18"/></g></defs>
-            <rect x="11" y="13" width="418" height="182" rx="9" fill="none" stroke="#50646a" stroke-width="1"/>
-            <g fill="none" stroke="#a8c7ba" stroke-width="1.7" stroke-linecap="round">
-              <use href="#pc-station" x="32" y="33"/><use href="#pc-station" x="85" y="33"/><use href="#pc-station" x="138" y="33"/><use href="#pc-station" x="191" y="33"/>
-              <use href="#pc-station" x="32" y="81"/><use href="#pc-station" x="85" y="81"/><use href="#pc-station" x="138" y="81"/><use href="#pc-station" x="191" y="81"/>
-              <use href="#pc-station" x="32" y="129"/><use href="#pc-station" x="85" y="129"/><use href="#pc-station" x="138" y="129"/><use href="#pc-station" x="191" y="129"/>
-            </g>
-            <path d="M250 32v143" stroke="#50646a" stroke-dasharray="3 5"/>
-            <rect x="275" y="52" width="130" height="98" rx="36" fill="#233f49" stroke="#d8b875" stroke-width="1.2"/>
-            <g fill="#d8b875"><circle cx="301" cy="39" r="5"/><circle cx="327" cy="36" r="5"/><circle cx="353" cy="36" r="5"/><circle cx="379" cy="39" r="5"/><circle cx="301" cy="164" r="5"/><circle cx="327" cy="167" r="5"/><circle cx="353" cy="167" r="5"/><circle cx="379" cy="164" r="5"/></g>
-            <text x="340" y="94" text-anchor="middle" fill="#f6f3eb" font-family="Times New Roman, Times, serif" font-size="19">Off-station</text><text x="340" y="118" text-anchor="middle" fill="#d8b875" font-family="Times New Roman, Times, serif" font-size="16">16 visitor places</text>
-          </svg>
-          <div class="venue-numbers"><div><strong>12</strong><span>PC stations</span></div><div><strong>2</strong><span>floor hosts</span></div><div><strong>$300</strong><span>budget ceiling</span></div></div>
-          <div class="time-track" aria-label="90 minutes total: 10 arrival, 70 program, 10 close"><span>10 <small>arrive</small></span><span>70 <small>program</small></span><span>10 <small>close</small></span></div>
-          <p class="venue-caption">24 visitors + up to 3 staff · 27-person total limit · 90 minutes</p>
-        </figure>
-      </div>
 
-      <div class="lab-entry-grid">
-        <section class="lab-runway" aria-labelledby="runway-title">
-          <p class="eyebrow">Your next 10–15 minutes</p><h2 id="runway-title">Choose. Reconsider. Defend.</h2>
-          <ol class="lab-steps">
-            <li><span>01</span><div><strong>Make your first call</strong><p>Read the brief, choose a proposal, and explain its fit in 1–2 sentences. Lock that starting point.</p></div></li>
-            <li><span>02</span><div><strong>Meet the new information</strong><p>Revisit your choice, make one practical adjustment, and decide whose needs come first.</p></div></li>
-            <li><span>03</span><div><strong>Show your judgment</strong><p>Explain your final plan and the benefit you give up. Submit, then keep your receipt.</p></div></li>
-          </ol>
-          <p class="runway-note">Everything you need is supplied. No outside research or guest interview is required. There is no single correct format.</p>
-        </section>
 
-        <section class="identity-card" aria-labelledby="identity-title">
-          <p class="eyebrow">Before you begin</p><h2 id="identity-title">Make this your work.</h2>
-          <div id="resume-panel" class="resume-panel" hidden><strong>A draft is saved on this device.</strong><p id="resume-detail">Resume only if it is yours. On a shared device, do not open someone else’s work.</p><div class="inline-actions"><button id="resume-attempt" type="button" class="button button-secondary button-small">Resume my draft</button><button id="discard-draft" type="button" class="text-button">Clear saved draft</button></div></div>
-          <form id="identity-form" novalidate>
-            <fieldset id="identity-fields" class="identity-fields">
-              <legend class="visually-hidden">Your student identity</legend>
-              <div class="identity-names"><div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" maxlength="80" required></div><div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" maxlength="80" required></div></div>
-              <div class="field"><label for="email">La Salle email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@lasalle.edu" maxlength="180" aria-describedby="email-help" required><p id="email-help" class="field-help">Use your La Salle email so your instructor can match the submission to you.</p></div>
-            </fieldset>
-            <div id="pilot-identity" class="pilot-identity" hidden><span class="eyebrow">Assigned practice identity</span><strong id="demo-identity">Practice student</strong><p>No real name or email is needed in pilot mode.</p></div>
-            <label class="individual-check"><input id="individualWork" name="individualWork" type="checkbox" required><span>I will complete this lab individually and submit my own reasoning.</span></label>
-            <p class="identity-privacy"><strong>Your work is private to your instructor.</strong> A draft is also kept in this browser so you can resume. On a shared device, download your receipt and clear your local copy when finished.</p>
-            <div id="identity-feedback" class="form-feedback" role="alert" tabindex="-1" hidden></div>
-            <button class="button button-primary" id="start-lab" type="submit">Enter the decision lab <span aria-hidden="true">↗</span></button>
-          </form>
-        </section>
-      </div>
-    </section>
-
-    <section id="workspace" class="workspace page-shell" aria-labelledby="workspace-title" hidden>
-      <div class="workspace-heading">
-        <div><p class="eyebrow">SPM 343 · Individual decision lab</p><h1 id="workspace-title" tabindex="-1">Make the call.</h1><p class="workspace-subtitle">A workable event. A clear priority. A tradeoff you can defend.</p></div>
-        <div class="identity-chip"><span class="eyebrow">Your submission</span><strong id="student-identity">Student identity</strong></div>
-      </div>
-      <div class="work-layout">
-        <aside class="work-sidebar" aria-label="Brief, saving, and scoring">
-          <div class="sidebar-brief"><p class="eyebrow">The challenge</p><h2>A reason to return.</h2><p>Bring 24 college visitors through a first visit that fits the room, the budget, and the people.</p></div>
-          <nav class="step-nav" aria-label="Lab stages"><a href="#initial-stage"><span>01</span>Your first decision</a><a id="revision-nav" href="#revision-stage" hidden><span>02</span>Your final decision</a></nav>
-          <div class="status-panel" aria-label="Draft and submission status">
-            <p class="status-title"><span class="status-dot" aria-hidden="true"></span><strong id="save-status" role="status" aria-live="polite">No draft saved yet</strong></p>
-            <p id="save-detail">Saving status will appear here as you work.</p>
-            <p id="live-status" class="live-status" role="status" aria-live="polite">Not submitted to your instructor</p>
-            <div class="save-actions"><button id="retry-save" type="button" class="button button-secondary button-small" hidden>Retry save</button><button id="download-draft" type="button" class="text-button">Download draft</button></div>
-          </div>
-          <details class="rubric"><summary>How the 10 points work</summary><ul><li><strong>2</strong><span>Initial position</span></li><li><strong>3</strong><span>Event–venue fit</span></li><li><strong>3</strong><span>Tradeoff and risk</span></li><li><strong>2</strong><span>Adaptation to new information</span></li></ul><p>Your instructor scores the reasoning. The app checks completion and practical limits; it does not assign your grade.</p><p>Keeping your original format can earn full credit if you explain it well.</p></details>
-          <p class="sidebar-boundary">All venue figures are fictional classroom assumptions, not verified TAP facts.</p>
-        </aside>
-
-        <div class="response-column">
-          <form id="decision-form" novalidate>
-            <section id="initial-stage" class="initial-stage" aria-labelledby="initial-heading">
-              <div class="stage-title"><span class="stage-kicker">Stage 01</span><h2 id="initial-heading">Your first decision</h2><p>Choose with the information you have now.</p></div>
-              <section class="case-brief" aria-labelledby="brief-heading">
-                <div class="brief-heading"><p class="eyebrow">The case brief</p><h3 id="brief-heading">One room. Several priorities.</h3></div>
-                <div class="brief-facts"><div><strong>24</strong><span>college visitors</span></div><div><strong>12</strong><span>PC stations</span></div><div><strong>2</strong><span>floor hosts</span></div><div><strong>$300</strong><span>incremental budget</span></div></div>
-                <p><strong>You have 90 minutes:</strong> 10 for arrival, 70 for the program, and 10 to close. The case admits 24 visitors plus up to 3 staff within a 27-person total room limit. The off-station area has 16 visitor places, with staff circulation kept clear. One additional floor host is available for $75 if your budget allows.</p>
-                <p><strong>The audience’s gaming experience is not yet confirmed.</strong> The venue operator wants repeat visits, the gaming club wants competition, and student affairs wants a welcoming, accessible experience.</p>
-                <p class="brief-assumption">The three base proposals fit the supplied limits. Each has something useful to offer and something to give up.</p>
-              </section>
-              <fieldset id="initial-fields" class="stage-fieldset">
-                <legend class="visually-hidden">Choose and explain your initial proposal</legend>
-                <fieldset class="proposal-fieldset"><legend class="field-label proposal-legend">Which proposal would you take forward?</legend>
-                  <div class="proposal-grid">
-                    <label class="proposal-card"><input type="radio" name="initialChoice" value="cup" required><span class="proposal-content"><span class="proposal-code">01 / Competition</span><strong class="proposal-name">Rivalry <br>Mini-Cup</strong><span class="proposal-spec"><b>$280</b><span>12 stations</span></span><span class="proposal-description">Timeboxed play rotations build toward a competitive finish, with prizes in the spotlight.</span><span class="proposal-tension"><b>The tension</b> A clear contest can give people a reason to care; the pace and prize focus may make a first timer hesitate.</span><span class="proposal-select">Choose Mini-Cup <span aria-hidden="true">↗</span></span></span></label>
-                    <label class="proposal-card"><input type="radio" name="initialChoice" value="open" required><span class="proposal-content"><span class="proposal-code">02 / Connection</span><strong class="proposal-name">Play &amp; <br>Connect</strong><span class="proposal-spec"><b>$180</b><span>10 stations</span></span><span class="proposal-description">Guided rotations and social play help visitors try games and get to know one another.</span><span class="proposal-tension"><b>The tension</b> A flexible welcome leaves room in the budget; the club may want a more distinctive competitive finish.</span><span class="proposal-select">Choose Play &amp; Connect <span aria-hidden="true">↗</span></span></span></label>
-                    <label class="proposal-card"><input type="radio" name="initialChoice" value="showcase" required><span class="proposal-content"><span class="proposal-code">03 / Spectacle</span><strong class="proposal-name">Campus <br>Showcase</strong><span class="proposal-spec"><b>$240</b><span>8 stations</span></span><span class="proposal-description">An exhibition, demos, and social time show visitors what the venue and experienced players can do.</span><span class="proposal-tension"><b>The tension</b> A shared spectacle can spark interest; hands-on opportunities are limited in the base proposal.</span><span class="proposal-select">Choose Showcase <span aria-hidden="true">↗</span></span></span></label>
-                  </div>
-                </fieldset>
-                <div class="response-card initial-writing"><div class="field"><label class="field-label" for="initial-position">Why is this your best starting point?</label><p id="initial-position-help" class="field-help">1–2 sentences. Connect the audience or a stakeholder priority to a concrete feature of the venue or proposal.</p><textarea id="initial-position" name="initialPosition" rows="3" maxlength="1800" aria-describedby="initial-position-help" placeholder="I would start with… because…" required></textarea></div></div>
-              </fieldset>
-              <div id="lock-panel" class="stage-action"><div><strong>Commit to a starting point.</strong><p>Your initial choice and reasoning will be kept as a read-only snapshot. The next stage reveals new information.</p></div><button id="lock-initial" type="button" class="button button-primary">Lock first decision <span aria-hidden="true">→</span></button></div>
-            </section>
-
-            <section id="initial-snapshot" class="initial-snapshot" aria-labelledby="snapshot-heading" hidden><div class="snapshot-heading"><span class="eyebrow">Locked starting point</span><h2 id="snapshot-heading">Your first decision is preserved.</h2></div><div id="original-plan" class="original-plan"></div><p>You can now change your plan without rewriting where you started.</p></section>
-
-            <fieldset id="revision-stage" class="stage-fieldset" hidden>
-              <legend class="visually-hidden">Reconsider and defend your final decision</legend>
-              <div class="stage-title"><span class="stage-kicker">Stage 02</span><h2 id="revision-heading" tabindex="-1">Now the audience comes into focus.</h2><p>Keep or switch your format. Either can be a strong decision.</p></div>
-              <section class="registration-update" aria-labelledby="registration-heading"><div class="update-label"><span class="update-dot" aria-hidden="true"></span><span>New registration information</span></div><div class="registration-content"><div class="registration-number"><strong>16<span> / 24</span></strong><span>are new to gaming PCs</span></div><div><h3 id="registration-heading" tabindex="-1">Every visitor needs a way in.</h3><p>Eight visitors are experienced. The organizer now wants everyone to have a supported hands-on turn. The gaming club still wants a competitive finish.</p></div></div><p class="update-question">What changes in your plan, and what are you willing to give up?</p></section>
-
-              <section class="response-card decision-controls" aria-labelledby="final-choice-heading">
-                <fieldset class="choice-fieldset"><legend id="final-choice-heading" class="field-label numbered-label"><span>1</span>Your final format</legend><p class="field-help">Keep your original format or choose another.</p><div class="final-options"><label class="compact-option"><input type="radio" name="finalChoice" value="cup" required><span><strong>Rivalry Mini-Cup</strong><small>$280 · 12 stations</small></span></label><label class="compact-option"><input type="radio" name="finalChoice" value="open" required><span><strong>Play &amp; Connect</strong><small>$180 · 10 stations</small></span></label><label class="compact-option"><input type="radio" name="finalChoice" value="showcase" required><span><strong>Campus Showcase</strong><small>$240 · 8 stations</small></span></label></div></fieldset>
-                <fieldset class="choice-fieldset adjustment-fieldset"><legend class="field-label numbered-label"><span>2</span>Make one practical adjustment</legend><p class="field-help">Choose one. You will explain how the resulting plan responds to the new audience.</p><div class="adjustment-options"><label class="adjustment-option"><input type="radio" name="adjustment" value="orientation" required><span><strong>Add a guided PC introduction</strong><small>Replace 10 minutes of the main program with orientation. 60 minutes of main program remain.</small></span><b>+$0</b></label><label class="adjustment-option"><input type="radio" name="adjustment" value="extra_host" required><span><strong>Add a third floor host</strong><small>More support during the program. Only available if the total stays at or below $300.</small></span><b>+$75</b></label><label class="adjustment-option"><input type="radio" name="adjustment" value="rotations" required><span><strong>Rework the hands-on rotations</strong><small>Plan supported turns for everyone. Give up some uninterrupted play or exhibition time.</small></span><b>+$0</b></label></div></fieldset>
-                <div id="fit-strip" class="fit-strip" aria-label="Your current plan against the case limits" aria-live="polite"><div><span>Total cost</span><strong id="fit-cost">—</strong><small id="fit-budget">$300 budget limit</small></div><div><span>PC stations</span><strong id="fit-stations">—</strong><small id="fit-spare-stations">12 available</small></div><div><span>Main program</span><strong id="fit-time">70 min</strong><small id="fit-time-detail">+ 10 arrive · 10 close</small></div><div><span>Floor hosts</span><strong id="fit-hosts">2</strong><small>Support has limits</small></div><p id="fit-message">Choose your final format and adjustment to check the practical fit. These are resource checks, not a grade or a prediction.</p></div>
-                <fieldset class="choice-fieldset priority-fieldset"><legend class="field-label numbered-label"><span>3</span>Whose needs come first in your decision?</legend><div class="priority-options"><label class="compact-option"><input type="radio" name="priority" value="newcomers" required><span><strong>Newcomers</strong><small>Welcome and supported access</small></span></label><label class="compact-option"><input type="radio" name="priority" value="club" required><span><strong>Gaming club</strong><small>A competitive finish</small></span></label><label class="compact-option"><input type="radio" name="priority" value="operator" required><span><strong>Venue operator</strong><small>A reason to visit again</small></span></label></div><p class="field-help priority-help">Prioritize one without ignoring the others.</p></fieldset>
-              </section>
-
-              <section class="response-card defend-card" aria-labelledby="defend-heading"><div class="defend-heading"><p class="eyebrow">Make your reasoning visible</p><h2 id="defend-heading">Defend the decision.</h2></div>
-                <div class="field"><label class="field-label" for="final-reason">How does your revised plan work?</label><p id="final-reason-help" class="field-help">2–3 sentences. Explain how the plan responds to 16 PC newcomers, serves your priority stakeholder, and manages one specific risk. Refer to the room, hosts, time, or budget.</p><textarea id="final-reason" name="finalReason" rows="4" maxlength="1800" aria-describedby="final-reason-help" placeholder="With this adjustment, I would… My priority is… I would manage the risk of…" required></textarea></div>
-                <div class="field runnerup-field"><label class="field-label" for="runner-up">Which other format was your runner-up?</label><select id="runner-up" name="runnerUp" required><option value="">Choose another format</option><option value="cup">Rivalry Mini-Cup</option><option value="open">Play &amp; Connect</option><option value="showcase">Campus Showcase</option></select></div>
-                <div class="field"><label class="field-label" for="tradeoff">What worthwhile benefit are you giving up?</label><p id="tradeoff-help" class="field-help">1 sentence. Explain why you rejected the runner-up and name a real benefit you lose by doing so.</p><textarea id="tradeoff" name="tradeoff" rows="3" maxlength="1800" aria-describedby="tradeoff-help" placeholder="I passed on… because… even though it would have…" required></textarea></div>
-                <div class="sharing-choice"><label><input id="guest-consent" name="guestConsent" type="checkbox"><span>I’m willing to include my anonymous choices in a guest summary if my instructor releases it.</span></label><p>Optional and off by default. Only structured choices and progress may appear. Your name, email, written responses, grade, and feedback never appear in the guest view.</p></div>
-                <div class="submit-row"><div><strong>Ready to stand behind your plan?</strong><p>Your instructor reviews the reasoning and scores it out of 10.</p></div><button id="submit-final" type="submit" class="button button-primary">Submit final decision <span aria-hidden="true">→</span></button></div>
-              </section>
-            </fieldset>
-            <div id="form-feedback" class="form-feedback" role="alert" tabindex="-1" hidden></div>
-          </form>
-
-          <section id="receipt" class="receipt card" aria-labelledby="receipt-heading" tabindex="-1" hidden>
-            <p class="eyebrow">Submission receipt</p><h2 id="receipt-heading">Your decision is recorded.</h2><p id="receipt-status">Submitted · awaiting instructor review. Numeric scores and grading notes stay in the instructor’s records.</p>
-            <dl id="receipt-details" class="receipt-details"><div><dt>Receipt</dt><dd id="receipt-id"></dd></div><div><dt>Recorded</dt><dd id="receipt-time"></dd></div><div><dt>Review</dt><dd id="receipt-score">Pending review · not yet scored</dd></div></dl>
-            <p>Keep a copy of your initial decision, final reasoning, and submission receipt.</p><div class="receipt-actions"><button id="download-receipt" type="button" class="button button-secondary">Download my receipt</button><button id="clear-device" type="button" class="text-button">Clear this shared device</button></div>
-            <div id="clear-confirmation" class="clear-confirmation" hidden><strong>Keep your copy before clearing.</strong><p>This removes the draft and identity from this browser. It does not withdraw a submission already received by your instructor.</p><label class="individual-check"><input id="confirm-clear" type="checkbox"><span>I have downloaded my receipt and saved it somewhere I can access.</span></label><div class="inline-actions"><button id="confirm-clear-device" type="button" class="button button-secondary button-small">Clear local copy</button><button id="cancel-clear" type="button" class="text-button">Keep it here</button></div></div>
-          </section>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer page-shell"><p>SPM 343 · TAP Decision Lab 2 <span>· A fictional classroom case</span></p><nav aria-label="Related views"><a id="pilot-link" href="?mode=pilot">Try the practice version</a><a id="guest-link" href="guest/" target="_blank" rel="noopener">Guest view <span class="visually-hidden">(opens in a new tab)</span></a><a id="instructor-link" href="instructor/">Instructor review</a></nav></footer>
-  <noscript><div class="noscript-notice">JavaScript is required to save and submit this lab. Please enable it before entering personal information or starting the activity.</div></noscript>
+<p><strong>Your assignment:</strong> recommend one welcome event for 24 college visitors making their first visit to this venue. First visit does not necessarily mean first time gaming. Their gaming experience is not yet confirmed.</p>
+<p><strong>What is fixed:</strong> the booking is 90 minutes: 10 for arrival, 70 for the program, and 10 to close. There are 12 ready-to-use gaming PCs, two included floor hosts, and 16 places in the social area. The room holds all 24 visitors and up to three staff. People can remain seated at inactive PCs during group introductions or the social close.</p>
+<p><strong>What the prices cover:</strong> each proposal includes the room, equipment, two hosts, and all planned materials or prizes. The $300 is the maximum spending allowance for this event. The only optional added cost is a third host at $75. No revenue forecast or additional purchasing is required.</p>
+<p><strong>What is already arranged:</strong> game access, appropriate permissions, accessible arrival routes, equipment checks, and a suitable game for each format. You do not need to choose a game or design a venue. Host 1 supports PC play; Host 2 manages timing, transitions, and the social area. You may explain a different division of work.</p>
+<p><strong>Whose interests compete:</strong> the operator wants repeat visits, the gaming club wants meaningful competition, and student affairs wants a welcoming experience. All three base proposals fit the supplied limits. Choose the benefit you think matters most.</p></section>
+<fieldset class="stage-fieldset" id="initial-fields">
+<legend class="visually-hidden">Choose and explain your initial proposal</legend>
+<fieldset class="proposal-fieldset"><legend class="field-label proposal-legend">Which proposal would you take forward?</legend>
+<div class="proposal-grid">
+<label class="proposal-card"><input name="initialChoice" required="" type="radio" value="cup"/><span class="proposal-content"><span class="proposal-code">01 / Competition</span><strong class="proposal-name">Rivalry <br/>Mini-Cup</strong><span class="proposal-spec"><b>$280</b><span>12 stations</span></span><span class="proposal-description"><strong>Purpose:</strong> a shared contest with a clear winner.</span><span class="proposal-schedule"><strong>70-minute program:</strong> two groups of 12 each get a 25-minute block (20 minutes playing + 5 minutes to change over), followed by a 20-minute final for eight players.</span><span class="proposal-tension"><b>The tradeoff</b>Strong competition; less room in the budget and more pressure for inexperienced visitors.</span><span class="proposal-select">Choose Mini-Cup <span aria-hidden="true">↗</span></span></span></label>
+<label class="proposal-card"><input name="initialChoice" required="" type="radio" value="open"/><span class="proposal-content"><span class="proposal-code">02 / Connection</span><strong class="proposal-name">Play &amp; <br/>Connect</strong><span class="proposal-spec"><b>$180</b><span>10 stations</span></span><span class="proposal-description"><strong>Purpose:</strong> relaxed play and new connections.</span><span class="proposal-schedule"><strong>70-minute program:</strong> three groups of eight each get a 20-minute block (15 minutes playing + 5 minutes to change over), followed by 10 minutes of social time. Ten PCs are reserved: eight active and two spares.</span><span class="proposal-tension"><b>The tradeoff</b>Flexible support and $120 left in the budget; no formal competitive final.</span><span class="proposal-select">Choose Play &amp; Connect <span aria-hidden="true">↗</span></span></span></label>
+<label class="proposal-card"><input name="initialChoice" required="" type="radio" value="showcase"/><span class="proposal-content"><span class="proposal-code">03 / Spectacle</span><strong class="proposal-name">Campus <br/>Showcase</strong><span class="proposal-spec"><b>$240</b><span>8 stations</span></span><span class="proposal-description"><strong>Purpose:</strong> show what skilled play and the venue can offer.</span><span class="proposal-schedule"><strong>70-minute program:</strong> a 20-minute demonstration, three 15-minute turns for groups of eight, and 5 minutes total for handovers between those turns. Everyone gets their own turn.</span><span class="proposal-tension"><b>The tradeoff</b>A strong shared spectacle; more viewing time and fewer minutes playing independently.</span><span class="proposal-select">Choose Showcase <span aria-hidden="true">↗</span></span></span></label>
+</div>
+</fieldset>
+<div class="response-card initial-writing"><div class="field"><label class="field-label" for="initial-position">Why is this your best starting plan?</label><p class="field-help" id="initial-position-help"><strong>About 50–70 words.</strong> State the result you want and whose needs you prioritize. Use <strong>two supplied facts</strong> about the proposal, room, staffing, time, or budget to support your choice. Your first decision uses only what you know now.</p><textarea aria-describedby="initial-position-help" id="initial-position" maxlength="1800" name="initialPosition" placeholder="My purpose is… I would choose… Two facts that support my choice are…" required="" rows="5"></textarea></div></div>
+</fieldset>
+<div class="stage-action" id="lock-panel"><div><strong>Commit to a starting point.</strong><p>Your starting response becomes final when you save it. You may revise your event choice in the next stage. Changing your mind does not cost points.</p></div><button class="button button-primary" id="lock-initial" type="button">Save initial decision and show update</button></div>
+</section>
+<section aria-labelledby="snapshot-heading" class="initial-snapshot" hidden="" id="initial-snapshot"><div class="snapshot-heading"><span class="eyebrow">Locked starting point</span><h2 id="snapshot-heading">Your first decision is preserved.</h2></div><div class="original-plan" id="original-plan"></div><p>You can now change your plan without rewriting where you started.</p></section>
+<fieldset class="stage-fieldset" hidden="" id="revision-stage">
+<legend class="visually-hidden">Reconsider and defend your final decision</legend>
+<div class="stage-title"><span class="stage-kicker">Stage 02</span><h2 id="revision-heading" tabindex="-1">2. Adapt your event plan</h2><p>Allow about 15–18 minutes for your choices and final writing.</p></div>
+<section aria-labelledby="registration-heading" class="registration-update"><div class="update-label"><span aria-hidden="true" class="update-dot"></span><span>New registration information</span></div><div class="registration-content"><div class="registration-number"><strong>16<span> / 24</span></strong><span>are new to gaming PCs</span></div><div><h3 id="registration-heading" tabindex="-1">Every visitor needs a way in.</h3><p>Eight visitors are experienced. Student affairs now requires every visitor to receive at least 15 minutes of supported hands-on play. Watching a demonstration does not count. The club still wants a competitive experience.</p></div></div><p class="update-question">Your decision: keep or switch the format, choose one adjustment, and explain how you will meet the participation requirement.</p></section>
+<section aria-labelledby="final-choice-heading" class="response-card decision-controls">
+<fieldset class="choice-fieldset"><legend class="field-label numbered-label" id="final-choice-heading"><span>1</span>Your final format</legend><p class="field-help">Keep your original format or choose another.</p><div class="final-options"><label class="compact-option"><input name="finalChoice" required="" type="radio" value="cup"/><span><strong>Rivalry Mini-Cup</strong><small>$280 · 12 stations</small></span></label><label class="compact-option"><input name="finalChoice" required="" type="radio" value="open"/><span><strong>Play &amp; Connect</strong><small>$180 · 10 stations</small></span></label><label class="compact-option"><input name="finalChoice" required="" type="radio" value="showcase"/><span><strong>Campus Showcase</strong><small>$240 · 8 stations</small></span></label></div></fieldset>
+<fieldset class="choice-fieldset adjustment-fieldset"><legend class="field-label numbered-label"><span>2</span>Make one practical adjustment</legend><p class="field-help">Choose exactly one support adjustment. Each uses the schedule below. Extra spending is allowed only when the total is $300 or less.</p><div class="adjustment-options"><label class="adjustment-option"><input name="adjustment" required="" type="radio" value="orientation"/><span><strong>Add a guided PC introduction</strong><small>Replace 10 minutes of the main program with orientation. 60 minutes remain: shorten the Mini-Cup final, remove Play &amp; Connect’s social close, or shorten the Showcase demonstration. Playing turns stay intact.</small></span><b>+$0</b></label><label class="adjustment-option"><input name="adjustment" required="" type="radio" value="extra_host"/><span><strong>Add a third floor host</strong><small>The extra host supports newcomers while the original hosts run the event. Only Play &amp; Connect fits the budget: $180 + $75 = $255.</small></span><b>+$75</b></label><label class="adjustment-option"><input name="adjustment" required="" type="radio" value="rotations"/><span><strong>Coach the start of each turn</strong><small>A host guides the first 5 minutes of each group’s playing turn. This is part of the turn, not added time. Give up some uninterrupted play to provide hands-on coaching.</small></span><b>+$0</b></label></div></fieldset>
+<div aria-label="Your current plan against the case limits" aria-live="polite" class="fit-strip" id="fit-strip"><div><span>Total cost</span><strong id="fit-cost">—</strong><small id="fit-budget">$300 budget limit</small></div><div><span>PC stations</span><strong id="fit-stations">—</strong><small id="fit-spare-stations">12 available</small></div><div><span>Main program</span><strong id="fit-time">70 min</strong><small id="fit-time-detail">+ 10 arrive · 10 close</small></div><div><span>Floor hosts</span><strong id="fit-hosts">2</strong><small>Support has limits</small></div><p id="fit-message">Choose your final format and adjustment to check the practical fit. These are resource checks, not a grade or a prediction.</p></div><section aria-label="Supplied operating schedule" aria-live="polite" class="plan-preview" id="plan-preview"></section>
+<fieldset class="choice-fieldset priority-fieldset"><legend class="field-label numbered-label"><span>3</span>Whose needs come first in your decision?</legend><div class="priority-options"><label class="compact-option"><input name="priority" required="" type="radio" value="newcomers"/><span><strong>Newcomers</strong><small>Welcome and supported access</small></span></label><label class="compact-option"><input name="priority" required="" type="radio" value="club"/><span><strong>Gaming club</strong><small>A competitive finish</small></span></label><label class="compact-option"><input name="priority" required="" type="radio" value="operator"/><span><strong>Venue operator</strong><small>A reason to visit again</small></span></label></div><p class="field-help priority-help">Everyone must still receive supported play. Your priority explains which additional benefit you emphasize.</p></fieldset>
+</section>
+<section aria-labelledby="defend-heading" class="response-card defend-card"><div class="defend-heading"><p class="eyebrow">Make your reasoning visible</p><h2 id="defend-heading">Your individual decision brief</h2></div>
+<div class="field"><label class="field-label" for="final-reason">How will your final plan work after the update?</label><p class="field-help" id="final-reason-help"><strong>About 100–150 words. Address all three:</strong><br/><strong>1. Decision:</strong> Why keep or change your format after learning that 16 visitors are new to gaming PCs?<br/><strong>2. Operation:</strong> Use the supplied schedule to explain the PCs, hosts, visitors between turns, and what your adjustment changes. Confirm the time and spending limits.<br/><strong>3. Evidence:</strong> Give one measurable success target, who will track it, and when. Connect it to your event purpose.</p><textarea aria-describedby="final-reason-help" id="final-reason" maxlength="1800" name="finalReason" placeholder="1. Decision and audience fit…
+2. How the plan will operate…
+3. Success target, owner, and timing…" required="" rows="9"></textarea></div>
+<div class="field runnerup-field"><label class="field-label" for="runner-up">Which other format was your runner-up?</label><select id="runner-up" name="runnerUp" required=""><option value="">Choose another format</option><option value="cup">Rivalry Mini-Cup</option><option value="open">Play &amp; Connect</option><option value="showcase">Campus Showcase</option></select></div>
+<div class="field"><label class="field-label" for="tradeoff">What do you give up, and what needs active management?</label><p class="field-help" id="tradeoff-help"><strong>About 70–100 words.</strong> Name a real benefit of your runner-up and explain why you still reject it. Identify which stakeholder bears a cost in your chosen plan. Then name <strong>one specific operational risk</strong>, the action that reduces it, and the person responsible.</p><textarea aria-describedby="tradeoff-help" id="tradeoff" maxlength="1800" name="tradeoff" placeholder="My runner-up offers… I still prefer my choice because… The cost falls on… One operational risk is… The responsible host will…" required="" rows="6"></textarea><p class="field-help">The suggested lengths help you judge the expected detail. Your reasoning earns the points; length and keyword counts do not.</p></div>
+<details class="sharing-details"><summary>Optional: anonymous choices for class discussion</summary><div class="sharing-choice"><label><input id="guest-consent" name="guestConsent" type="checkbox"/><span>I’m willing to include my anonymous choices in a guest summary if my instructor releases it.</span></label><p>Optional and off by default. Only structured choices and progress may appear. Your name, email, written responses, grade, and feedback never appear in the guest view.</p></div></details>
+<div class="submit-row"><div><strong>Review your three responses before submitting</strong><p>Submission locks the final brief. Your instructor grades it out of 10. Keep the downloaded brief and receipt.</p></div><button class="button button-primary" id="submit-final" type="submit">Submit final decision <span aria-hidden="true">→</span></button></div>
+</section>
+</fieldset>
+<div class="form-feedback" hidden="" id="form-feedback" role="alert" tabindex="-1"></div>
+</form>
+<section aria-labelledby="receipt-heading" class="receipt card" hidden="" id="receipt" tabindex="-1">
+<p class="eyebrow">Submission receipt</p><h2 id="receipt-heading">Your individual brief is submitted</h2><p id="receipt-status">Submission received. Your instructor scores this brief out of 10. Check your grade here after review; Canvas records the course grade.</p>
+<dl class="receipt-details" id="receipt-details"><div><dt>Receipt</dt><dd id="receipt-id"></dd></div><div><dt>Recorded</dt><dd id="receipt-time"></dd></div><div><dt>Review</dt><dd id="receipt-score">Pending review · not yet scored</dd></div></dl>
+<p>Keep a copy of your initial decision, final reasoning, and submission receipt.</p><div class="receipt-actions"><button class="button button-secondary" id="download-receipt" type="button">Download my brief and receipt</button><button class="text-button" id="clear-device" type="button">Clear this shared device</button></div>
+<div class="clear-confirmation" hidden="" id="clear-confirmation"><strong>Keep your copy before clearing.</strong><p>This removes the draft and identity from this browser. It does not withdraw a submission already received by your instructor.</p><label class="individual-check"><input id="confirm-clear" type="checkbox"/><span>I have downloaded my receipt and saved it somewhere I can access.</span></label><div class="inline-actions"><button class="button button-secondary button-small" id="confirm-clear-device" type="button">Clear local copy</button><button class="text-button" id="cancel-clear" type="button">Keep it here</button></div></div>
+</section>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer page-shell"><p>SPM 343 · TAP Decision Lab 2 <span>· Fictional case · Revised October 8, 2026</span></p><nav aria-label="Related views"><a href="?mode=pilot" id="pilot-link">Try the practice version</a><a href="guest/" id="guest-link" rel="noopener" target="_blank">Guest view <span class="visually-hidden">(opens in a new tab)</span></a><a href="instructor/" id="instructor-link">Instructor review</a></nav></footer>
+<noscript><div class="noscript-notice">JavaScript is required to save and submit this lab. Please enable it before entering personal information or starting the activity.</div></noscript>
 </body>
 </html>

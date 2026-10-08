@@ -1,0 +1,42 @@
+/* Clear case parameters and a readable individual decision brief. */
+.student-app .lab-hero-copy h1{font-size:clamp(54px,5.8vw,78px);line-height:1.02}
+.student-app .lab-hero-copy .hero-question{font-size:24px;line-height:1.25}
+.student-app .lab-hero-copy .hero-description{max-width:510px;font-size:18px}
+.student-app .lab-meta strong{font-size:19px}
+.student-app .runway-note{font-size:16px;line-height:1.55}
+.student-app .case-brief>p{font-size:17px;line-height:1.55;margin-top:17px}
+.student-app .proposal-description{font-size:16px;line-height:1.45}
+.student-app .proposal-schedule{display:block;font-size:15px;line-height:1.5;margin:14px 0;padding-top:12px;border-top:1px solid #d5ddd3}
+.student-app .proposal-schedule strong{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.student-app .proposal-tension{font-size:14px;line-height:1.5}
+.student-app .proposal-content{height:100%;min-width:0}
+.student-app .field-help{font-size:16px;line-height:1.6}
+.student-app .adjustment-option small{font-size:15px;line-height:1.5}
+.student-app textarea{font-size:18px;line-height:1.55}
+.student-app .rubric{font-size:15px}
+.student-app .rubric summary{font-size:17px}
+.student-app .rubric li span{line-height:1.4}
+.student-app .sharing-details{margin-top:24px;padding:16px 0;border-top:1px solid var(--line);font-size:15px}
+.student-app .sharing-details summary{cursor:pointer}
+.student-app .sharing-details .sharing-choice{margin-top:14px}
+.student-app #lock-initial{max-width:290px;white-space:normal;line-height:1.3}
+.student-app .plan-preview{margin-top:24px;padding:22px;background:#f4f6ef;border:1px solid #cbd8c7;border-radius:7px}
+.student-app .plan-preview:empty{display:none}
+.student-app .plan-preview h3{font-size:25px;margin-bottom:12px}
+.student-app .plan-preview p{font-size:16px;line-height:1.5}
+.student-app .plan-preview ol{padding-left:24px;margin:14px 0}
+.student-app .plan-preview li{font-size:16px;line-height:1.5;margin:8px 0}
+.student-app .plan-preview table{width:100%;border-collapse:collapse;margin:15px 0;font-size:15px}
+.student-app .plan-preview th,.student-app .plan-preview td{padding:9px 10px;border-bottom:1px solid #cbd8c7;text-align:left;vertical-align:top}
+.student-app .plan-preview th{font-weight:bold}
+.student-app .plan-preview .plan-note{font-size:14px;margin-top:10px;color:#52665e}
+.student-app .plan-preview .schedule-meta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 15px}
+.student-app .plan-preview .schedule-meta span{padding:5px 9px;background:#e2ebdf;border-radius:4px;font-size:14px}
+.student-app .plan-preview-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0;padding:16px;background:#e3ebdf;border-radius:5px}
+.student-app .plan-preview-figures dt{font-size:13px;color:#52665e}
+.student-app .plan-preview-figures dd{margin:2px 0 0;font-size:19px;font-weight:bold}
+.student-app .plan-preview-table caption{text-align:left;font-size:14px;padding:0 0 10px;color:#52665e}
+.student-app .plan-preview-detail{display:block;margin-top:4px;font-size:14px;line-height:1.45;color:#52665e}
+.student-app .plan-preview-time{width:75px;white-space:nowrap}
+.student-app .plan-preview-warning{padding:12px;background:#fff0e5;color:#8d3321;border-left:3px solid #b45839}
+@media(max-width:620px){.student-app .lab-hero-copy h1{font-size:55px}.student-app .lab-hero-copy .hero-question{font-size:22px}.student-app .proposal-schedule{font-size:16px}.student-app .plan-preview{padding:16px}.student-app .plan-preview th,.student-app .plan-preview td{padding:8px 5px;font-size:14px}.student-app .stage-action{align-items:stretch}.student-app #lock-initial{max-width:none;width:100%}}
