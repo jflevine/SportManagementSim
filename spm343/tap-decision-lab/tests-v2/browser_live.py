@@ -490,7 +490,7 @@ def feasible_choices(browser):
         expect(p.locator('#fit-cost')).to_contain_text(str(amount))
         expect(p.locator('#fit-time')).to_have_text('60 min' if adjustment == 'orientation' else '70 min')
         expect(p.locator('#fit-time-detail')).to_contain_text('10 arrive')
-        expect(p.locator('#fit-spare-stations')).to_contain_text('spare of 12')
+        expect(p.locator('#fit-spare-stations')).to_contain_text('not reserved of 12')
         if adjustment == 'orientation': expect(p.locator('#fit-time-detail')).to_contain_text('10 orientation')
         p.locator('#submit-final').click()
         if accepted:
