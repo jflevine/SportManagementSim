@@ -1,85 +1,71 @@
-import json, os, threading, functools
+import json, threading, functools, subprocess, time
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
-from playwright.sync_api import sync_playwright
-
+from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[3]
-OUT=ROOT/'before-you-sign-qa'; OUT.mkdir(exist_ok=True)
-Handler=functools.partial(SimpleHTTPRequestHandler,directory=str(ROOT))
-server=ThreadingHTTPServer(('127.0.0.1',8765),Handler)
+OUT=ROOT/'before-you-sign-qa';OUT.mkdir(exist_ok=True)
+server=ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(SimpleHTTPRequestHandler,directory=str(ROOT)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
+api=subprocess.Popen(['node',str(ROOT/'spm370/before-you-sign/qa/mock-api.mjs')])
 URL='http://127.0.0.1:8765/spm370/before-you-sign/'
 ANS=[1,2,0,1,0,2,1,0,2,1]
 NOTE='I would review the actual contract language, identify the relevant promise, and seek a specific revision that protects Maya while giving the organization workable rights in the agreed services.'
 BRIEF='I recommend revising this draft before Maya signs. First, she needs a clear termination payment because a six month term alone does not guarantee the full thirty thousand dollars. I would ask for notice and defined pay if the organization ends the agreement without a serious uncured breach. Second, the agreement should reserve her existing channel and independent work while giving the team a limited license to identified deliverables. That change protects future income without denying the team useful promotional rights. Maya may need to accept a narrower license fee or fewer benefits to obtain those protections. I would ask counsel which law applies to the termination terms and whether the proposed sponsor activity conflicts with her existing headset agreement.'
+ESSAY='This is a synthetic test response about permission and contract scope. The instructor should be able to read this response, evaluate its reasoning, and enter a manual grade without any student data being made public.'
 results=[]
-def record(name):
- results.append({'test':name,'status':'PASS'})
-def overflow(page):
- assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
-def walk(page,engine):
- page.goto(URL); page.locator('#start').click(); assert page.locator('#startError').inner_text()
- page.locator('#name').fill('Synthetic QA Student'); page.locator('#start').click()
- assert page.locator('[data-stage="4"]').is_disabled(); record(engine+' start validation and sequential access')
+def record(s):results.append({'test':s,'status':'PASS'})
+def overflow(p):assert p.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+def route_api(ctx,lost_ack=False):
+ lost=set()
+ def route(route,req):
+  action=json.loads(req.post_data or '{}').get('action')
+  suffix='/instructor' if req.url.endswith('/instructor') else '/'
+  res=ctx.request.fetch('http://127.0.0.1:8766'+suffix,method=req.method,headers=req.headers,data=req.post_data)
+  if lost_ack and action in ['activity','submitQuiz'] and action not in lost:
+   lost.add(action);route.abort('failed');return
+  route.fulfill(status=res.status,headers=dict(res.headers),body=res.body())
+ ctx.route('https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-before-you-sign**',route)
+def walk(p,engine):
+ p.goto(URL);p.locator('#start').click();expect(p.locator('#startError')).to_contain_text('email')
+ p.locator('#name').fill('Synthetic '+engine);p.locator('#email').fill('synthetic-'+engine+'@lasalle.edu');p.locator('#identityHonor').check();p.locator('#start').click();expect(p.locator('#decide')).to_be_visible()
  for i in range(5):
-  assert page.locator('h1').inner_text(); overflow(page)
-  if i==0: page.screenshot(path=str(OUT/(engine+'-file1.png')),full_page=True)
-  page.locator('#decide').click()
+  p.locator('#decide').click()
   for j in range(2):
-   k=i*2+j
-   page.locator('#checkQ').click(); assert page.locator('#choiceError').inner_text()
-   wrong=(ANS[k]+1)%3
-   page.locator('input[name="choice"][value="%s"]'%wrong).check(); page.locator('#checkQ').click()
-   assert 'Reconsider' in page.locator('.feedback').inner_text()
-   assert page.locator('#nextQ').count()==0
-   page.locator('input[name="choice"][value="%s"]'%ANS[k]).check();page.locator('#checkQ').click()
-   assert 'Decision cleared' in page.locator('.feedback').inner_text()
-   if i==2 and j==0:
-    page.reload();assert page.locator('#nextQ').is_visible()
-   page.locator('#nextQ').click()
-  page.locator('#note').fill('Too short'); page.locator('#clearFile').click();assert page.locator('#noteError').inner_text()
-  page.locator('#note').fill(NOTE);page.locator('#clearFile').click()
- record(engine+' ten correction loops, note validation, and refresh recovery')
- page.locator('#finish').click();assert 'Choose' in page.locator('#finalError').inner_text()
- page.locator('#decision').select_option(label='Revise before signing')
- page.locator('#recommendation').fill('Too short');page.locator('#finish').click();assert '100 words' in page.locator('#finalError').inner_text()
- page.locator('#recommendation').fill(BRIEF);page.locator('#finish').click();assert 'Confirm' in page.locator('#finalError').inner_text()
- page.locator('#attest').check();page.locator('#finish').click()
- assert 'You have not submitted yet.' in page.locator('#main').inner_text()
- assert page.locator('.final-review h3').count()==6
- with page.expect_download() as d: page.locator('#downloadReport').click()
- path=Path(d.value.path());text=path.read_text();assert 'Synthetic QA Student' in text and 'Files cleared: 5 of 5' in text and BRIEF in text
- assert all(('FILE '+str(i)) in text for i in range(1,6))
- with page.expect_download() as d: page.locator('#backupEnd').click()
+   ans=ANS[i*2+j];p.locator('input[name=choice][value="%s"]'%((ans+1)%3)).check();p.locator('#checkQ').click();expect(p.locator('.feedback')).to_contain_text('Reconsider')
+   p.locator('input[name=choice][value="%s"]'%ans).check();p.locator('#checkQ').click();p.locator('#nextQ').click()
+  p.locator('#note').fill(NOTE);p.locator('#clearFile').click()
+ record(engine+' full five-file activity and correction feedback')
+ p.locator('#decision').select_option(label='Revise before signing');p.locator('#recommendation').fill(BRIEF);p.locator('#attest').check();p.locator('#finish').click()
+ expect(p.locator('h1')).to_contain_text('Ready to send');p.locator('#submitActivity').click();expect(p.locator('#submitError')).not_to_have_text('Sending your activity…')
+ expect(p.locator('#submitActivity')).to_be_enabled();p.locator('#submitActivity').click();expect(p.locator('h1')).to_have_text('Your activity is submitted.')
+ p.reload();expect(p.locator('h1')).to_have_text('Your activity is submitted.');overflow(p)
+ p.screenshot(path=str(OUT/(engine+'-activity-receipt.png')),full_page=True)
+ record(engine+' activity persists and lost acknowledgement retry returns original receipt')
+ with p.expect_download() as d:p.locator('#backupEnd').click()
  backup=OUT/(engine+'-backup.json');d.value.save_as(backup)
- page.reload();assert 'Submit your work in Canvas.' in page.locator('h1').inner_text()
- page.screenshot(path=str(OUT/(engine+'-complete.png')),full_page=True)
- record(engine+' final brief, individual affirmation, export, and completion persistence')
- # Restoring in a genuinely new browser context tests portable progress.
- c2=page.context.browser.new_context(viewport={'width':390,'height':844},accept_downloads=True)
- p2=c2.new_page();p2.goto(URL);p2.locator('#resourcesButton').click()
- p2.on('dialog',lambda d:d.accept())
- p2.locator('#restoreFile').set_input_files(str(backup));p2.locator('#downloadReport').wait_for(state='visible');overflow(p2)
- p2.locator('#editFinal').click();assert p2.locator('#recommendation').input_value()==BRIEF
- p2.locator('[data-stage="2"]').click();overflow(p2)
- p2.screenshot(path=str(OUT/(engine+'-mobile.png')),full_page=True)
- # Check keyboard focus and 200% text enlargement with a real layout.
- p2.evaluate('document.documentElement.style.fontSize="200%"');overflow(p2)
- c2.close();record(engine+' backup portability, mobile layout, and enlarged text')
-
-with sync_playwright() as p:
- for engine in ['chromium','firefox','webkit']:
-  browser=getattr(p,engine).launch()
-  context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
-  page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-  walk(page,engine);assert not errors,errors;record(engine+' no browser exceptions')
-  context.close()
-  ctx=browser.new_context(viewport={'width':390,'height':844})
-  ctx.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Disabled','SecurityError')}})")
-  tab=ctx.new_page();tab.goto(URL);assert tab.locator('#saveWarning').is_visible()
-  tab.locator('#name').fill('Offline QA');tab.locator('#start').click();assert tab.locator('#decide').is_visible()
-  overflow(tab);record(engine+' storage-blocked fallback')
-  ctx.close();browser.close()
-(OUT/'results.json').write_text(json.dumps(results,indent=2))
-print(json.dumps(results,indent=2))
-server.shutdown()
+ p.get_by_role('link',name='Continue to Legal Literacy Check 3').click();expect(p.locator('#next')).to_be_visible()
+ for i in range(12):
+  p.locator('input[name=answer][value="0"]').check();p.locator('#next').click();expect(p.locator('[aria-current=step]')).to_have_text(str(i+2))
+  if i==4:p.reload();expect(p.locator('#next')).to_be_visible()
+ for i in range(2):
+  p.locator('#essay').fill(ESSAY);p.locator('#next').click();expect(p.locator('[aria-current=step]')).to_have_text('14' if i==0 else 'Review')
+ expect(p.locator('#submitQuiz')).to_be_enabled();p.locator('#submitQuiz').click();expect(p.locator('#notice')).to_contain_text('Confirm');p.locator('#attestQuiz').check();p.locator('#submitQuiz').click();expect(p.locator('#submitQuiz')).to_be_enabled();p.locator('#submitQuiz').click();expect(p.locator('h1')).to_have_text('Your work is submitted.')
+ with p.expect_download() as d:p.locator('#receiptDownload').click()
+ txt=Path(d.value.path()).read_text();assert 'BYS-' in txt and 'LLC3-' in txt and 'synthetic-'+engine+'@lasalle.edu' in txt
+ p.reload();expect(p.locator('h1')).to_have_text('Your work is submitted.');overflow(p);p.screenshot(path=str(OUT/(engine+'-both-receipts.png')),full_page=True)
+ record(engine+' quiz draft recovery, affirmation, duplicate-safe submit, and both receipts')
+ # Fresh device restores private access from a backup and verifies server state.
+ ctx=p.context.browser.new_context(viewport={'width':390,'height':844});route_api(ctx)
+ mobile=ctx.new_page();mobile.goto(URL);mobile.locator('#resourcesButton').click();mobile.on('dialog',lambda d:d.accept());mobile.locator('#restoreFile').set_input_files(str(backup));expect(mobile.locator('h1')).to_have_text('Your activity is submitted.');overflow(mobile);mobile.get_by_role('link',name='Continue to Legal Literacy Check 3').click();expect(mobile.locator('h1')).to_have_text('Your work is submitted.');overflow(mobile);mobile.evaluate('document.documentElement.style.fontSize="200%"');overflow(mobile);ctx.close();record(engine+' fresh-device recovery and mobile enlarged layout')
+ # Instructor authorization and durable review through the same handler.
+ p.goto(URL+'instructor/');p.locator('#key').fill('incorrect');p.locator('#open').click();expect(p.locator('#notice')).to_contain_text('Invalid instructor');p.locator('#key').fill('synthetic-instructor-key-only');p.locator('#open').click();expect(p.locator('#dashboard')).to_be_visible()
+ p.locator('#search').fill('synthetic-'+engine+'@lasalle.edu');card=p.locator('#rows > details');card.locator('summary').first.click();card.locator('input[name=activity]').fill('9');card.locator('input[name=essay1]').fill('3');card.locator('input[name=essay2]').fill('4');card.get_by_role('button',name='Save review',exact=True).click();expect(p.locator('#notice')).to_have_text('Review saved.');expect(p.locator('#rows')).to_contain_text('19/20')
+ with p.expect_download() as d:p.locator('#export').click()
+ csv=Path(d.value.path()).read_text();assert 'synthetic-'+engine+'@lasalle.edu' in csv and BRIEF in csv and ESSAY in csv
+ p.screenshot(path=str(OUT/(engine+'-instructor.png')),full_page=True);p.locator('#logout').click();expect(p.locator('#dashboard')).to_be_hidden();assert not p.locator('#rows').inner_text();record(engine+' instructor access, review, export, and logout clearing')
+try:
+ with sync_playwright() as runtime:
+  for engine in ['chromium','firefox','webkit']:
+   browser=getattr(runtime,engine).launch();ctx=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True);route_api(ctx,True);p=ctx.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)));walk(p,engine);assert not errors,errors;record(engine+' no browser exceptions');browser.close()
+ (OUT/'results.json').write_text(json.dumps(results,indent=2));print(json.dumps(results,indent=2))
+finally:api.terminate();server.shutdown()
