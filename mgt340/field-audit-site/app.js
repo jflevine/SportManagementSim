@@ -52,7 +52,7 @@ function readFields(){
 function validate(){
   if(!form.reportValidity()) return false;
   const email=el('email').value.trim().toLowerCase();
-  const ok=/^[^@\\s]+@lasalle[.]edu$/i.test(email)&&!email.includes('..')&&!email.startsWith('.')&&!email.split('@')[0].endsWith('.');
+  const ok=/^[^@\s]+@lasalle[.]edu$/i.test(email)&&!email.includes('..')&&!email.startsWith('.')&&!email.split('@')[0].endsWith('.');
   if(!ok){el('email').setCustomValidity('Enter your official @lasalle.edu email.');el('email').reportValidity();el('email').setCustomValidity('');return false;}
   if(form.elements.requestKind.value==='site'){
     const date=el('event-date').value;
