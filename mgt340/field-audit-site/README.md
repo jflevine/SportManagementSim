@@ -2,6 +2,8 @@
 
 Student page: https://jflevine.github.io/SportManagementSim/mgt340/field-audit-site/
 
+No-save instructor preview: https://jflevine.github.io/SportManagementSim/mgt340/field-audit-site/?preview=1 — exercises the form and generates an unmistakably simulated confirmation without making a database request.
+
 This is an **ungraded planning checkpoint** for the Fall 2026 *Philadelphia Sport Management Field Audit*, not a new assessment. It preserves the assignment/syllabus's separate graded checkpoints.
 
 | Date | Requirement | Submission location |
