@@ -5,6 +5,14 @@ const form = el('site-form');
 const button = el('submit-button');
 const status = el('status');
 const storageKey = 'mgt340-field-audit-unconfirmed-v1';
+const previewMode = new URLSearchParams(window.location.search).get('preview') === '1';
+if (previewMode) {
+  const notice=document.createElement('p');
+  notice.className='inline-note';
+  notice.textContent='INSTRUCTOR PREVIEW — No information entered here will be sent or saved. Do not share this preview link as the student submission link.';
+  document.querySelector('.hero').append(notice);
+  document.title='PREVIEW (not submitted) · MGT 340 Field Audit';
+}
 let pending = null;
 let completed = null;
 const fields = Object.freeze({
@@ -138,6 +146,23 @@ async function sendPending(){
 form.addEventListener('change',e=>{if(e.target.name==='requestKind')mode();});
 form.addEventListener('submit',async e=>{
   e.preventDefault();
+  if(previewMode){
+    if(!validate()) return;
+    pending=readFields();
+    const simulated={
+      receiptId:'PREVIEW-NOT-SAVED',attemptId:pending.attemptId,
+      submittedAt:new Date().toISOString(),late:false,requestKind:pending.requestKind,
+      siteName:pending.siteName,eventDate:pending.eventDate,
+      approvalStatus:pending.requestKind==='assistance'?'assistance_requested':pending.siteCategory==='lasalle-varsity'?'approved':'pending_review'
+    };
+    updateReceipt(simulated);
+    el('receipt-heading').textContent='Preview only — nothing submitted';
+    el('receipt-review').textContent='Simulated status: '+simulated.approvalStatus+'. This is not an instructor decision.';
+    el('receipt-next').textContent='No student record was sent or saved. Use the standard link (without ?preview=1) for real submissions.';
+    el('download-receipt').hidden=true;
+    pending=null;
+    return;
+  }
   if(!pending){
     if(!validate())return;
     pending=readFields();
@@ -171,7 +196,7 @@ el('download-receipt').addEventListener('click',()=>{
   document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-try{
+if (!previewMode) try{
   const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');
   if(saved && saved.formVersion===config.formVersion &&
     /^[0-9a-f-]{36}$/i.test(saved.attemptId) &&
