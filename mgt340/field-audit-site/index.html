@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="MGT 340 Philadelphia Sport Management Field Audit: ungraded site confirmation and assistance requests.">
+<title>Field Audit | Site Confirmation · MGT 340</title>
+<link rel="stylesheet" href="styles.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="masthead"><div class="wrap masthead-inner"><div class="wordmark"><span class="mark" aria-hidden="true">L</span><span>LA SALLE UNIVERSITY <small>School of Business</small></span></div><span class="course-id">MGT 340–21 · FALL 2026</span></div></header>
+<main id="main" class="wrap">
+<section class="hero" aria-labelledby="page-title">
+<p class="eyebrow">PHILADELPHIA SPORT MANAGEMENT FIELD AUDIT</p>
+<h1 id="page-title">Where will you observe sport management in action?</h1>
+<p class="lede">Confirm the sport event or operation you plan to observe. Your job is to look beyond the game and notice how a sport organization is managed.</p>
+<div class="due-line"><span class="due-chip">Site confirmation · Due Sunday, October 18</span><span class="quiet">Ungraded planning checkpoint · Individual assignment</span></div>
+</section>
+<section class="timeline" aria-label="Field Audit milestones">
+<div><span class="number">01</span><strong>Oct 18</strong><span>Confirm site and date<br><em>Ungraded</em></span></div>
+<div><span class="number">02</span><strong>Nov 8</strong><span>Field notes + evidence<br><em>25 audit points · Canvas</em></span></div>
+<div><span class="number">03</span><strong>Nov 15</strong><span>Final report<br><em>75 audit points · Canvas</em></span></div>
+</section>
+<div class="content-grid">
+<div class="main-column">
+<section class="panel" id="form-panel" aria-labelledby="form-title">
+<div class="panel-head"><p class="overline">CHECKPOINT 01</p><h2 id="form-title">Site selection &amp; confirmation</h2><p>Complete this form once. If you have already received an individual approval from Professor Levine, please still register the event here so there is a course record.</p></div>
+<form id="site-form" novalidate>
+<fieldset class="fieldset" id="identity-fields"><legend>Your information</legend>
+<div class="two-col"><label>First name <span aria-hidden="true">*</span><input id="first-name" name="firstName" autocomplete="given-name" maxlength="80" required></label><label>Last name <span aria-hidden="true">*</span><input id="last-name" name="lastName" autocomplete="family-name" maxlength="80" required></label></div>
+<label>La Salle email <span aria-hidden="true">*</span><input id="email" name="email" type="email" autocomplete="email" maxlength="120" pattern="[^@ ]+@([Ll][Aa][Ss][Aa][Ll][Ll][Ee]\\.[Ee][Dd][Uu])" placeholder="username@lasalle.edu" required><span class="field-help">Use your official University email, not a personal address.</span></label>
+</fieldset>
+<fieldset class="fieldset" id="selection-fields"><legend>What are you submitting?</legend>
+<div class="radio-card"><label><input type="radio" name="requestKind" value="site" checked><span><strong>I have selected an event or sport setting</strong><small>Register its name, date, and location for approval or confirmation.</small></span></label></div>
+<div class="radio-card"><label><input type="radio" name="requestKind" value="assistance"><span><strong>I need help choosing an appropriate site</strong><small>Let Professor Levine know you need an accessible option.</small></span></label></div>
+</fieldset>
+<fieldset class="fieldset" id="site-fields"><legend>Selected event or sport setting</legend>
+<label>Type of setting <span aria-hidden="true">*</span>
+<select id="site-category" name="siteCategory" required>
+<option value="">Choose the best description</option>
+<option value="lasalle-varsity">La Salle varsity athletics event</option>
+<option value="campus-operation">Other La Salle campus sport/recreation operation</option>
+<option value="college-school">Other college or school sport event</option>
+<option value="youth-community">Youth or community sport event/program</option>
+<option value="professional-amateur">Professional or amateur sport event</option>
+<option value="tournament-race">Tournament, road race, or organized event</option>
+<option value="facility-recreation">Sport facility or recreation operation</option>
+<option value="live-esports">Live esports competition/event</option>
+<option value="other">Other organized live sport setting</option>
+</select><span class="field-help">La Salle varsity athletics events are eligible, preapproved sites. Other settings require individual review.</span></label>
+<label>Name of event or operation <span aria-hidden="true">*</span><input id="site-name" name="siteName" maxlength="150" placeholder="e.g., La Salle men's soccer home game" required></label>
+<div class="two-col"><label>Event or visit date <span aria-hidden="true">*</span><input id="event-date" name="eventDate" type="date" min="2026-09-01" max="2026-11-08" required></label><label>Starting time <span class="optional">(optional)</span><input id="event-time" name="eventTime" type="time"></label></div>
+<label>Venue and location <span aria-hidden="true">*</span><input id="venue" name="venueLocation" maxlength="180" placeholder="Venue name, city or campus location" required></label>
+<label>What management activity could you observe there? <span aria-hidden="true">*</span><textarea id="focus" name="observationFocus" rows="3" minlength="8" maxlength="400" placeholder="One sentence is enough. For example: ticket entry, crowd flow, staff coordination, sponsor visibility, or fan services." required></textarea><span class="field-help">You do not need field notes or an analysis yet. The final audit will address all six management lenses.</span></label>
+<p class="inline-note"><strong>Attending before October 18?</strong> You can select and attend a site early, but it must be approved before your observation. La Salle varsity athletics events are preapproved. If your event has already passed or you need an exception, contact Professor Levine.</p>
+</fieldset>
+<section id="help-panel" class="assist-panel" hidden aria-live="polite"><h3>We can find an option</h3><p>No ticket purchase is required. Free La Salle Athletics and other suitable campus options are available. Submit this request, then email <a href="mailto:levinej@lasalle.edu?subject=MGT%20340%20Field%20Audit%20Site%20Assistance">levinej@lasalle.edu</a> to discuss a suitable option. You do not need to describe personal circumstances on this form.</p></section>
+<div class="submit-area">
+<label class="acknowledgment"><input id="ack" type="checkbox" required><span>I understand this is an ungraded planning checkpoint, not the field observation or final report. I will follow venue rules and respect privacy.</span></label>
+<p class="privacy" id="privacy">Your name, La Salle email, and site details go to a private course submission database, not a public GitHub page. Identity is self-reported; this form does not use University sign-in. You may submit only once per email. For changes, contact Professor Levine.</p>
+<button class="primary" id="submit-button" type="submit">Submit site confirmation <span aria-hidden="true">→</span></button>
+<p id="status" role="status" aria-live="polite" class="status"></p>
+</div>
+</form>
+</section>
+<section class="panel receipt" id="receipt" hidden aria-labelledby="receipt-heading">
+<span class="success-icon" aria-hidden="true">✓</span>
+<h2 id="receipt-heading">Submission recorded</h2>
+<p id="receipt-summary"></p>
+<dl><div><dt>Confirmation ID</dt><dd id="receipt-id" class="mono"></dd></div><div><dt>Received</dt><dd id="receipt-time"></dd></div><div><dt>Site review</dt><dd id="receipt-review"></dd></div></dl>
+<p id="receipt-next" class="inline-note"></p>
+<button type="button" class="secondary" id="download-receipt">Download my confirmation</button>
+<p class="field-help">Keep your confirmation ID. A downloaded confirmation does not replace instructor approval if your proposed site requires review.</p>
+</section>
+</div>
+<aside class="side-column" aria-labelledby="guide-title">
+<section class="guide"><p class="overline">WHAT COUNTS?</p><h2 id="guide-title">A sport operation you can actually observe</h2>
+<p>Eligible settings include varsity athletics, youth and community sport, professional or amateur events, recreation operations, and live esports events with observable management activity.</p>
+<div class="rule"></div>
+<h3>Look with six management lenses</h3>
+<ol class="lens-list"><li>Operations &amp; facility</li><li>Customer / fan experience</li><li>Marketing, revenue &amp; sponsorship</li><li>People &amp; management</li><li>Access, community &amp; stakeholders</li><li>Manager's opportunity</li></ol>
+<p class="fine">You will need specific field notes and original evidence when you conduct the observation. Avoid disrupting operations or photographing identifiable minors or individuals without permission.</p>
+</section>
+<section class="support"><h3>Need an alternative?</h3><p>Cost, travel, access, work, caregiving, or other circumstances should not prevent you from completing the audit. Request assistance above or contact <a href="mailto:levinej@lasalle.edu">Professor Levine</a>.</p></section>
+</aside>
+</div>
+<footer class="page-footer"><span>MGT 340 · Philadelphia Sport Management Field Audit · Fall 2026</span><span>Professor Jeffrey F. Levine · <a href="mailto:levinej@lasalle.edu">levinej@lasalle.edu</a></span></footer>
+</main>
+</body>
+</html>
