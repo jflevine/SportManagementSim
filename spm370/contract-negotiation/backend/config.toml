@@ -1,0 +1,3 @@
+[functions.spm370-contract-negotiation]
+verify_jwt = false
+# Custom hashed class, per-attempt, and instructor credentials are enforced by handler.mjs.
