@@ -18,7 +18,7 @@ Students need a browser, the class access code, and their school identity; no pa
 2. Enter name, school email, and class code. One attempt is allowed per case version and normalized email. Name/email are self-reported and must be supervised; this is not verified school single sign-on.
 3. Negotiate for 35 minutes, then use five minutes to check the existing record. A clear partial agreement or no deal is acceptable. The student may end bargaining early.
 4. Choose the outcome and finish the conversation. Download the complete numbered transcript. The outcome is the student's description, not an AI judgment.
-5. Complete the separate Word term sheet (file 03) during the assigned 15 minutes. Upload that document and the transcript to Canvas. A server receipt is not a Canvas submission.
+5. Complete the separate Word term sheet (file 03) during the assigned 15 minutes. Upload that document and the transcript to Canvas. Keep the transcript for the Contract Recommendation Memo. A server receipt is not a Canvas submission.
 
 The app saves an unguessable private resume credential in the browser. Students can download it for device changes. They can switch between saved practice and assessed sessions. Email alone never restores access. The instructor may reset a credential only after checking the student's identity. Do not share resume files.
 
