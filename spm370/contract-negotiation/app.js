@@ -45,7 +45,7 @@ app.addEventListener('submit',async e=>{e.preventDefault();if(busy)return;busy=t
  if(form.id==='composer'){
   const text=new FormData(form).get('text').trim();if(!pending||pending.session_id!==session.id)pending={session_id:session.id,request_id:crypto.randomUUID(),text};else if(pending.text!==text)throw Error('Refresh and retry the saved message before composing a different message.');try{localStorage.setItem(key+'.pending',JSON.stringify(pending));}catch{}
   form.querySelector('textarea').disabled=true;const sent=pending;
-  await api('/turn',{body:sent});if(!session.pending)clearSentDraft(sent);render();
+  message('Avery is responding. Please wait for the saved reply.');await api('/turn',{body:sent});message('');if(!session.pending)clearSentDraft(sent);render();
  }
  if(form.id==='admin-login'){adminKey=new FormData(form).get('key');await adminList();}
  if(form.id==='policy-upload'){const file=document.querySelector('#policy').files[0];const p=JSON.parse(await file.text());await api('/instructor/policy',{admin:true,auth:false,body:p});message('Private case version saved.');}

@@ -6,7 +6,7 @@ The app handles the conversation and evidence. Students use the supplied Word te
 
 ## Current boundary
 
-The Supabase Edge Function `spm370-contract-negotiation` is configured with the provider key and separate instructor/pilot access controls. Only the Northline pilot policy is loaded. Assessed release is false. Live activation is blocked: the deployed provider rejects the saved server credential with `401 invalid_api_key`; a separate call with the locally saved original credential succeeds. The first failed live turn was preserved and the session paused. The frontend remains on an unmerged draft branch. A configured health response alone does not establish classroom readiness.
+The Supabase Edge Function `spm370-contract-negotiation` is configured with the provider key and separate instructor/pilot access controls. Only the Northline pilot policy is loaded. Assessed release is false. The deployed API passed a synthetic conversation test on October 14, 2026: live replies, retry without duplicate events, recovery of the original paused attempt, confirmation, finish receipt, and identical participant/instructor records. The frontend is for the instructor pilot only. The actual classroom browser, transcript download, and the full range of authority scenarios still require instructor review before assessed release. A configured health response alone does not establish classroom readiness.
 
 The default model is the documented snapshot `gpt-4.1-mini-2025-04-14`, using the Responses API and strict structured outputs. A real provider call is implemented; there is no scripted substitute presented as live AI. The model is frozen in each session when it starts.
 
@@ -24,7 +24,7 @@ The app saves an unguessable private resume credential in the browser. Students 
 
 ## Instructor pilot
 
-Planned page after activation: [the pilot](https://jflevine.github.io/SportManagementSim/spm370/contract-negotiation/). Use the private launch guide for the pilot access code and a unique `@example.invalid` identity. Open `?instructor=1` with the separate instructor credential to inspect saved records and session controls. No API key belongs in either form.
+Open [the pilot](https://jflevine.github.io/SportManagementSim/spm370/contract-negotiation/). Use the private launch guide for the pilot access code and a unique `@example.invalid` identity. Open `?instructor=1` with the separate instructor credential to inspect saved records and session controls. No API key belongs in either form.
 
 Only `northline-pilot-v2-1` is loaded. No Harbor practice policy or graded policy is active. The server independently denies new graded attempts. Complete the classroom-device pilot and review full transcripts before a separately authorized assessed release. Then load the reviewed graded policy, confirm its class window, change the frontend mode choices, and enable the server release gate. Pilot approval does not itself authorize those steps.
 

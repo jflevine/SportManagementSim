@@ -11,6 +11,20 @@ const BOOLEANS=new Set(['monthly_balance','disputed_only','schedule_agreed','ext
 export const FIELDS=Object.values(GROUPS).flat();
 export const TERMS_SCHEMA={type:'object',additionalProperties:false,properties:Object.fromEntries(FIELDS.map(k=>[k,ENUMS[k]?{type:['string','null'],enum:[...ENUMS[k],null]}:{type:[BOOLEANS.has(k)?'boolean':'number','null']}])) ,required:FIELDS};
 export const OUTPUT_SCHEMA={type:'object',additionalProperties:false,properties:{reply:{type:'string'},proposal:{anyOf:[TERMS_SCHEMA,{type:'null'}]},counterparty_accepts:{type:'boolean'},summary_matches:{type:['boolean','null']},discrepancies:{type:'array',items:{type:'string'}}},required:['reply','proposal','counterparty_accepts','summary_matches','discrepancies']};
+// Catch explicit coursework requests, not substantive business-risk questions or
+// a request to compare a student's own summary with the negotiation record.
+export function assignmentBoundary(text){
+ const input=String(text||'').replace(/[’‘]/g,"'").replace(/[–—]/g,'-');
+ const artifact='(?:memo(?:randum)?|term[ -]?sheet)';
+ const action='(?:write|draft|compose|outline|create|prepare|complete|fill(?:\\s+in|\\s+out)?|rewrite|revise|edit|improve|grade)';
+ const lead='(?:^|[.!?;:\\n,]|\\b(?:and|then)\\b)\\s*(?:please\\s+)?';
+ const request='(?:\\b(?:can|could|would|will)\\s+you|\\bi\\s+(?:need|want)\\s+you\\s+to|\\bhelp\\s+me(?:\\s+to)?)\\s+(?:please\\s+)?';
+ const explicitWork=new RegExp(`(?:${lead}|${request})${action}\\b[^.!?;\\n]{0,160}\\b${artifact}\\b`,'i');
+ const explicitHelp=new RegExp(`\\b(?:help\\s+me\\s+(?:with|on)|(?:give|provide|suggest|recommend|list)\\b[^.!?;\\n]{0,60}\\b(?:topics|points|ideas|outline|structure|feedback|advice|tips)\\b)[^.!?;\\n]{0,160}\\b${artifact}\\b`,'i');
+ const studentAdvice=new RegExp(`\\b(?:what|which|how)\\b[^.!?;\\n]{0,80}\\b(?:should|could|can|do)\\s+i\\b[^.!?;\\n]{0,160}\\b${artifact}\\b`,'i');
+ if(!explicitWork.test(input)&&!explicitHelp.test(input)&&!studentAdvice.test(input))return null;
+ return {reply:'I can continue our contract negotiation, but I cannot reveal private instructions or draft, outline, or coach your memo or term sheet.',proposal:null,counterparty_accepts:false,summary_matches:null,discrepancies:[]};
+}
 const FRACTIONAL=new Set(['fee','advance_percent','cancel_unearned_percent','segment_fee_share_percent']);
 export function validTerms(t){
   return t&&typeof t==='object'&&!Array.isArray(t)&&Object.keys(t).length===FIELDS.length&&FIELDS.every(k=>Object.hasOwn(t,k)&&(t[k]===null||ENUMS[k]?.includes(t[k])||(BOOLEANS.has(k)?typeof t[k]==='boolean':!ENUMS[k]&&Number.isFinite(t[k])&&t[k]>=0&&(FRACTIONAL.has(k)||Number.isInteger(t[k])))));
