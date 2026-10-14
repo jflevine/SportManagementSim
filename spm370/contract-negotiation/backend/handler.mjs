@@ -68,7 +68,7 @@ export function createHandler({store,provider,instructorHash,classHash,allowedOr
      const result=await provider.reply({policy:p,session:s,events:await store.events(s.id),text:body.text,sessionPhase:begun.phase,termSheet:begun.phase==='confirmation'?s.sheet:null});
      // Provider output is already shape/authority validated. No private diagnostics leave here.
      await store.command('finish_turn',{session_id:s.id,request_id:body.request_id,text:result.value.reply,payload:{...result.value,usage:result.usage}});
-    }catch(e){await store.command('fail_turn',{session_id:s.id,request_id:body.request_id});return send({ok:false,error:'The AI reply could not be confirmed. Your message is saved and the session is paused. Ask your instructor to resume or use the human alternative.',session:await view(await store.session(s.id))},503);}
+    }catch(e){console.error('Avery turn failed',JSON.stringify({providerStatus:Number.isInteger(e.providerStatus)?e.providerStatus:null,providerCode:/^[a-z_]{1,60}$/.test(e.providerCode||'')?e.providerCode:null,kind:e.name==='AbortError'?'timeout':'request_or_validation'}));await store.command('fail_turn',{session_id:s.id,request_id:body.request_id});return send({ok:false,error:'The AI reply could not be confirmed. Your message is saved and the session is paused. Ask your instructor to resume or use the human alternative.',session:await view(await store.session(s.id))},503);}
     return send({ok:true,session:await view(await store.session(s.id))});
    }
    if(path==='/accept'){

@@ -11,7 +11,7 @@ export function createProvider({key,model,fetcher=fetch}){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),40000);
   try{
    const r=await fetcher('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model:activeModel,store:false,instructions,input:messages,text:{format:{type:'json_schema',name:'counterparty_turn',strict:true,schema:OUTPUT_SCHEMA}},max_output_tokens:2200}),signal:controller.signal});
-   if(!r.ok)throw Error(`AI service returned ${r.status}`);
+   if(!r.ok){let code='upstream_error';try{const d=await r.json();if(/^[a-z_]{1,60}$/.test(d.error?.code||''))code=d.error.code;}catch{}throw Object.assign(Error(`AI service returned ${r.status}`),{providerStatus:r.status,providerCode:code});}
    const data=await r.json();
    if(data.status!=='completed')throw Error('AI response did not complete');
    const raw=(data.output||[]).filter(x=>x.type==='message').flatMap(x=>x.content||[]).filter(x=>x.type==='output_text').map(x=>x.text).join('');

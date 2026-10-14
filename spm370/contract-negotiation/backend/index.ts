@@ -5,9 +5,13 @@ import {loadAccess} from './access.mjs';
 const key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const url=Deno.env.get('SUPABASE_URL')||'';
 const store=createStore({url,key});
+// Accept a copied dotenv assignment without changing any key characters.
+const rawProviderKey=Deno.env.get('OPENAI_API_KEY')||'';
+let providerKey=rawProviderKey.trim().replace(/^OPENAI_API_KEY\s*=\s*/, '');
+if((providerKey.startsWith('"')&&providerKey.endsWith('"'))||(providerKey.startsWith("'")&&providerKey.endsWith("'")))providerKey=providerKey.slice(1,-1);
 const options={
  store,
- provider:createProvider({key:Deno.env.get('OPENAI_API_KEY'),model:Deno.env.get('SPM370_CONTRACT_MODEL')||'gpt-4.1-mini-2025-04-14'}),
+ provider:createProvider({key:providerKey,model:Deno.env.get('SPM370_CONTRACT_MODEL')||'gpt-4.1-mini-2025-04-14'}),
  allowedOrigins:(Deno.env.get('SPM370_CONTRACT_ORIGINS')||'https://jflevine.github.io').split(',').map(s=>s.trim()),
  released:Deno.env.get('SPM370_CONTRACT_RELEASED')==='true'
 };
