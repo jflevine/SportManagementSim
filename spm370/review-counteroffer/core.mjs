@@ -2,7 +2,7 @@ export const API = 'https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370
 export const CASE_VERSION = 'decision-lab-3-v1';
 export const SCHEMA_VERSION = 1;
 export const STORAGE_KEY = 'spm370-review-counteroffer-v1';
-export const decisions = {proceed:'Proceed on the commercial terms, subject to clarification',counter:'Make a counteroffer',decline:'Decline and use staff-created promotion'};
+export const decisions = {proceed:'Keep the proposed price and main terms; clarify one obligation',counter:'Propose a different price or scope of work, and clarify one obligation',decline:'Decline and use staff-created promotion'};
 export const clauseTitles = ['Video and publication','Fee and payment','Review and timing','Reposting and promotion','Additional support','Ownership and permissions'];
 export function wordCount(value=''){return value.trim() ? value.trim().split(/\s+/u).length : 0;}
 export function csvCell(value){const s=String(value??'');return '"'+(/^[\s]*[=+@-]/.test(s)?"'"+s:s).replaceAll('"','""')+'"';}
