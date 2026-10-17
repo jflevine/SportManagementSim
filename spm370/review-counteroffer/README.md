@@ -1,6 +1,6 @@
 # SPM 370 — Review the Counteroffer
 
-A 12-minute individual Decision Lab: read the client brief and six-clause offer, recommend a course of action, and clarify one priority clause. Students write two short answers; 120–180 words total is guidance rather than a minimum. The 10-point rubric is visible on the activity page. This lab runs without generative AI.
+A 12-minute individual Decision Lab: read the client brief and six-clause offer, recommend a course of action, and write a short reply proposing one specific change and asking one useful question about a priority issue. Students write two short answers; 120–180 words total is guidance rather than a minimum. The 10-point rubric is visible on the activity page. This lab runs without generative AI.
 
 ## Classroom use
 
@@ -8,11 +8,17 @@ Student page: https://jflevine.github.io/SportManagementSim/spm370/review-counte
 
 Instructor page: https://jflevine.github.io/SportManagementSim/spm370/review-counteroffer/instructor.html
 
-Allow 2 minutes to read, 7 to write and submit, and 3 for instructor-led discussion. Provide the class code through the course LMS. Students use their names and La Salle email addresses; these are self-reported, not verified school sign-on. A confirmed submission is final. The page saves a local draft and offers a text download, but only a server receipt confirms submission. A pending submission retries the same saved answers and identifier.
+Allow 3 minutes to read, 6 to write and submit, and 3 for instructor-led discussion. Compare how a specific proposal and an information-seeking question help students prepare to negotiate with Avery. Provide the class code through the course LMS. Students use their names and La Salle email addresses; these are self-reported, not verified school sign-on. A confirmed submission is final. The page saves a local draft and offers a text download, but only a server receipt confirms submission. A pending submission retries the same saved answers and identifier.
 
 The instructor key opens saved responses, manual 4/2/4 scoring, feedback, and CSV export. It also controls whether new submissions are open. Existing records remain accessible after closing. Never share the instructor key with students. Keep access credentials and teaching answers out of this public repository.
 
 This is a separate weekly Decision Lab. It does not modify or activate the Northline/Avery negotiation project.
+
+## Prompt update and original-version fairness
+
+The October 17 prompt update asks “What would you say next?” rather than requiring a replacement clause. The 10 points remain recommendation/reasoning 4, applied concept 2, and reply 4 (specific within-authority proposal 2; useful question 2). Students who began the original version may submit their clause revision for the same final 4 points, assessed for specificity, workability, and resolution of the chosen uncertainty. Do not require a question or message format from them. Submission time cannot establish when an unsubmitted browser draft began.
+
+The stored `clarification` field and grade key deliberately remain unchanged and can contain either response format. Instructor and export labels describe both; they do not classify old responses as new-format replies. Case version, storage key, input names, decision values, and API shape are unchanged. Do not clear saved drafts, alter pending submissions, or regrade existing records automatically.
 
 ## Implementation
 

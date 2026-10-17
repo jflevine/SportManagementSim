@@ -16,7 +16,7 @@ export function responseText(payload, receipt=null){return [
  `Decision: ${decisions[payload.decision]||''}`,
  '\nRECOMMENDATION\n'+(payload.recommendation||''),
  `\nPRIORITY CLAUSE: ${payload.clause_number||''} ${clauseTitles[Number(payload.clause_number)-1]||''}`,
- '\nPROPOSED REPLACEMENT\n'+(payload.clarification||'')
+ '\nREPLY TO CASEY OR ORIGINAL CLAUSE REVISION\n'+(payload.clarification||'')
 ].join('\n');}
 export function download(name,text,type='text/plain;charset=utf-8'){
  const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
