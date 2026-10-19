@@ -1,7 +1,8 @@
 export const API = 'https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-counteroffer';
 export const CASE_VERSION = 'decision-lab-3-v1';
 export const SCHEMA_VERSION = 1;
-export const STORAGE_KEY = 'spm370-review-counteroffer-v1';
+export const RETRY_ATTEMPT = typeof location !== 'undefined' && new URLSearchParams(location.search).get('attempt') === '2';
+export const STORAGE_KEY = 'spm370-review-counteroffer-v1' + (RETRY_ATTEMPT ? '-attempt-2' : '');
 export const decisions = {proceed:'Keep the proposed price and main terms; clarify one obligation',counter:'Propose a different price or scope of work, and clarify one obligation',decline:'Decline and use staff-created promotion'};
 export const clauseTitles = ['Video and publication','Fee and payment','Review and timing','Reposting and promotion','Additional support','Ownership and permissions'];
 export function wordCount(value=''){return value.trim() ? value.trim().split(/\s+/u).length : 0;}
@@ -12,6 +13,7 @@ export function responseText(payload, receipt=null){return [
  'SPM 370 • Legal Decision Lab 3 • Review the Counteroffer',
  receipt ? `SERVER CONFIRMED • Receipt: ${receipt.receipt} • ${receipt.submitted_at}` : 'UNSUBMITTED COPY • This download is not proof of submission.',
  `Case: ${payload.case_version||CASE_VERSION}`,
+ `Attempt: ${receipt?.attempt_number || (payload.retry_attempt ? 2 : 1)}`,
  `Name: ${payload.name||''}`, `Email: ${payload.email||''}`,
  `Decision: ${decisions[payload.decision]||''}`,
  '\nRECOMMENDATION\n'+(payload.recommendation||''),
@@ -30,3 +32,4 @@ export async function request(path,{method='GET',headers={},body,timeout=25000}=
   return data;
  }finally{clearTimeout(id);}
 }
+

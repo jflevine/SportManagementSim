@@ -11,6 +11,7 @@ export function submission(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) throw fail(400, 'Provide a submission.');
   if (!uuid(body.submission_id) || typeof body.submission_token !== 'string' || !/^[A-Za-z0-9_-]{64,128}$/.test(body.submission_token)) throw fail(400, 'The private submission identifier is invalid. Reload the activity before submitting.');
   if (body.case_version !== CASE_VERSION || body.schema_version !== SCHEMA_VERSION) throw fail(409, 'This activity version is out of date. Save your answers, then reload the activity.', 'version_mismatch');
+  if (body.retry_attempt !== undefined && body.retry_attempt !== true) throw fail(400, 'Invalid retry request.');
   const email = string(body.email, 6, 160, 'School email').toLowerCase();
   if (!/^[a-z0-9.!#$%&'*+\/=?^_`{|}~-]+@lasalle\.edu$/.test(email)) throw fail(400, 'Enter your La Salle email ending in @lasalle.edu.');
   if (!['proceed', 'counter', 'decline'].includes(body.decision)) throw fail(400, 'Choose proceed, counter, or decline.');
@@ -21,7 +22,8 @@ export function submission(body) {
     decision: body.decision,
     recommendation: string(body.recommendation, LIMITS.recommendation_min, LIMITS.recommendation_max, 'Recommendation'),
     clause_number: body.clause_number,
-    clarification: string(body.clarification, LIMITS.clarification_min, LIMITS.clarification_max, 'Clarification')
+    clarification: string(body.clarification, LIMITS.clarification_min, LIMITS.clarification_max, 'Clarification'),
+    ...(body.retry_attempt === true ? {retry_attempt:true} : {})
   };
 }
 export function grade(body) {
@@ -40,3 +42,4 @@ export function equalHash(a, b) {
   let diff = 0; for (let i = 0; i < 64; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
+

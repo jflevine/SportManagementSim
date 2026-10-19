@@ -27,3 +27,12 @@ Static HTML/CSS/JavaScript hosted on GitHub Pages, with an isolated saved-submis
 For a local preview, serve this directory on port 8765. The API permits that local origin and the published GitHub Pages origin. Run focused unit tests with `node --test tests/backend.test.mjs`. The live test is opt-in, uses private access credentials, and requires owner cleanup of its recorded synthetic IDs; do not run it against a class in progress.
 
 Instructor grades are stored in this service and exported as CSV; there is no automatic Canvas grade synchronization. Use the existing course process to return feedback and record grades.
+
+## Individually authorized additional attempt
+
+The `?attempt=2` URL selects a separate local draft/receipt slot and sends an explicit retry marker. It does not grant permission. The server accepts at most one additional attempt only for an original submission privately authorized by the owner. It links the new immutable record to the original; neither original work nor grades are replaced. Instructor review and CSV show the attempt number and original ID. The full 10-point rubric applies; grades remain manual.
+
+Apply `backend/retry-migration.sql` once after the existing installation. Never rerun the fresh-install schema. Authorization records are private database-owner actions with no public management endpoint. Never put student identities or authorization data into this repository. Existing school-email/class-code authentication remains self-reported identity, not individual sign-on. The settings-row transaction lock and unique linked-retry index enforce one use; exact saved request retries preserve their receipt even after closing.
+
+Run `node --test tests/*.test.mjs`. `tests/retry-database.sql` verifies synthetic runtime cases inside a rolled-back transaction; it does not consume a real student authorization. Do not run persistent synthetic live submissions against a class in progress.
+

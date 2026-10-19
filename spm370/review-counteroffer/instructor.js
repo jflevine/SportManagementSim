@@ -1,4 +1,4 @@
-import {decisions,clauseTitles,toCSV,download,responseText,request} from './core.mjs';
+import {decisions,clauseTitles,toCSV,download,responseText,request} from './core.mjs?retry-v1';
 const $=id=>document.getElementById(id);let key='',submissions=[],selected=null,settings={accepts_submissions:true},dirty=false;
 function status(text,kind=''){$('admin-status').textContent=text;$('admin-status').className='status '+kind;}
 function gradeOf(row){return row.grade||null;}
@@ -9,14 +9,14 @@ function renderList(){
  const filter=$('filter').value.trim().toLowerCase();const root=$('submission-list');root.replaceChildren();
  const rows=submissions.filter(x=>(x.name+' '+x.email).toLowerCase().includes(filter));
  for(const row of rows){const b=document.createElement('button');b.type='button';b.className='submission-button';b.setAttribute('aria-pressed',String(selected?.submission_id===row.submission_id));
-  const n=document.createElement('strong');n.textContent=row.name;const e=document.createElement('span');e.className='small';e.textContent=row.email;const g=document.createElement('span');g.className='small';g.textContent=row.grade?`${total(pointsOf(row))}/10 · Assessed`:'Awaiting review';b.append(n,e,g);b.addEventListener('click',()=>choose(row));root.append(b);
+  const n=document.createElement('strong');n.textContent=row.name+' · Attempt '+(row.attempt_number||1);const e=document.createElement('span');e.className='small';e.textContent=row.email;const g=document.createElement('span');g.className='small';g.textContent=row.grade?`${total(pointsOf(row))}/10 · Assessed`:'Awaiting review';b.append(n,e,g);b.addEventListener('click',()=>choose(row));root.append(b);
  }if(!rows.length){const p=document.createElement('p');p.className='empty';p.textContent=submissions.length?'No matching students.':'No submissions yet.';root.append(p);}
  $('submission-count').textContent=`${submissions.length} submission${submissions.length===1?'':'s'} · ${submissions.filter(x=>x.grade).length} assessed`;
 }
 function choose(row,force=false){
  if(dirty&&!force&&!confirm('Leave this unsaved assessment?'))return;
  selected=row;dirty=false;$('review-panel').hidden=false;$('no-selection').hidden=true;$('review-name').textContent=row.name;
- $('review-meta').textContent=`${row.email} · ${new Date(row.submitted_at).toLocaleString()} · Receipt ${row.receipt}`;
+ $('review-meta').textContent=`${row.email} · Attempt ${row.attempt_number||1}${row.original_submission_id ? ' · Original ID '+row.original_submission_id : ''} · ${new Date(row.submitted_at).toLocaleString()} · Receipt ${row.receipt}`;
  $('review-decision').textContent=decisions[row.decision]||row.decision;$('review-recommendation').textContent=row.recommendation;
  $('review-clause').textContent=`Reply or original clause revision · Clause ${row.clause_number}: ${clauseTitles[row.clause_number-1]||''}`;$('review-clarification').textContent=row.clarification;
  const p=pointsOf(row);for(const k of ['recommendation','concept','clarification'])$('score-'+k).value=p[k]??'';
@@ -45,6 +45,7 @@ $('grade-form').addEventListener('submit',async e=>{
   dirty=false;await load();$('grade-status').textContent='Assessment saved.';status('Assessment saved successfully.','success');
  }catch(err){$('grade-status').textContent=err.status===409?'Another assessment revision was saved. Copy your feedback, refresh, and review the current scores before trying again.':'Save was not confirmed. '+err.message;}finally{setSaving(false);}
 });
-$('export').addEventListener('click',()=>{if(dirty&&!confirm('Export only saved assessments? Unsaved changes will not be included.'))return;const rows=[['Name','Email','Decision','Recommendation','Priority clause','Reply to Casey or original clause revision','Recommendation /4','Course concept /2','Reply or original revision /4','Total /10','Feedback','Grade revision','Submitted at','Receipt','Case version']];for(const r of submissions){const p=pointsOf(r);rows.push([r.name,r.email,decisions[r.decision]||r.decision,r.recommendation,r.clause_number,r.clarification,p.recommendation??'',p.concept??'',p.clarification??'',r.grade?total(p):'',r.grade?.feedback||'',r.grade?.revision||'',r.submitted_at,r.receipt,r.case_version]);}download('SPM370_Decision_Lab_3_Responses.csv',toCSV(rows),'text/csv;charset=utf-8');});
+$('export').addEventListener('click',()=>{if(dirty&&!confirm('Export only saved assessments? Unsaved changes will not be included.'))return;const rows=[['Name','Email','Decision','Recommendation','Priority clause','Reply to Casey or original clause revision','Recommendation /4','Course concept /2','Reply or original revision /4','Total /10','Feedback','Grade revision','Submitted at','Receipt','Case version','Attempt','Original submission ID']];for(const r of submissions){const p=pointsOf(r);rows.push([r.name,r.email,decisions[r.decision]||r.decision,r.recommendation,r.clause_number,r.clarification,p.recommendation??'',p.concept??'',p.clarification??'',r.grade?total(p):'',r.grade?.feedback||'',r.grade?.revision||'',r.submitted_at,r.receipt,r.case_version,r.attempt_number||1,r.original_submission_id||'']);}download('SPM370_Decision_Lab_3_Responses.csv',toCSV(rows),'text/csv;charset=utf-8');});
 $('download-response').addEventListener('click',()=>{if(selected)download('SPM370_Decision_Lab_3_Response.txt',responseText(selected,selected));});
 addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+

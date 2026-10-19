@@ -12,6 +12,7 @@ function publicSettings(s) { return {case_version: CASE_VERSION, schema_version:
 const databaseErrors = {
   ACTIVITY_CLOSED: [409, 'Submissions are closed. Download your answers and contact the instructor.', 'activity_closed'],
   DUPLICATE_EMAIL: [409, 'A response already exists for this email. Your saved response was not changed; contact the instructor if needed.', 'duplicate_email'],
+  RETRY_NOT_AUTHORIZED: [409, 'An additional attempt is not available for this email. Check your school email or contact your instructor. Your original submission was not changed.', 'retry_not_authorized'],
   RETRY_MISMATCH: [409, 'This submission identifier belongs to a different request. Your original response was not changed.', 'retry_mismatch'],
   GRADE_CONFLICT: [409, 'This grade changed in another window. Refresh the record before saving again.', 'grade_conflict'],
   NOT_FOUND: [404, 'The submission was not found.', 'not_found'],
@@ -64,3 +65,4 @@ export function createHandler({store, allowedOrigins = ['https://jflevine.github
     }
   };
 }
+
