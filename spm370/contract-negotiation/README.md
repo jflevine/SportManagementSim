@@ -9,7 +9,7 @@ The main page is the student midterm. Avery Chen is an AI counterparty represent
 - Allow 35 minutes for negotiation, five minutes for confirmation, and 15 minutes for the separate term sheet. Start by 11 p.m. to allow an upload buffer.
 - New session clocks are capped at the common deadline. Starting late reduces available conversation time and can leave no confirmation time. Instructor accommodations can extend an individual session.
 - One graded attempt per normalized email and case version. Names and emails are self-reported, not school single sign-on.
-- Complete the separate Word term sheet (file 03). Upload it and the downloaded full transcript to Canvas. Saving the app record does not submit to Canvas.
+- Complete the separate Word term sheet (file 03). Upload it and the downloaded full transcript to Canvas. The primary transcript download is a genuine Word (.docx) document in Times New Roman; a plain-text backup remains available. Both include the full numbered conversation and receipt. Downloading is local to the browser and requires no additional service. Email delivery is not enabled. Saving the app record does not submit to Canvas.
 - The Contract Recommendation Memo remains a separate assignment under the Student Guide.
 
 ## Instructor test and records
