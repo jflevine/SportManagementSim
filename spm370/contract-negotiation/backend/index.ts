@@ -13,11 +13,15 @@ const options={
  store,
  provider:createProvider({key:providerKey,model:Deno.env.get('SPM370_CONTRACT_MODEL')||'gpt-4.1-mini-2025-04-14'}),
  allowedOrigins:(Deno.env.get('SPM370_CONTRACT_ORIGINS')||'https://jflevine.github.io').split(',').map(s=>s.trim()),
- released:Deno.env.get('SPM370_CONTRACT_RELEASED')==='true'
+ released:false
 };
 // Resolve missing access hashes privately per request, so a failed lookup never
 // enables access and a corrected configuration does not require an isolate restart.
 Deno.serve(async req=>{
  const access=await loadAccess({store,instructorEnv:Deno.env.get('SPM370_CONTRACT_INSTRUCTOR_KEY_HASH'),classEnv:Deno.env.get('SPM370_CONTRACT_CLASS_CODE_HASH')});
- return createHandler({...options,...access})(req);
+ // The owner releases a reviewed private case explicitly. Its window is enforced
+ // by both the request handler and the database; missing settings fail closed.
+ let released=false;
+ try { released=(await store.policy('graded'))?.assessed_release===true; } catch {}
+ return createHandler({...options,...access,released})(req);
 });

@@ -46,7 +46,8 @@ export function createHandler({store,provider,instructorHash,classHash,allowedOr
     if(!provider.configured)throw fail(503,'The AI negotiation is not active. Ask your instructor for the assigned arrangement.');
     if(!['graded','practice','pilot'].includes(body.mode))throw fail(400,'Choose a session mode');
     if(body.mode==='graded'&&!released)throw fail(403,'The assessed session has not been released');
-    if(!classHash||typeof body.classCode!=='string'||await digest(body.classCode)!==classHash)throw fail(403,'Class access code was not verified');
+    const expectedHash=body.mode==='pilot'?instructorHash:classHash;
+    if(!expectedHash||typeof body.classCode!=='string'||await digest(body.classCode)!==expectedHash)throw fail(403,body.mode==='pilot'?'Instructor test access was not verified. Use your instructor access credential.':'Class access code was not verified');
     if(typeof body.name!=='string'||body.name.trim().length<3||body.name.length>120||typeof body.email!=='string'||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)||body.email.length>160||body.consent!==true)throw fail(400,'Enter your name, school email, and submission acknowledgement');
     if(body.mode==='pilot'&&!body.email.endsWith('@example.invalid'))throw fail(400,'Pilot sessions require a synthetic example.invalid identity');
     const p=await store.policy(body.mode);if(!p)throw fail(503,'This session has not been configured');
@@ -54,6 +55,8 @@ export function createHandler({store,provider,instructorHash,classHash,allowedOr
     if(!idOK(id)||typeof credential!=='string'||!/^[0-9a-f-]{72}$/i.test(credential))throw fail(400,'Invalid private attempt credential');
     const existing=await store.session(id);
     if(existing){if(await digest(credential)!==existing.token_hash)throw fail(401,'Attempt could not be resumed');return send({ok:true,token:credential,session:await view(existing)});}
+    if(now()<Date.parse(p.release_at))throw fail(403,'This session opens October 22 at 3:30 p.m. Eastern. Return at the opening time.');
+    if(now()>=Date.parse(p.close_at))throw fail(403,'The deadline for starting this session has passed. Resume your saved record or contact Professor Levine.');
     try{await store.command('create',{id,case_id:p.id,model_name:p.model_name||provider.model,token_hash:await digest(credential),name:body.name.trim(),email:body.email.trim().toLowerCase()});}catch(e){if(/duplicate|unique/i.test(e.message))throw fail(409,'An attempt already exists for this email. Resume on the original browser or ask your instructor to restore access.');throw e;}
     return send({ok:true,token:credential,session:await view(await store.session(id))});
    }
