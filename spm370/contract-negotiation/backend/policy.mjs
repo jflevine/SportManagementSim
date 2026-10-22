@@ -61,6 +61,8 @@ export function validateOutput(v){return v&&typeof v.reply==='string'&&v.reply.t
 export function sanitizeModel(v,policy,sessionPhase){
  if(!validateOutput(v))throw Error('Model returned an invalid response');
  if(sessionPhase!=='bargaining')return {...v,reply:v.summary_matches===true?'I found no discrepancy in the summary against the saved record. These terms remain provisional.':'Please review the summary against the saved record before submitting. No new concessions are made in this phase.',proposal:null,counterparty_accepts:false,discrepancies:[]};
+ // Auxiliary model commentary is never part of the negotiation record shown to participants.
+ v={reply:v.reply,proposal:v.proposal,counterparty_accepts:v.counterparty_accepts,summary_matches:null,discrepancies:[]};
  if(v.proposal&&FIELDS.some(k=>v.proposal[k]===null))return {...v,proposal:null,counterparty_accepts:false};
  if(v.proposal&&!evaluateTerms(v.proposal,policy).ok)return {reply:'I cannot confirm that package as written. Let us clarify the terms before recording any agreement.',proposal:null,counterparty_accepts:false,summary_matches:null,discrepancies:[],validation_alert:'A model-proposed package failed the private authority checks and was not shown or accepted.'};
  return v;

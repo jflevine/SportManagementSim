@@ -28,6 +28,8 @@ Graded release requires the active private graded policy's `assessed_release` fi
 
 The public health route reports configuration booleans. Configuration alone does not prove live model quality. October 22 verification includes real AI replies, rejection of an impermissible opening, a supported 25% advance exchange, relevant scheduling facts, refusal to draft coursework, exact request retries, confirmation, saved receipts, and matching participant/instructor records.
 
+Auxiliary model commentary is removed from participant API views, including historical events, and is not rendered or exported by the interface. The provider also checks replies for known internal-limit language, retries once, and uses a nonaccepting clarification if that check fails again. This is a targeted safeguard, not a guarantee against every possible model error. Shared conversation instructions distinguish opening demands from authority, exclusivity from reuse rights, and proposals from accepted terms. These response-handling changes also apply on the next turn of existing sessions; saved dialogue and private case economics remain unchanged.
+
 ## Recovery
 
 The browser saves a private resume credential. Students should save the private resume file for device recovery and keep it confidential. Email alone does not recover a session. Existing pilot and midterm records remain separate.
