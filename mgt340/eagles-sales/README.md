@@ -38,7 +38,17 @@ PRO step or purchase factor. Drafts are scoped to the session and next round.
 Only submitted planning is included in instructor records and downloads, never
 in the buyer's model context.
 
-After each conversation, choose **End round & get feedback**, check the advice
+When the buyer genuinely agrees to the appropriate outcome, the buyer briefly
+confirms it, recaps the agreed terms or next step, requests the relevant written
+follow-up in the simulation, and signs off in their own voice. The page displays
+**Call complete** and stops additional messages. Choose **Get feedback & choose
+next buyer** to review and continue. A purchase commitment is different from
+permission to follow up, a plan-review meeting, or a service-review agreement;
+these next steps do not claim a sale, renewal, email or future service occurred.
+Interest alone does not end the round. If the conversation has not reached an
+agreement, you can still choose **End round & get feedback**.
+
+After each conversation, review feedback, check the advice
 against the transcript, choose a buyer, rotate roles, and begin the next round.
 At the end, select one conversation for a 100–150-word account note identifying
 the buyer and round, an exact statement, recommendation, outcome and follow-up.
@@ -79,4 +89,5 @@ turn limits, submission bounds, and private buyer constraints. DOM tests cover b
 exports and final submission. Live checks exercise
 buyer voice, recovery, buyer constraints and switching through the existing endpoint. Private backend source and QA
 materials are maintained outside this public repository.
+
 
