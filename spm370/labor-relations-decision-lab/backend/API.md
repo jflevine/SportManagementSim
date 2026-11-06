@@ -1,7 +1,7 @@
 # Pixel Forge private assessment API
 
-Planned endpoint: `https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-labor-v3`.
-Status: contract; deployment pending verification. JSON requests and responses. No Supabase key is needed in the student browser: the function authenticates each attempt with a random bearer token and instructors separately.
+Production endpoint: `https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/spm370-labor-v3`.
+Status: deployed and open. One recorded attempt per normalized La Salle email, with save/resume before final submission. JSON requests and responses. No Supabase key is needed in the student browser: the function authenticates each attempt with a random bearer token and instructors separately.
 
 ## Browser contract
 

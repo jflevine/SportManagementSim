@@ -45,3 +45,7 @@ Run:
 The formative stub-DOM suite traverses 576 role/priority/evidence/decision paths. Backend synthetic tests cover role selection, key withholding, scoring, all MC subtotals and half-point writing totals including zero, locked receipts, concurrent replay, duplicate identity handling, revisions, grade audit, recovery, closed state, validation, origin limits, and authentication. The rollback-only SQL test verifies real database ACLs and atomic scoring/review behavior without retaining fixtures. These tests do not substitute for live-browser and deployment verification.
 
 Do not publish private assessment JSON, production entrypoints, verifier digests, resume codes, student data, or local QA-only tooling. The local QA server is synthetic and is not part of the deployed activity.
+
+## Release verification · November 6, 2026
+
+The published student page, both role entry paths, guides, backups, and protected instructor entry were checked in a real browser. Both production API flows passed save/resume, single-attempt enforcement, immutable receipts, writing/final pending states, audited semantic review, and student retrieval of the final total. Browser receipt rendering and instructor review were independently exercised against the same current handler with synthetic data. Narrow-screen layouts passed at 388 and 323 CSS pixels. Physical touch-device behavior and actual PDF pagination were not tested.
