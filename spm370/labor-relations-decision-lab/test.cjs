@@ -1,28 +1,19 @@
-const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const html=fs.readFileSync(__dirname+'/index.html','utf8');
-const source=html.match(/<script>([\s\S]*?)<\/script>/)[1];
-const listeners={},nodes={};
-const node=id=>nodes[id]??=( {innerHTML:'',textContent:'',value:'',disabled:false,classList:{add(){},remove(){},toggle(){}},addEventListener(){},focus(){},scrollIntoView(){},setCustomValidity(){},reportValidity(){}} );
-const context=vm.createContext({document:{getElementById:node,querySelector:()=>null,querySelectorAll:()=>[],addEventListener:(type,fn)=>listeners[type]=fn,body:{appendChild(){}}},window:{scrollTo(){},addEventListener(){},print(){}},requestAnimationFrame:fn=>fn(),location:{hash:'',pathname:'/',search:''},history:{replaceState(){}},setTimeout,URL,Blob,confirm:()=>false});
-vm.runInContext(source,context);
-const run=s=>vm.runInContext(s,context);
-const click=data=>listeners.click({target:{closest:()=>({dataset:data,disabled:false})}});
-assert(nodes.app.innerHTML.includes('The meetings stopped.'));
-click({action:'start'}); assert.equal(run('state.stage'),1);
-click({file:'0'});click({file:'0'});click({file:'1'});click({file:'2'});assert.equal(run('state.opened.length'),2);
-click({action:'toResponse'});assert.equal(run('state.stage'),2);
-click({response:'1'});click({response:'0'});assert.equal(run('state.response'),1);
-click({action:'toTwist'});click({twist:'0'});click({twist:'3'});assert.equal(run('state.twist'),0);
-click({action:'toMemo'});assert(nodes.app.innerHTML.includes('memoForm'));
-let paths=0;
-for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)for(let a=0;a<4;a++)for(let b=0;b<4;b++){
- run(`state.opened=[${i},${j}];state.response=${a};state.twist=${b};state.complete=false;`);
- for(let stage=1;stage<=4;stage++){run(`showStage(${stage})`);assert(!nodes.app.innerHTML.includes('undefined'));assert(nodes.app.innerHTML.length>2000)}
- run(`state.memo={risk1:'<script>alert(1)</script> bad faith',risk2:'Financial disclosure risk tied to refusal.',missing:'The complete record and financial request.',next:'Schedule meetings and provide relevant support.'};state.complete=true;render()`);
- assert(!nodes.app.innerHTML.includes('<script>alert'));assert(nodes.app.innerHTML.includes('&lt;script&gt;'));assert(run('reportText()').includes('Financial disclosure risk'));
- paths++;
+'use strict';
+const assert=require('assert'),vm=require('vm'),fs=require('fs');
+const content=fs.readFileSync(__dirname+'/content.js','utf8'),app=fs.readFileSync(__dirname+'/app.js','utf8');
+function harness(){
+ const events={},els={},downloads=[];let printCount=0,answer=true;
+ class El{constructor(id=''){this.id=id;this.innerHTML='';this.textContent='';this.value='';this.dataset={};this.disabled=false;this.classList={add(){},remove(){}};}focus(){}remove(){this.removed=true;}appendChild(el){if(el.download)downloads.push(el);}click(){}matches(s){return s==='#memo-form textarea'&&this.id.startsWith('memo-');}closest(){return this;} }
+ for(const id of ['app','main','guide','print-output'])els[id]=new El(id);
+ const document={body:new El('body'),addEventListener(t,f){events[t]=f;},getElementById(id){if(els[id]&&['app','main','guide','print-output'].includes(id))return els[id];const html=els.app.innerHTML+els.guide.innerHTML;if(!html.includes(`id="${id}"`))return null;if(!els[id])els[id]=new El(id);if(id.startsWith('memo-')&&id!=='memo-report'&&id!=='memo-status'){const m=html.match(new RegExp(`<textarea[^>]*id="${id}"[^>]*>([\\s\\S]*?)</textarea>`));if(m&&!els[id].touched)els[id].value=m[1];}return els[id];},querySelector(){return new El();},createElement(){return new El();}};
+ const w={document,location:{hash:'',pathname:'/',search:''},history:{replaceState(){}},confirm:()=>answer,Blob,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},setTimeout:f=>f(),console,globalThis:null};w.window=w;w.globalThis=w;w.LAB_ASSESS={mount(o){w.assessmentContext=o;},preserve(){},hasAttempt:()=>false,hasWork:()=>false,state:()=>({busy:false}),forget(){}};w.addEventListener=()=>{};w.print=()=>printCount++;w.open=()=>{};vm.createContext(w);vm.runInContext(content,w);vm.runInContext(app,w);
+ return {w,els,events,downloads,get printCount(){return printCount;},setConfirm(v){answer=v;},state:()=>w.LAB_TEST.getState(),click(a,v,guide){const b=new El();b.dataset={action:a,value:v,guide};events.click({target:b});},fill(k,value){const el=document.getElementById('memo-'+k);assert(el);el.value=value;el.touched=true;events.input({target:el});},submit(){events.submit({target:{id:'memo-form'},preventDefault(){}});}};
 }
-assert(!/localStorage|sessionStorage|fetch\(|XMLHttpRequest|sendBeacon/.test(source));
-assert(html.includes('minlength="20"'));assert(html.includes('@media(max-width:760px)'));
-assert(html.includes('prefers-reduced-motion'));assert(html.includes('Skip to activity'));
-console.log('PASS: '+paths+' complete decision combinations; double-click locks; 2-file limit; memo escaping; no network submission or persistence; responsive/accessibility structure.');
+let paths=0;
+for(const role of ['management','union'])for(let p=0;p<3;p++)for(let a=0;a<4;a++)for(let b=a+1;b<4;b++)for(let s=0;s<4;s++)for(let t=0;t<4;t++){
+ const h=harness(),r=h.w.LAB.roles[role];h.click('role',role);h.click('priority',r.priorities[p].id);h.click('start');assert.equal(h.state().stage,0);h.click('next');assert.equal(h.state().stage,0);h.click('evidence',r.files[a].id);h.click('evidence',r.files[b].id);h.click('next');assert.equal(h.state().stage,1);h.click('strategy',r.strategies[s].id);h.click('next');assert.equal(h.state().stage,2);h.click('twist',r.twistChoices[t].id);h.click('next');assert.equal(h.state().stage,3);
+ assert.equal(h.w.assessmentContext.role,role);assert.equal(h.w.assessmentContext.gameplay.strategy,r.strategies[s].id);assert.equal(h.w.assessmentContext.gameplay.twist,r.twistChoices[t].id);paths++;
+}
+const h=harness();h.click('role','union');h.click('priority','pay');h.click('start');h.click('evidence','calendar');h.click('evidence','finance');h.click('next');h.click('strategy','hold');h.click('next');h.click('twist','target');h.click('next');const original=JSON.stringify(h.state());h.click(null,null,'instructor');h.click('close-guide');assert.equal(JSON.stringify(h.state()),original);h.setConfirm(false);h.click('reset');assert.equal(JSON.stringify(h.state()),original);h.click('stage','1');h.click('strategy','package');assert.equal(h.state().strategy,'hold');h.setConfirm(true);h.click('strategy','package');assert.equal(h.state().twist,null);h.click('reset');assert.equal(h.state().role,null);
+const assessmentJS=fs.readFileSync(__dirname+'/assessment.js','utf8');assert(!/localStorage|sessionStorage|sendBeacon/.test(assessmentJS));assert(!assessmentJS.includes('"answer":'));assert(assessmentJS.includes("action==='submit'?{attest:true}:{}"));for(const path of ['app.js','assessment.js','content.js','instructor/app.js'])assert(!fs.readFileSync(__dirname+'/'+path,'utf8').includes('LOCAL-QA-ONLY'));
+console.log(`PASS ${paths} formative role/priority/evidence/decision paths into correctly scoped assessment; navigation/reset/guide guards; no credential or answer-key fixtures in client files.`);
