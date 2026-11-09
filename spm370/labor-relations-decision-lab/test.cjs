@@ -17,3 +17,18 @@ for(const role of ['management','union'])for(let p=0;p<3;p++)for(let a=0;a<4;a++
 const h=harness();h.click('role','union');h.click('priority','pay');h.click('start');h.click('evidence','calendar');h.click('evidence','finance');h.click('next');h.click('strategy','hold');h.click('next');h.click('twist','target');h.click('next');const original=JSON.stringify(h.state());h.click(null,null,'instructor');h.click('close-guide');assert.equal(JSON.stringify(h.state()),original);h.setConfirm(false);h.click('reset');assert.equal(JSON.stringify(h.state()),original);h.click('stage','1');h.click('strategy','package');assert.equal(h.state().strategy,'hold');h.setConfirm(true);h.click('strategy','package');assert.equal(h.state().twist,null);h.click('reset');assert.equal(h.state().role,null);
 const assessmentJS=fs.readFileSync(__dirname+'/assessment.js','utf8');assert(!/localStorage|sessionStorage|sendBeacon/.test(assessmentJS));assert(!assessmentJS.includes('"answer":'));assert(assessmentJS.includes("action==='submit'?{attest:true}:{}"));for(const path of ['app.js','assessment.js','content.js','instructor/app.js'])assert(!fs.readFileSync(__dirname+'/'+path,'utf8').includes('LOCAL-QA-ONLY'));
 console.log(`PASS ${paths} formative role/priority/evidence/decision paths into correctly scoped assessment; navigation/reset/guide guards; no credential or answer-key fixtures in client files.`);
+
+// First-time entry stays distinct from resume and explains both required choices.
+const entry=harness();
+assert(entry.els.app.innerHTML.includes('First visit? You do not need a resume code.'));
+assert(entry.els.app.innerHTML.includes('To enter: choose Management adviser or Union adviser above'));
+entry.click('start');assert(!entry.state().started);
+entry.click('role','management');
+assert(entry.els.app.innerHTML.includes('Next: choose one client priority above.'));
+entry.click('start');assert(!entry.state().started);
+entry.click('priority',entry.w.LAB.roles.management.priorities[0].id);
+assert(entry.els.app.innerHTML.includes('Ready. Enter the bargaining room to begin.'));
+entry.click('role','union');assert.equal(entry.state().priority,null);
+entry.click('resume');assert.equal(entry.w.assessmentContext.resumeOnly,true);
+entry.click('reset');assert.equal(entry.state().role,null);assert(!entry.state().resumeOnly);
+console.log('PASS first-visit prerequisite hints, role-change priority reset, and resume-to-start recovery.');

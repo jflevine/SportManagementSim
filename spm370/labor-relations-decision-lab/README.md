@@ -40,6 +40,7 @@ Static frontend files: `index.html`, `app.js`, `content.js`, `assessment.js`, `s
 Run:
 
     node test.cjs
+    node assessment.test.cjs
     node --test backend/tests/*.test.mjs
 
 The formative stub-DOM suite traverses 576 role/priority/evidence/decision paths. Backend synthetic tests cover role selection, key withholding, scoring, all MC subtotals and half-point writing totals including zero, locked receipts, concurrent replay, duplicate identity handling, revisions, grade audit, recovery, closed state, validation, origin limits, and authentication. The rollback-only SQL test verifies real database ACLs and atomic scoring/review behavior without retaining fixtures. These tests do not substitute for live-browser and deployment verification.
@@ -49,3 +50,9 @@ Do not publish private assessment JSON, production entrypoints, verifier digests
 ## Release verification · November 6, 2026
 
 The published student page, both role entry paths, guides, backups, and protected instructor entry were checked in a real browser. Both production API flows passed save/resume, single-attempt enforcement, immutable receipts, writing/final pending states, audited semantic review, and student retrieval of the final total. Browser receipt rendering and instructor review were independently exercised against the same current handler with synthetic data. Narrow-screen layouts passed at 388 and 323 CSS pixels. Physical touch-device behavior and actual PDF pagination were not tested.
+
+## First-visit entry regression
+
+The start screen names both required selections and explains why entry is not ready. Resume is labeled for returning students and includes an explicit first-visit return button. No code is required before the graded assessment is started. The one-attempt policy, assessment, grading, and database access are unchanged.
+
+`entry.browser.cjs` checks both roles, required selections, repeated mistaken resume clicks, guide return, and bargaining-room entry at 1280, 388, and 323 CSS pixels. It blocks assessment API requests and creates no records. Run it with Playwright 1.58.2 and its Chromium installed; optionally set `CHROMIUM_PATH` to an existing Chromium executable. The Pixel Forge Entry QA workflow runs this browser test and the existing frontend/backend regressions.
