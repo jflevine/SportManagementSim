@@ -1,0 +1,331 @@
+{
+  "id": "spm370-governance-2026-v1",
+  "version": "1.0.0",
+  "title": "Esports Governance Case Challenge",
+  "intro": "You’re advising an esports organization. Review each case, identify who has authority, and explain what makes the decision accountable.",
+  "instructions": [
+    "Open-slide activity replacing Tuesday’s lesson",
+    "Four case files, seven multiple-choice questions, and one short recommendation",
+    "10 points total; plan for about 10–12 minutes",
+    "You may consult the posted slides and assigned chapter. Base your answers on the materials.",
+    "You may revise your work before your one final submission."
+  ],
+  "cases": [
+    {
+      "id": "valve",
+      "number": 1,
+      "title": "One incident, two authorities",
+      "subtitle": "Valve, ESIC, and the CS:GO spectator bug",
+      "evidence": [
+        "Coaches exploited a camera bug to gain an unfair view during matches.",
+        "ESIC investigated and issued findings and sanctions. Valve announced its own Major-eligibility schedule in January 2021.",
+        "Use the historical schedule below for this case; it is not a statement of every current competition rule."
+      ],
+      "table": {
+        "headers": [
+          "ESIC demerits",
+          "Majors missed"
+        ],
+        "rows": [
+          [
+            "2",
+            "1"
+          ],
+          [
+            "3",
+            "2"
+          ],
+          [
+            "4",
+            "3"
+          ],
+          [
+            "5",
+            "5"
+          ],
+          [
+            "6+",
+            "All future Majors"
+          ]
+        ]
+      },
+      "slideReferences": [
+        18
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "A coach receives four ESIC demerits. Under Valve’s displayed schedule, what consequence should you advise the team to expect?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Exclusion from four Majors"
+            },
+            {
+              "id": "b",
+              "text": "Exclusion from all future Majors"
+            },
+            {
+              "id": "c",
+              "text": "Exclusion from three Majors"
+            },
+            {
+              "id": "d",
+              "text": "Exclusion from two Majors"
+            }
+          ],
+          "slideReferences": [
+            18
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "A team manager says, “Once ESIC sanctioned the coach, Valve had no separate decision to make.” Which response best matches this case?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Valve used ESIC’s findings to impose consequences within Valve’s own competition scope."
+            },
+            {
+              "id": "b",
+              "text": "Valve’s schedule replaced ESIC’s sanctions in every competition covered by ESIC."
+            },
+            {
+              "id": "c",
+              "text": "ESIC’s investigation transferred Major-eligibility decisions from Valve to individual organizers."
+            },
+            {
+              "id": "d",
+              "text": "Valve acted as an appeals tribunal that reviewed whether ESIC had correctly decided the case."
+            }
+          ],
+          "slideReferences": [
+            13,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nyamdorj",
+      "number": 2,
+      "title": "Warning signs and a reporting duty",
+      "subtitle": "Nyamdorj v. ESIC",
+      "evidence": [
+        "Counter-Strike player Tuvshintugs “Annihilation” Nyamdorj appealed a 12-month ESIC sanction.",
+        "His letter described recurring unexplained gameplay decisions and underperformance. He characterized it as team dysfunction; ESIC argued it showed integrity concerns.",
+        "IGET reviewed the disciplinary decision and ESIC’s request to increase the sanction."
+      ],
+      "slideReferences": [
+        23,
+        24
+      ],
+      "questions": [
+        {
+          "id": "q3",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "You are advising a participant about the reporting rule applied in Nyamdorj. Which statement best describes its trigger?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The participant may wait until an organizer confirms that a match was manipulated."
+            },
+            {
+              "id": "b",
+              "text": "The duty begins only when the participant knows which person personally profited."
+            },
+            {
+              "id": "c",
+              "text": "The participant must prove the underlying corruption before making a report."
+            },
+            {
+              "id": "d",
+              "text": "Facts that may evidence corruption can trigger reporting before certainty or proof exists."
+            }
+          ],
+          "slideReferences": [
+            24
+          ]
+        },
+        {
+          "id": "q4",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "Which description accurately explains how independent review operated in Nyamdorj?",
+          "options": [
+            {
+              "id": "a",
+              "text": "IGET overturned the sanction because the evidence did not establish personal profit."
+            },
+            {
+              "id": "b",
+              "text": "IGET upheld 12 months but rejected ESIC’s proposed increase to 24 months."
+            },
+            {
+              "id": "c",
+              "text": "IGET increased the sanction because challenging ESIC automatically removed any discount."
+            },
+            {
+              "id": "d",
+              "text": "IGET replaced the reporting finding with a finding of active match-fixing."
+            }
+          ],
+          "slideReferences": [
+            24
+          ]
+        }
+      ]
+    },
+    {
+      "id": "epic",
+      "number": 3,
+      "title": "A publisher goes to court",
+      "subtitle": "Epic Games Inc. v. Araujo",
+      "evidence": [
+        "Epic alleged repeated Fortnite cheating and evasion of its bans using false accounts and hardware tools.",
+        "It pursued civil claims involving anti-circumvention law, contract, and copyright.",
+        "Araujo did not appear or defend. The court entered a default judgment, awarded civil relief, and imposed a permanent injunction."
+      ],
+      "slideReferences": [
+        25,
+        26
+      ],
+      "questions": [
+        {
+          "id": "q5",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "What distinguishes Epic’s civil lawsuit from its internal decision to ban a player?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A court must adopt the publisher’s rulebook as the controlling law for every claim."
+            },
+            {
+              "id": "b",
+              "text": "A court becomes the publisher’s routine appeals panel for all eligibility decisions."
+            },
+            {
+              "id": "c",
+              "text": "The publisher must establish a legal basis for the judicial relief it requests."
+            },
+            {
+              "id": "d",
+              "text": "An internal ban establishes entitlement to any damages the publisher requests."
+            }
+          ],
+          "slideReferences": [
+            22,
+            25,
+            26
+          ]
+        },
+        {
+          "id": "q6",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "A colleague says, “Araujo defaulted, so the court had to accept every legal conclusion and remedy Epic requested.” What is the best correction?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The court accepted well-pleaded facts but still evaluated legal sufficiency and relief."
+            },
+            {
+              "id": "b",
+              "text": "The court had to retry the entire dispute as if both parties had presented evidence."
+            },
+            {
+              "id": "c",
+              "text": "The court could enforce a competition ban but could not award civil damages."
+            },
+            {
+              "id": "d",
+              "text": "The court could award damages without considering whether the claims were legally sufficient."
+            }
+          ],
+          "slideReferences": [
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "number": 4,
+      "title": "The governance audit",
+      "subtitle": "Your recommendation to a fictional league",
+      "fictional": true,
+      "evidence": [
+        "A fictional esports league promises participants “fair treatment.”",
+        "Its rules do not identify who hears appeals or require written reasons for disciplinary decisions.",
+        "The league director asks you to recommend one specific governance improvement."
+      ],
+      "slideReferences": [
+        5,
+        6,
+        15,
+        16,
+        30
+      ],
+      "questions": [
+        {
+          "id": "q7",
+          "type": "multiple-choice",
+          "points": 1,
+          "prompt": "Which diagnosis is best supported by these facts?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The league has demonstrated accountability because its rules promise fair treatment."
+            },
+            {
+              "id": "b",
+              "text": "The league lacks any authority to discipline participants because it is a private body."
+            },
+            {
+              "id": "c",
+              "text": "The league must transfer every dispute to IGET because its own rules omit an appeal process."
+            },
+            {
+              "id": "d",
+              "text": "The fairness promise lacks specified procedures for explaining and reviewing decisions."
+            }
+          ],
+          "slideReferences": [
+            15,
+            16,
+            22,
+            30
+          ]
+        }
+      ]
+    }
+  ],
+  "writing": {
+    "id": "q8",
+    "type": "short-answer",
+    "points": 3,
+    "prompt": "For the fictional league in Case File 4, recommend one specific change. Identify the governance gap your change addresses, describe a workable safeguard, and name who must implement it. Explain how the change would make the league accountable.",
+    "targetWords": {
+      "min": 60,
+      "max": 90
+    },
+    "criteria": [
+      "Identifies the governance gap",
+      "Proposes a workable safeguard",
+      "Assigns responsibility for implementation"
+    ],
+    "slideReferences": [
+      5,
+      6,
+      15,
+      16,
+      30
+    ]
+  }
+}
