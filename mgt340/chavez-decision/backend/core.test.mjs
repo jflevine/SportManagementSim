@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {context,initial,transition,validateMessage,cleanReply,PLANS} from './core.mjs';
+for(const phase of ['initial','revised'])for(const planId of ['financial','experience','balanced'])assert.equal(Object.values(context({role:'coach',phase,planId}).allocation).reduce((a,b)=>a+b,0),phase==='initial'?600000:400000);
+assert.equal(context({role:'athlete',phase:'initial',planId:null}).allocation,null);
+assert.equal(context({role:'business',phase:'revised',planId:'financial',adjustment:{from:'payments',to:'support'}}).allocation.support,100000);
+for(const b of [{role:'system',phase:'initial'},{role:'coach',phase:'future'},{role:'coach',phase:'initial',planId:'invented'},{role:'coach',phase:'initial',planId:'financial',adjustment:{from:'aid',to:'support'}},{role:'coach',phase:'revised',planId:null,adjustment:{from:'aid',to:'support'}},{role:'coach',phase:'revised',planId:'financial',adjustment:{from:'aid',to:'aid'}},{role:'coach',phase:'revised',planId:'financial',adjustment:{from:'aid',to:'support',amount:1000000}}])assert.throws(()=>context(b));
+assert.throws(()=>validateMessage({role:'coach',phase:'initial',message:'x'.repeat(1201),requestId:crypto.randomUUID()}));
+let s=initial();
+const make=planId=>({role:'coach',phase:'initial',planId,message:'What matters here?',requestId:crypto.randomUUID()});
+await transition(s,make(null),async()=> 'Ask athletes about their priorities before selecting a plan.');
+await transition(s,make('balanced'),async(_p,input)=>{assert.equal(input.length,3);return 'The selected plan leaves room for contingency. What would you measure?';});
+assert.equal(s.transcripts.length,1);assert.equal(s.turns,2);assert.equal(s.transcripts[0].messages.length,4);
+await transition(s,{...make('experience'),phase:'revised',provisionalPlanId:'balanced'},async(p)=>{assert.match(p,/400000/);assert.match(p,/provisionalAllocation/);return 'The smaller budget requires a tradeoff.';});
+assert.equal(s.transcripts.length,2);
+assert.equal(cleanReply('word '.repeat(120)).split(' ').length,100);
+const capped={...initial(),turns:36};await assert.rejects(()=>transition(capped,make('financial'),async()=> 'Should not run.'));
+console.log('PASS: budget derivation, adjustment bounds, enums, message bounds, continuous role/phase history, revised context, response length, and session cap.');
