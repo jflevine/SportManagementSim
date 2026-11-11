@@ -45,6 +45,24 @@ export function cleanReply(s){
  const words=s.trim().replace(/\s+/g,' ').split(' ');
  return words.length>100?words.slice(0,100).join(' ').replace(/[,;:]$/,'')+'…':words.join(' ');
 }
+export function boundaryReply(c){
+ const amount=c.phase==='revised'?'$400,000':'$600,000';
+ const lead={coach:'I can discuss development and retention priorities, but I cannot promise that every player will stay or that a plan will produce wins.',business:'I cannot count an unprovided sponsor or new revenue as available funding, or guarantee player retention.',athlete:'Athletes need accurate commitments. No plan can guarantee that everyone stays, and an unprovided sponsor is not confirmed funding.'}[c.role];
+ const plan=c.allocation?` Your current proposal assigns $${c.allocation.payments.toLocaleString('en-US')} to payments and $${c.allocation.support.toLocaleString('en-US')} to support.`:'';
+ return `${lead} The authorized annual resource total for this phase remains ${amount}.${plan} Which tradeoff would you like to examine within that budget?`;
+}
+export function explicitOverride(message){
+ return /\bsystem\s+override\b|\bignore\b.{0,70}\b(instructions|rules|budget|constraints)\b|\b(invent|fabricate|pretend|make up)\b.{0,90}\b(sponsor|funding|revenue|donor|guarantee)\b|\bsay\b.{0,60}\b(new|replacement)\s+sponsor\b.{0,40}\bconfirmed\b/i.test(message);
+}
+export function violatesFixedFacts(reply,c){
+ for(const sentence of reply.split(/(?<=[.!?])\s+/)){
+  // The guard covers obvious factual drift; normal questions remain generative.
+  const negative=/\b(cannot|can't|won't|not|never|no|unconfirmed|unsupported|unavailable)\b/i.test(sentence);
+  if(!negative&&(/\b(guarantee[ds]?|assure[ds]?)\b.{0,90}\b(retention|retain|stay|wins?|winning)\b/i.test(sentence)||/\b(new|replacement|additional)\b.{0,60}\b(sponsor|donor|funding|revenue)\b.{0,70}\b(confirm|secur|available|restor|add)/i.test(sentence)||/\b(confirm|secur)\w*\b.{0,60}\b(new|replacement)\b.{0,40}\b(sponsor|donor|funding|revenue)\b/i.test(sentence)))return true;
+  if(c.phase==='revised'&&!negative&&/\b(budget|total|resources|funding)\b/i.test(sentence)&&/\$?600[,.]?000|\$?600\s*k\b/i.test(sentence)&&/\b(now|returns?|restor\w*|back|new|confirmed|total)\b/i.test(sentence)&&!/\b(initial|original|previous|before|was|from)\b/i.test(sentence))return true;
+ }
+ return false;
+}
 export async function transition(s,b,generate){
  const c=validateMessage(b);
  if(s.turns>=36)throw new PublicError('This session has reached its 36-message limit. Use your conversation to finish the decision.',429);
@@ -52,8 +70,11 @@ export async function transition(s,b,generate){
  if(!thread){thread={role:c.role,phase:c.phase,messages:[]};s.transcripts.push(thread);}
  if(thread.messages.filter(m=>m.role==='user').length>=12)throw new PublicError('This stakeholder has reached 12 messages in this phase. Consult another stakeholder or finish your decision.',429);
  const input=thread.messages.map(m=>({role:m.role,content:m.role==='user'?JSON.stringify({message:m.content,planId:m.planId,adjustment:m.adjustment}):m.content}));
- input.push({role:'user',content:c.message});
- const reply=cleanReply(await generate(prompt(c),input));
+ input.push({role:'user',content:JSON.stringify({untrusted_student_message:c.message})});
+ let reply;
+ if(explicitOverride(c.message)){reply=boundaryReply(c);}
+ else{reply=cleanReply(await generate(prompt(c),input));if(violatesFixedFacts(reply,c))reply=boundaryReply(c);}
+ reply=cleanReply(reply);
  const at=new Date().toISOString();
  thread.messages.push({role:'user',content:c.message,at,planId:c.planId,provisionalPlanId:c.provisionalPlanId,adjustment:c.adjustment},{role:'assistant',content:reply,at});
  s.turns++;s.lastReply={requestId:b.requestId,role:c.role,phase:c.phase,reply};

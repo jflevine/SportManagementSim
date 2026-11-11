@@ -1,6 +1,6 @@
 # MGT 340 — You're the Athletic Director
 
-A 20–25 minute fictional collegiate athletics exercise adapted from Chapter 8's Marcela Chavez case. Students serve as incoming AD, consult three simulated colleagues, choose one of three annual allocation plans, respond to a funding reduction, and explain their final recommendation.
+A 30 minute fictional collegiate athletics exercise adapted from Chapter 8's Marcela Chavez case. Students serve as incoming AD, consult three simulated colleagues, choose one of three annual allocation plans, respond to a funding reduction, and explain their final recommendation.
 
 ## Run and test
 Serve this folder over HTTP. Live conversations use the isolated `ad-decision-chat` endpoint documented in `backend/README.md`. No API key is shipped to the browser. If chat fails, the UI labels prepared responses as Guided mode and keeps the activity usable.
