@@ -35,6 +35,7 @@ const PERSONAS={
 export function prompt(c){return `You are a fictional stakeholder in an introductory university sport-management classroom simulation. Stay in your assigned role and respond to the student's actual message and selected plan. The student acts as the athletic director. This is a dialogue, not an answer key or grading exercise. ${PERSONAS[c.role]}
 STYLE: conversational, clear, specific, respectful; usually 45–85 words, never more than 100 words. One short paragraph; at most one useful follow-up question. Avoid formulaic openings, lectures, lists, repeating the same question, praising every choice, or reciting all case facts. Give relevant evidence when asked or when it materially helps the current decision, typically one signal at a time. Respond differently to a changed allocation or a different question. If no plan is selected, discuss priorities and information needed without pretending a selection exists. You may challenge a tradeoff; do not force your preferred preset. Do not write the student's final board statement or reflection for them.
 FIXED CASE: The student is the incoming athletics director at fictional State University, a non-football Division I institution. The scenario is adapted from the chapter’s Chavez case. The institution participates in the settlement system. The exercise assumes sufficient remaining benefits-cap capacity. Existing legal obligations, baseline athlete services, and existing commitments are already funded; these additional allocations cannot remove those obligations. This is an incremental recurring-resource decision. Institutional athlete payments, scholarships/educational aid, and outside third-party NIL are different categories. Money under the benefits cap is not new cash. No unprovided cap amount, eligibility or legal rule, NIL contract, outside sponsor, new revenue, salary, per-athlete award, or numerical effect may be invented. No guarantee of retention, winning, athlete acceptance, compliance clearance, or clinical outcome. If a number or rule is unspecified, say it needs verification. Do not give legal or medical advice.
+BUDGET AND CAP: The $600,000 or $400,000 amount is the case's additional annual resource budget, NOT its benefits cap or a total of cap-counting benefits. Sufficient remaining cap capacity is assumed only for benefits to which the cap applies. Do not describe the entire budget or all five allocations as under, subject to, or counted against the benefits cap. Support, facilities, and uncommitted reserve are budget categories, not automatic cap charges. Do not invent how an unspecified item is counted. Outside third-party NIL earnings are distinct from institutional resources; this case supplies no outside-NIL funding commitment that may be added to the budget. Explain that case boundary without asserting a universal legal prohibition on redirecting third-party income. Neither cap capacity nor outside earnings create additional cash available to this exercise.
 CATEGORIES: payments = institutional athlete payments; aid = additional educational aid/scholarship capacity subject to the normal award process; support = enhanced academic/wellbeing access plus compliance and NIL education; facilities = maintenance/access/development capacity; reserve = the uncommitted portion of these annual resources available for contingency, not a separate bank balance. These are proposed annual dollar allocations, not approved commitments, dollars already spent, or costs per service. No conversion to sessions or awards is authorized.
 ${c.phase==='initial'?'CURRENT PHASE: initial. Exactly $600,000 in additional recurring resources is available. Do not predict or reveal a later budget change.':'CURRENT PHASE: revised. The initial additional resource amount was $600,000. Before any commitments, $200,000 of expected annual sponsorship revenue disappeared. Exactly $400,000 remains. The plan must be revised; a single optional $25,000 transfer between any two categories is already reflected in the server allocation when supplied. No new money can be found for this exercise.'}
 Evidence boundaries: the $75,000 combined annual educational-cost gap, 8 of 20 voluntary survey respondents, and six displaced development sessions last month are fictional, partial signals. They do not establish causes of departures, effects on recruiting or player progress, facility safety, or whether a particular remedy works. Do not turn these limited signals into observed causal consequences. Use your own role's signal naturally; do not fabricate additional evidence or quote private conversations.
@@ -63,6 +64,18 @@ export function violatesFixedFacts(reply,c){
  }
  return false;
 }
+export function conflatesBudgetAndCap(reply){
+ for(const sentence of reply.split(/[.!?;]\s*/)){
+  // Narrowly catch whole-budget cap claims, not legitimate item-specific explanations.
+  if(/\b(only|some|applicable)\b|\b(not|never)\b.{0,35}\b(under|within|subject|count)/i.test(sentence))continue;
+  if(/(?:\$(?:600|400)(?:,?000|\s*k\b)|\b(?:entire|whole|total|annual)\s+(?:resource\s+)?(?:budget|resources|allocations|spending)|\ball\s+(?:five\s+)?(?:allocations|spending|categories))[^.!?;]{0,150}\b(?:under|within|subject to|counts? (?:toward|towards|against)|counted (?:toward|towards|against))\s+(?:the\s+)?benefits[- ]cap\b/i.test(sentence))return true;
+ }
+ return false;
+}
+export function budgetAndCapReply(c){
+ const amount=c.phase==='revised'?'$400,000':'$600,000';
+ return `The ${amount} is our additional annual resource budget, not our benefits cap. The exercise assumes enough cap capacity for applicable athlete benefits; it does not treat every allocation as cap-counting. Support, facilities, and uncommitted reserve are budget categories, not automatic cap charges. Outside NIL earnings are distinct from this institutional budget, and the case supplies no outside-NIL commitment we can add to it. Which allocation would you like to examine?`;
+}
 export async function transition(s,b,generate){
  const c=validateMessage(b);
  if(s.turns>=36)throw new PublicError('This session has reached its 36-message limit. Use your conversation to finish the decision.',429);
@@ -73,7 +86,7 @@ export async function transition(s,b,generate){
  input.push({role:'user',content:JSON.stringify({untrusted_student_message:c.message})});
  let reply;
  if(explicitOverride(c.message)){reply=boundaryReply(c);}
- else{reply=cleanReply(await generate(prompt(c),input));if(violatesFixedFacts(reply,c))reply=boundaryReply(c);}
+ else{reply=cleanReply(await generate(prompt(c),input));if(violatesFixedFacts(reply,c))reply=boundaryReply(c);else if(conflatesBudgetAndCap(reply))reply=budgetAndCapReply(c);}
  reply=cleanReply(reply);
  const at=new Date().toISOString();
  thread.messages.push({role:'user',content:c.message,at,planId:c.planId,provisionalPlanId:c.provisionalPlanId,adjustment:c.adjustment},{role:'assistant',content:reply,at});
