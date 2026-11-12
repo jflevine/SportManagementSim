@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {context,initial,transition,validateMessage,cleanReply,PLANS,violatesFixedFacts,conflatesBudgetAndCap,misstatesPlanState,prompt} from './core.mjs';
+import {context,initial,transition,validateMessage,cleanReply,PLANS,violatesFixedFacts,conflatesBudgetAndCap,misstatesPlanState,prompt,inventsAthleteExperience} from './core.mjs';
 for(const phase of ['initial','revised'])for(const planId of ['financial','experience','balanced'])assert.equal(Object.values(context({role:'coach',phase,planId}).allocation).reduce((a,b)=>a+b,0),phase==='initial'?600000:400000);
 assert.equal(context({role:'athlete',phase:'initial',planId:null}).allocation,null);
 assert.equal(context({role:'business',phase:'revised',planId:'financial',adjustment:{from:'payments',to:'support'}}).allocation.support,100000);
@@ -49,4 +49,12 @@ for(const bad of ['Your current plan assigns $250,000 to payments.','The $75,000
 for(const valid of ['The earlier $600,000 plan was provisional; the current budget is $400,000.','The aid is not already committed.','If you choose the financial plan, the proposed aid line would be $75,000.','Existing baseline support is already funded.'])assert.equal(misstatesPlanState(valid,undecided),false,valid);
 assert.equal(misstatesPlanState('Your selected plan assigns $75,000 to aid.',revisedContext),false);
 assert.equal(misstatesPlanState('Your aid is already committed.',revisedContext),true);
+for(const bad of ["We're covering the full $75,000 in known annual aid needs.",'The $250,000 for payments is a strong commitment.'])assert.equal(misstatesPlanState(bad,revisedContext),true,bad);
+assert.equal(misstatesPlanState('The $75,000 aid proposal matches the needs figure without proving that every cost is covered.',revisedContext),false);
+const athleteContext=context({role:'athlete',phase:'initial',planId:'financial'});
+for(const bad of ['A lot of us feel the pinch right now.','For those of us who struggle to get support, it matters.','Payments help everyone.']){
+ assert.equal(inventsAthleteExperience(bad,athleteContext),true,bad);
+ const state=initial();await transition(state,{...make('financial'),role:'athlete'},async()=>bad);assert.match(state.lastReply.reply,/I don't know who would get what/);assert.doesNotMatch(state.lastReply.reply,/a lot of us|those of us|Payments help everyone/i);
+}
+assert.equal(inventsAthleteExperience("I'd want more going toward payments, and the reserve would frustrate me.",athleteContext),false);
 console.log('PASS: budget derivation, adjustment bounds, enums, message bounds, continuous role/phase history, revised context, response length, session cap, and budget/cap distinction guard.');
