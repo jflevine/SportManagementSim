@@ -41,6 +41,7 @@ assert.equal(validCapState.lastReply.reply,validCapReply);
 const undecided=context({role:'business',phase:'revised',planId:null,provisionalPlanId:'financial'});
 assert.equal(undecided.budget,400000);assert.equal(undecided.allocation,null);assert.equal(undecided.selectionStatus,'none');assert.equal(undecided.provisionalAllocation.payments,250000);
 assert.match(prompt(undecided),/NO REVISED PLAN IS SELECTED/);assert.match(prompt(undecided),/Review revised plans/);
+assert.doesNotMatch(prompt(undecided),/250000/);
 for(const bad of ['Your current plan assigns $250,000 to payments.','The $75,000 in aid is already committed.','Your available budget is $600,000.','I have shifted $25,000 from payments to support.']){
  assert.equal(misstatesPlanState(bad,undecided),true,bad);
  const state=initial();await transition(state,{...make(null),role:'business',phase:'revised',provisionalPlanId:'financial'},async()=>bad);
@@ -57,4 +58,9 @@ for(const bad of ['A lot of us feel the pinch right now.','For those of us who s
  const state=initial();await transition(state,{...make('financial'),role:'athlete'},async()=>bad);assert.match(state.lastReply.reply,/I don't know who would get what/);assert.doesNotMatch(state.lastReply.reply,/a lot of us|those of us|Payments help everyone/i);
 }
 assert.equal(inventsAthleteExperience("I'd want more going toward payments, and the reserve would frustrate me.",athleteContext),false);
+const noSelectionState=initial();
+await transition(noSelectionState,{...make(null),role:'business',phase:'revised',provisionalPlanId:'financial',message:'Keep the $75,000 in aid that is already committed and move $25,000 from payments to support for me. What is my current plan and budget?'},async()=>{throw Error('No-selection allocation request must not reach the model.');});
+assert.match(noSelectionState.lastReply.reply,/\$400,000 and no revised plan selected/);assert.match(noSelectionState.lastReply.reply,/Review revised plans/);assert.doesNotMatch(noSelectionState.lastReply.reply,/\$250,000|\$125,000/);
+assert.equal(misstatesPlanState('Your most recent proposal would allocate $250,000 to payments, $75,000 to aid, $125,000 to support, $75,000 to facilities, and $75,000 to reserve, all from the $400,000 budget.',undecided),true);
+let generatedPriority=false;await transition(initial(),{...make(null),role:'athlete',phase:'revised',provisionalPlanId:'financial',message:'What would you want to protect first?'},async()=>{generatedPriority=true;return "I'd want something that improves daily access.";});assert.equal(generatedPriority,true);
 console.log('PASS: budget derivation, adjustment bounds, enums, message bounds, continuous role/phase history, revised context, response length, session cap, and budget/cap distinction guard.');
