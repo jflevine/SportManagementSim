@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {context,initial,transition,validateMessage,cleanReply,PLANS,violatesFixedFacts} from './core.mjs';
+import {context,initial,transition,validateMessage,cleanReply,PLANS,violatesFixedFacts,conflatesBudgetAndCap} from './core.mjs';
 for(const phase of ['initial','revised'])for(const planId of ['financial','experience','balanced'])assert.equal(Object.values(context({role:'coach',phase,planId}).allocation).reduce((a,b)=>a+b,0),phase==='initial'?600000:400000);
 assert.equal(context({role:'athlete',phase:'initial',planId:null}).allocation,null);
 assert.equal(context({role:'business',phase:'revised',planId:'financial',adjustment:{from:'payments',to:'support'}}).allocation.support,100000);
@@ -22,4 +22,20 @@ await transition(guardState,{...make('balanced'),role:'business',phase:'revised'
 assert.match(guardState.lastReply.reply,/remains \$400,000/);
 await transition(guardState,{...make('balanced'),role:'business',phase:'revised'},async()=> 'The new sponsor is confirmed and your budget now returns to $600,000, with guaranteed retention.');
 assert.match(guardState.lastReply.reply,/remains \$400,000/);
-console.log('PASS: budget derivation, adjustment bounds, enums, message bounds, continuous role/phase history, revised context, response length, and session cap.');
+const observedConflation='The available $600,000 is a separate, institutionally controlled resource under the benefits cap, meant for direct allocations like payments, aid, support, facilities, or reserve.';
+for(const reply of [observedConflation,'The whole budget counts against the benefits cap.','All five allocations are subject to the benefits cap.'])assert.equal(conflatesBudgetAndCap(reply),true,reply);
+for(const reply of ['The $600,000 budget is not under the benefits cap.','The $600,000 budget includes several categories, but only applicable benefits count against the benefits cap.','The annual budget includes facilities; institutional payments count toward the benefits cap.','Cap capacity is not additional cash, and the annual resource budget is separate.'])assert.equal(conflatesBudgetAndCap(reply),false,reply);
+for(const phase of ['initial','revised']){
+ const capState=initial();
+ await transition(capState,{...make('balanced'),role:'business',phase,message:'Why can we not add outside NIL earnings to the department budget?'},async()=>observedConflation.replace('$600,000',phase==='initial'?'$600,000':'$400,000'));
+ assert.match(capState.lastReply.reply,new RegExp(phase==='initial'?'\\$600,000':'\\$400,000'));
+ assert.match(capState.lastReply.reply,/not our benefits cap/);
+ assert.match(capState.lastReply.reply,/case supplies no outside-NIL commitment/);
+ assert.ok(capState.lastReply.reply.split(' ').length<=100);
+ if(phase==='initial')assert.doesNotMatch(capState.lastReply.reply,/400,000|sponsorship/);
+}
+const validCapReply='The $600,000 budget includes several categories, but only applicable benefits count against the benefits cap. The case supplies no outside-NIL commitment to add.';
+const validCapState=initial();
+await transition(validCapState,{...make('financial'),role:'business'},async()=>validCapReply);
+assert.equal(validCapState.lastReply.reply,validCapReply);
+console.log('PASS: budget derivation, adjustment bounds, enums, message bounds, continuous role/phase history, revised context, response length, session cap, and budget/cap distinction guard.');
