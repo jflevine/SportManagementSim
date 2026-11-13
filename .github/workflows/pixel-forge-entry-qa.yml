@@ -24,6 +24,7 @@ jobs:
           node --check spm370/labor-relations-decision-lab/assessment.js
           node spm370/labor-relations-decision-lab/test.cjs
           node spm370/labor-relations-decision-lab/assessment.test.cjs
+          node --test spm370/labor-relations-decision-lab/reliability.test.cjs
           node --test spm370/labor-relations-decision-lab/backend/tests/*.test.mjs
       - name: Install pinned browser test dependency
         run: |
@@ -31,3 +32,6 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Check desktop and narrow-screen entry without creating records
         run: node spm370/labor-relations-decision-lab/entry.browser.cjs
+      - name: Check autosave editing and uncertain-submission recovery with synthetic responses
+        run: node spm370/labor-relations-decision-lab/reliability.browser.cjs
+
