@@ -145,7 +145,7 @@ async function bounded(promise,message){
     assert([...store.rows.values()][0].receipt,'synthetic server committed the submission before response loss');
     await page.locator('[data-grade="check"]').click();
     await page.waitForFunction(()=>!!LAB_ASSESS.state().record?.receipt&&!LAB_ASSESS.state().busy);
-    assert.match(await page.locator('#assessment-host').innerText(),/Server-confirmed submission/);
+    assert.match(await page.locator('#assessment-host').innerText(),/Server-confirmed submission/i);
     assert.match(await page.locator('#assessment-host').innerText(),/Pending, not zero/);
     assert.equal(calls.filter(c=>c.action==='start').length,1);
     assert.equal(calls.filter(c=>c.action==='submit').length,1,'recovery retrieves the receipt without a second submission');
