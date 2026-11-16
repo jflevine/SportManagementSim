@@ -9,9 +9,12 @@
 
 export function createMemoryStore({ load, save } = {}) {
   let db = { runs: {}, events: {} };
-  try { const saved = load?.(); if (saved?.runs) db = saved; } catch { /* start empty */ }
+  // With `load`, every operation re-reads storage first, so two pages in one browser
+  // (student desk and instructor room in the offline preview) see each other's writes.
+  const sync = () => { try { const saved = load?.(); if (saved?.runs) db = saved; } catch { /* keep what we have */ } };
   const persist = () => { try { save?.(db); } catch { /* storage may be unavailable */ } };
-  return {
+  sync();
+  const api = {
     async createRun(run) { db.runs[run.id] = run; db.events[run.id] = []; persist(); },
     async getRun(id) { return db.runs[id] || null; },
     async getRunByJoinCode(code) { return Object.values(db.runs).find(r => r.joinCode === code) || null; },
@@ -31,4 +34,6 @@ export function createMemoryStore({ load, save } = {}) {
     async countRunsSince(iso) { return Object.values(db.runs).filter(r => r.createdAt >= iso).length; },
     _reset() { db = { runs: {}, events: {} }; persist(); },
   };
+  if (load) for (const k of Object.keys(api)) { const fn = api[k]; api[k] = (...a) => { sync(); return fn(...a); }; }
+  return api;
 }

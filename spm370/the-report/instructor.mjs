@@ -135,5 +135,5 @@ export async function mount(root, { endpoint = '' } = {}) {
   if (local) await seed();
   if (local || ui.key) await load();
   render();
-  setInterval(async () => { if (ui.loaded && !ui.project && !document.hidden) { await load(true); render(); } }, 6000);
+  setInterval(async () => { if (root.isConnected && ui.loaded && !ui.project && !document.hidden) { await load(true); render(); } }, 6000);
 }
