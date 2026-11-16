@@ -157,3 +157,11 @@ test('the instructor key is required when the board is not open', async () => {
   await assert.rejects(handle('instructor.runs', { caseId: cf.id, key: 'wrong' }), /not accepted/);
   assert.deepEqual((await handle('instructor.runs', { caseId: cf.id, key: 'right' })).runs, []);
 });
+
+test('a guarded fact never reaches a voice in a free reply', async () => {
+  const { characterPrompt } = await import('../voice.mjs');
+  const s = reduce(cf, []);
+  const brief = briefFor(cf, s, 'priya');
+  assert.ok(!characterPrompt({ cf, brief, must: null, free: true }).includes('March'));
+  assert.ok(characterPrompt({ cf, brief, must: 'Admits March.', free: false }).includes('March'));
+});

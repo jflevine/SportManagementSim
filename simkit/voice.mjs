@@ -17,7 +17,10 @@ export function authoredVoice() {
 const words = (text, max) => { const w = String(text).trim().replace(/\s+/g, ' ').split(' '); return w.length > max ? w.slice(0, max).join(' ') + '…' : w.join(' '); };
 
 export function characterPrompt({ cf, brief, must, free }) {
-  const facts = brief.knows.length ? brief.knows.map(f => `- ${f.text}${f.guarded ? ' [You keep this to yourself unless WHAT TO CONVEY includes it.]' : ''}`).join('\n') : '- (nothing relevant)';
+  // In a free reply (no rule chose what to convey) a guarded fact is withheld from the voice
+  // altogether, so it cannot slip out without the ledger recording that the student learned it.
+  const known = brief.knows.filter(f => !(free && f.guarded));
+  const facts = known.length ? known.map(f => `- ${f.text}${f.guarded ? ' [You keep this to yourself unless WHAT TO CONVEY includes it.]' : ''}`).join('\n') : '- (nothing relevant)';
   return [
     `You are voicing ${brief.name}, ${brief.role}, in "${cf.title}", a classroom simulation. The student plays ${cf.role}. Everyone in it is fictional and an adult.`,
     `CHANNEL: ${brief.channel}. Write the way this person writes on this channel.`,

@@ -127,6 +127,11 @@ tests and during outages) and an OpenAI voice.
   a fact. Her procedural line and the GM's decisions are now fixed text.
 - **Leave the voice on where manner is the point**: the nineteen-year-old who types in
   lowercase, the coach who texts in clichés.
+- **Guard what a person would hold back.** In a live test the GM, asked casually about
+  history before she knew of any concern, mentioned March; the student had learned a fact
+  the ledger never recorded. Guarded facts are now withheld from free replies entirely and
+  reach a voice only when a rule's `must` conveys them. If a fact matters to an outcome,
+  mark it `guarded` for everyone who holds it and release it through a rule.
 - A message no rule anticipated gets a free in-character reply from the brief. It cannot
   change state. If students keep asking something that *should* matter, add a speech act and
   a rule.
