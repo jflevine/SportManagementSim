@@ -6,6 +6,10 @@ import { YOU, formatClock } from './kernel.mjs';
 const name = (cf, id) => id === YOU ? 'the student' : cf.actors[id]?.name.split(' ')[0] || id;
 
 export function describe(cf, e) {
+  // A casefile may word its own events (e.g. its own deadline, or an allocation act whose
+  // params are amounts). Return null from cf.describeEvent to fall through to the defaults.
+  const own = cf.describeEvent?.(e);
+  if (own) return own;
   const who = id => name(cf, id);
   switch (e.type) {
     case 'run.started': return { kind: 'world', text: 'The desk opens.' };
