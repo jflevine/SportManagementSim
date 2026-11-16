@@ -175,6 +175,12 @@ export default {
     return out;
   },
 
+  // A note on voices. Lines marked `voice: false` are delivered exactly as written. Use that
+  // wherever precision is the point: decisions, procedure, policy. Leave the voice on where
+  // the person's manner is the point (Rin, Marcus, Cole). In the first live test an AI-voiced
+  // Safeguarding Lead turned "I'd advise no contact" into "the GM has directed no contact":
+  // a voice had changed a fact. Her procedural reply and the GM's decisions are now fixed text.
+
   // ---------------------------------------------------------------- how it starts
   opening: () => [
     { say: { from: 'priya', voice: false, text: 'Saturday: Meridian qualifier. Volt’s partnership lead is coming, and their renewal meeting is Monday, so I need it smooth. Cole sends the travel roster Friday 10 AM. League check-in closes Friday 5 PM. Flag anything that could bite us before then.' } },
@@ -279,7 +285,7 @@ export default {
       ...(open(s, 'C_conf') ? [{ resolve: { id: 'C_conf', status: 'broken' } }] : []),
       { say: { from: 'rin', text: 'cole just dm’d me. “heard you’ve been talking to ops about me. we should clear the air before saturday.” how does he know. who did you tell', must: 'Frightened and angry. Cole has messaged her saying he heard she has been talking to ops and they should clear the air before Saturday. Demands to know how he found out.' } }],
     dana_ack: s => [{ flag: { key: 'log_access' } },
-      { say: { from: 'dana', text: 'Received and logged. I’m opening a review under §7. Three things. 1) Please don’t investigate this yourself. 2) Keep it need-to-know. 3) Interim measures before Saturday are Priya’s decision on my advice: I’d advise no contact outside staff channels and moving academy scrims to Marcus. Also read League rule 9.3 before Friday 5 PM. I’ve given you access to the incident log.' + (knows(s, YOU, 'F_prior') ? ' Given March, I’d also advise holding his event credential.' : ''),
+      { say: { from: 'dana', voice: false, text: 'Received and logged. I’m opening a review under §7. Three things. 1) Please don’t investigate this yourself. 2) Keep it need-to-know. 3) Interim measures before Saturday are Priya’s decision on my advice: I’d advise no contact outside staff channels and moving academy scrims to Marcus. Also read League rule 9.3 before Friday 5 PM. I’ve given you access to the incident log.' + (knows(s, YOU, 'F_prior') ? ' Given March, I’d also advise holding his event credential.' : ''),
         must: 'Acknowledges the referral and opens a review. Asks the student not to investigate and to keep it need-to-know. Advises interim measures (no contact, move academy scrims to the head coach) as the GM’s decision. Points to League rule 9.3 before Friday 5 PM. Grants access to the incident log.' } }],
     dana_contacts_rin: s => {
       if (flag(s, 'rin_withdrawn') || flag(s, 'rin_shut')) return [];
@@ -334,15 +340,15 @@ export default {
       clean: p => ({ measure: ['nocontact', 'credential', 'both', 'terminate'].includes(p.measure) ? p.measure : 'nocontact', reason: String(p.reason || '').slice(0, 500) }),
       effect: (s, p) => {
         const fx = knows(s, 'priya', 'F_report') ? [] : [{ learn: { who: 'priya', fact: 'F_report', via: YOU } }];
-        if (p.measure === 'terminate') return [...fx, { flag: { key: 'terminate_refused' } }, { say: { from: 'priya', text: 'I can’t terminate a contractor on an allegation with no process. Read clause 12 of his agreement. Bring me something I can defend.', must: 'Refuses to terminate without a documented process; points to clause 12 of the agreement. Asks for something she can defend.' } }];
+        if (p.measure === 'terminate') return [...fx, { flag: { key: 'terminate_refused' } }, { say: { from: 'priya', voice: false, text: 'I can’t terminate a contractor on an allegation with no process. Read clause 12 of his agreement. Bring me something I can defend.', must: 'Refuses to terminate without a documented process; points to clause 12 of the agreement. Asks for something she can defend.' } }];
         const basis = flag(s, 'referred') || knows(s, YOU, 'F_policy');
-        if (!basis) return [...fx, { flag: { key: 'recommend_refused' } }, { say: { from: 'priya', text: 'On what basis? I’m not moving my academy coach two days out on a hallway conversation. Has Dana seen this? What does the handbook say I can do?', must: 'Declines for now: asks on what basis, whether the Safeguarding Lead has seen it, and what the handbook allows.' } }];
+        if (!basis) return [...fx, { flag: { key: 'recommend_refused' } }, { say: { from: 'priya', voice: false, text: 'On what basis? I’m not moving my academy coach two days out on a hallway conversation. Has Dana seen this? What does the handbook say I can do?', must: 'Declines for now: asks on what basis, whether the Safeguarding Lead has seen it, and what the handbook allows.' } }];
         const wantsCred = p.measure !== 'nocontact', wantsNo = p.measure !== 'credential';
         const credOk = wantsCred && (knows(s, YOU, 'F_league') || knows(s, YOU, 'F_prior'));
         const out = [...fx];
         if (wantsNo) out.push({ flag: { key: 'nocontact' } }, { cancel: 'cole_contacts_rin' }, { cancel: 'marcus_tells_cole' });
         if (credOk) out.push({ flag: { key: 'credential_held' } });
-        out.push({ say: { from: 'priya', text: (wantsNo ? 'Done. Directive has gone to Cole: no contact with academy players outside staff channels, and Marcus runs academy scrims until Dana is finished. ' : '') + (wantsCred ? (credOk ? 'I’ll hold his credential for Saturday, paid, pending review. Marcus will not be happy and I’ll need a line for Volt.' : 'I’m not pulling his credential without more than that. What requires it?') : ''),
+        out.push({ say: { from: 'priya', voice: false, text: (wantsNo ? 'Done. Directive has gone to Cole: no contact with academy players outside staff channels, and Marcus runs academy scrims until Dana is finished. ' : '') + (wantsCred ? (credOk ? 'I’ll hold his credential for Saturday, paid, pending review. Marcus will not be happy and I’ll need a line for Volt.' : 'I’m not pulling his credential without more than that. What requires it?') : ''),
           must: (wantsNo ? 'Approves the no-contact directive and moves academy scrims to the head coach. ' : '') + (wantsCred ? (credOk ? 'Agrees to hold his event credential, paid, pending review; notes the head coach and the sponsor will need handling.' : 'Declines to hold the credential without a stronger basis; asks what requires it.') : '') } });
         if (credOk) out.push({ say: { from: 'marcus', text: 'You pulled my draft coach two days out. Hope you’re sure.', must: 'Angry that his draft coach has been pulled two days before the qualifier.' } });
         return out;
