@@ -21,7 +21,7 @@ export function describe(cf, e) {
     case 'rule.fired': return { kind: 'hidden', text: e.why, why: true };
     case 'timer.set': return { kind: 'hidden', text: `Set in motion: ${e.id.replace(/_/g, ' ')} at ${formatClock(cf, e.at)}.`, minor: true };
     case 'timer.cancelled': return { kind: 'hidden', text: `Headed off: ${e.id.replace(/_/g, ' ')}.` };
-    case 'timer.due': return { kind: 'hidden', text: `Came due: ${e.id.replace(/_/g, ' ')}.`, minor: true };
+    case 'timer.due': return cf.timerWhy?.[e.id] ? { kind: 'hidden', text: cf.timerWhy[e.id], why: true } : { kind: 'hidden', text: `Came due: ${e.id.replace(/_/g, ' ')}.`, minor: true };
     case 'note': return { kind: 'world', text: e.text };
     case 'clock': return { kind: 'world', text: 'Time passes.', minor: true };
     case 'run.ended': return { kind: 'world', text: 'League check-in has closed. Time is up.' };

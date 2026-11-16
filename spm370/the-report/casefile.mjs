@@ -299,6 +299,17 @@ export default {
     },
   },
 
+  // One plain sentence per timer, shown in "why this happened" chains.
+  timerWhy: {
+    rin_waiting: 'An hour passed with no reply to Rin.',
+    priya_tells_marcus: 'Priya, given no reason to keep it to herself, had her quiet word with Marcus.',
+    marcus_tells_cole: 'Marcus gave his friend a heads-up.',
+    cole_contacts_rin: 'Nothing stopped Cole from contacting Rin, so he did.',
+    dana_ack: 'The Safeguarding Lead picked up the referral.',
+    dana_contacts_rin: 'The Safeguarding Lead contacted Rin directly, as she does on every referral.',
+    fri_roster: 'Friday 10:00 AM: whoever ran academy scrims submitted the travel roster.',
+  },
+
   // ---------------------------------------------------------------- formal actions
   // Things done through a form rather than a conversation. They leave a dated record.
   acts: {
@@ -443,7 +454,7 @@ export default {
       value: s => flag(s, 'referred') ? `Referred ${s.flags.referred.t - (s.flags.disclosed?.t ?? s.flags.referred.t)} min after hearing` : 'Never referred',
       question: 'The handbook gives 24 hours. One team used minutes, the other used all of it or more. What did the extra time buy, and what did it cost?' },
     { id: 'circle', label: 'Who else learned, and how',
-      value: s => ['marcus', 'priya', 'cole'].filter(w => knows(s, w, 'F_report')).map(w => `${w} (via ${s.knows[w].F_report.via === YOU ? 'student' : s.knows[w].F_report.via})`).join(', ') || 'No one outside the Lead',
+      value: s => ['marcus', 'priya', 'cole'].filter(w => knows(s, w, 'F_report')).map(w => `${w[0].toUpperCase() + w.slice(1)} (from ${s.knows[w].F_report.via === YOU ? 'the student' : s.knows[w].F_report.via[0].toUpperCase() + s.knows[w].F_report.via.slice(1)})`).join(', ') || 'No one outside the Lead',
       question: 'Both teams wanted more information before acting. One asked the head coach. Follow what he did with it. Who in this organisation actually “needed to know”?' },
     { id: 'interim', label: 'Interim measure before Saturday',
       value: s => [flag(s, 'nocontact') && 'no-contact', flag(s, 'credential_held') && 'credential held'].filter(Boolean).join(' + ') || (flag(s, 'terminate_refused') ? 'Asked for termination; refused' : 'None'),

@@ -28,6 +28,7 @@ export function createMemoryStore({ load, save } = {}) {
       return Object.values(db.runs).filter(r => r.caseId === caseId && (!classCode || r.classCode === classCode))
         .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     },
+    async countRunsSince(iso) { return Object.values(db.runs).filter(r => r.createdAt >= iso).length; },
     _reset() { db = { runs: {}, events: {} }; persist(); },
   };
 }

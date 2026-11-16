@@ -74,6 +74,8 @@ export function createHandler({ store, cases, voice, instructorKeyHash = null, o
     async start(body) {
       const cf = caseOf(body.caseId);
       const team = clean(body.team, 60) || fail('Enter a team name.');
+      // Anonymous access is bounded, not proof of enrolment: cap new sessions per day.
+      if (await store.countRunsSince(new Date(Date.now() - 864e5).toISOString()) >= (limits.maxRunsPerDay ?? 400)) fail('Too many sessions were started today. Tell your instructor.', 429);
       const token = randomToken();
       const run = {
         id: crypto.randomUUID(), caseId: cf.id, caseVersion: cf.version, team, members: clean(body.members, 200),
