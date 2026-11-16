@@ -42,6 +42,13 @@ for (const cf of Object.values(cases)) {
       assert.deepEqual([...cf.detect(st.to, st.text)].sort(), [...st.acts].sort(), st.text);
   });
 
+  test(`${cf.id}: what a sample team enters in a form is what gets recorded (nothing silently clamped)`, () => {
+    for (const s of cf.samples) for (const st of s.steps) if (st.type === 'act' && cf.acts[st.act]?.clean) {
+      const cleaned = cf.acts[st.act].clean(st.params || {}, reduce(cf, []));
+      for (const [k, v] of Object.entries(st.params || {})) assert.deepEqual(cleaned[k], v, `${s.team}: ${st.act}.${k}`);
+    }
+  });
+
   test(`${cf.id}: refresh returns the same view; a retried request applies once`, async () => {
     const { handle, store } = setup(); const s = cf.samples[0];
     const run = await handle('start', { caseId: cf.id, team: 'T', classCode: 'CHECK' });

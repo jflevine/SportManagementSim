@@ -55,7 +55,9 @@ Write a one-page **design note** for Jeff answering:
 
 Ask Jeff only what he alone knows: what happened when he taught this, the chapter's terms
 and learning outcomes (they are in his Drive course folders), how long he has in class, and
-whether students work alone or in pods.
+whether students work alone or in pods. If you cannot reach Drive, read the existing
+activity for that week in this repository for the course's vocabulary, and list what you
+inferred as assumptions in the design note.
 
 ## 2. Choose the form from the skill
 
@@ -73,6 +75,15 @@ Ask: *what are the student's hands doing when a professional does this well?* Bu
 A conversation earns its place only when listening or persuasion *is* the skill. A familiar
 format is fine when it fits: the Eagles sales lab and the Northline negotiation are
 conversations because handling an objection is the job.
+
+**Two worked examples, deliberately unlike each other:**
+
+- `spm370/the-report/` — an inbox desk. Conversation is the consequential act.
+- `mgt340/the-shortfall/` — a budget board. Built by an independent session from a
+  one-sentence assignment, using only this repository. Allocation is the consequential act:
+  one `act` saves a dated draft of the whole board, a second `act` shows a draft to a person,
+  and each person reacts only to the draft they were shown. Use this mapping whenever the
+  student manipulates something other than words.
 
 **Do not copy The Report's interface.** Its three-column desk, channel-styled threads and
 case file exist because that job is an inbox. Write the page your task needs. Reuse
@@ -158,7 +169,10 @@ Every casefile must export:
 2. Add one line to `simkit/cases.mjs`.
 3. Write the page(s): import `connect` from `simkit/client.mjs`; call `sim.start`, `sim.send`,
    `sim.resume`; render from `sim.view`. Write an instructor page from `sim.instructor()`,
-   `reduce`, `causalChain` and `briefFor`. Copy `config.mjs` from the reference.
+   `reduce`, `causalChain` and `briefFor`. Copy `config.mjs` from the reference. **Until the
+   Edge Function is re-pinned and redeployed (step 6) the live endpoint answers "Unknown
+   simulation" for a new casefile; develop with `?dev` or `?local=1`.** Give your CSS its own
+   class names: the reference's `.bar`, `.card`, `.pane` are not a shared stylesheet.
 4. Add `<sim>.test.mjs` under `simkit/checks/` for your own paths (the generic checks in
    `every-case.test.mjs` already cover refresh, retry, leakage and instructor retrieval).
 5. `node --test simkit/checks/*.test.mjs`, then `node simkit/dev-server.mjs` and play it.
@@ -183,6 +197,8 @@ export default {
   acts:    { id: { label, blurb, cost, fields, available?, clean, effect: (s, params) => effects } },
   fallbackReply(s, who, text) { return 'authored line' },
   cleanMemo, memoFields, afterSubmit: s => effects,
+  checkSubmit?: (s, memo) => 'reason to refuse' | null,   // e.g. a budget that does not balance
+  describeEvent?: e => ({ kind, text }) | null,          // your own wording for timeline lines
   outcome(s, events), signals(s), lenses, samples,
 };
 ```
@@ -200,6 +216,10 @@ Effects (the only ways the world changes):
 | `{ note: text }` | Something the student is told happened |
 | `{ end: reason }` | Time is up |
 
+Also true, and safe to rely on: extra fields on a `commit` are kept (store what the promise
+was about); a flag's `value` may be a number or object; a document may set its own `cost`;
+`clean` must return what was entered or the generic checks fail (do not silently clamp).
+
 Student actions the kernel accepts: `open` (a document), `message` (free text to a person),
 `act` (a formal step with a form), `wait` (advance to the next thing that happens), `submit`.
 `act` is the general-purpose one: an allocation, a mark-up, a schedule, a filing are all
@@ -208,9 +228,11 @@ Student actions the kernel accepts: `open` (a document), `message` (free text to
 ### Safe to reuse as-is
 
 `kernel.mjs`, `handler.mjs`, `stores.mjs`, `voice.mjs`, `client.mjs`, `describe.mjs`, the
-Supabase tables and Edge Function, the dev server, `every-case.test.mjs`, and the patterns in
-the reference instructor room (team board, timeline with "why", who-knew-what table,
-briefing inspector, two-team projector).
+Supabase tables and Edge Function, the dev server and `every-case.test.mjs`.
+
+Copy and reword, do not import: the reference instructor room (team board, timeline with
+"why", who-knew-what table, briefing inspector, two-team projector). Its labels name The
+Report's characters. `mgt340/the-shortfall/instructor.mjs` shows the same patterns reworded.
 
 ### Decide afresh every time
 

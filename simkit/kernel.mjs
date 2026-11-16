@@ -160,6 +160,9 @@ export function plan(cf, events, action, acts = []) {
     advanceTo(Math.min(cf.clock.end, next ?? cf.clock.end));
   } else if (action.type === 'submit') {
     const memo = cf.cleanMemo ? cf.cleanMemo(action.memo || {}) : action.memo;
+    // Optional: a casefile may refuse a malformed submission (throw kernel-style: return a string).
+    const refusal = cf.checkSubmit?.(s, memo);
+    if (refusal) throw problem(refusal);
     emit({ type: 'run.submitted', memo, because: [] });
     if (cf.afterSubmit) { runEffects(cf.afterSubmit(s), [s.seq], 'aftermath'); settle(); }
   } else throw problem('Unknown action.');

@@ -5,7 +5,8 @@ It plays the before/after test in a real page: promise, refresh, retry, refer, c
 submit, and then finds the same outcome in the instructor room."""
 import sys, re
 from playwright.sync_api import sync_playwright, expect
-BASE = "http://localhost:8787/spm370/the-report/"
+import os
+BASE = os.environ.get("SIMKIT_BASE", "http://localhost:8787") + "/spm370/the-report/"   # e.g. SIMKIT_BASE=http://localhost:8799
 shots = sys.argv[1] if len(sys.argv) > 1 else None
 def shot(page, name):
     if shots: page.screenshot(path=f"{shots}/{name}.png", full_page=False)

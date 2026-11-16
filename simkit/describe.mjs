@@ -3,7 +3,8 @@
 // could not see it at the time) | 'record' (goes on the case file).
 import { YOU, formatClock } from './kernel.mjs';
 
-const name = (cf, id) => id === YOU ? 'the student' : cf.actors[id]?.name.split(' ')[0] || id;
+// First name for timelines, skipping a leading title ("Dr. Renee Coles" -> "Renee").
+const name = (cf, id) => id === YOU ? 'the student' : (cf.actors[id]?.name.split(' ').find(w => !/^(dr|mr|mrs|ms|prof|coach)\.?$/i.test(w))) || id;
 
 export function describe(cf, e) {
   // A casefile may word its own events (e.g. its own deadline, or an allocation act whose

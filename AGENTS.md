@@ -21,6 +21,8 @@ turn it into an activity his students can use in class and he can run and debrie
    what you must decide afresh, and the definition of done.
 2. `spm370/the-report/README.md` — why the reference simulation has the form it has.
 3. `spm370/the-report/casefile.mjs` — the reference casefile. Read it top to bottom once.
+   Then skim `mgt340/the-shortfall/` (a budget board) to see how different a second
+   simulation on the same engine should look.
 4. `simkit/kernel.mjs` — 250 lines; the vocabulary of events and effects.
 5. `simkit/AUDIT.md` — what limited the earlier activities, with the before/after test.
 
@@ -36,7 +38,7 @@ turn it into an activity his students can use in class and he can run and debrie
 - **Run the checks** before you say anything works: `node --test simkit/checks/*.test.mjs`
   (Node 20+; no install step, no network). Add checks for your simulation's own paths.
 - **Preview locally:** `node simkit/dev-server.mjs`, then open
-  `http://localhost:8787/<course>/<your-sim>/?dev`. Any page also runs fully offline with
+  `http://localhost:8787/<course>/<your-sim>/?dev` (set `PORT=8799` if 8787 is busy). Any page also runs fully offline with
   `?local=1` (prepared voices, browser storage only).
 - **Report honestly.** Say what you ran and what you did not. A classroom trial is the only
   test of whether students find a voice credible; do not claim it.
@@ -65,3 +67,4 @@ turn it into an activity his students can use in class and he can run and debrie
 | `simkit/checks/` | Runnable checks (`*.test.mjs`) and an optional browser check |
 | `simkit/supabase/` | Migration, Edge Function entry, deployment notes |
 | `spm370/the-report/` | Reference simulation: casefile, student desk, instructor room |
+| `mgt340/the-shortfall/` | Second example (budget board), built by an independent session as a transfer test |

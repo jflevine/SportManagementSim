@@ -1,3 +1,5 @@
+> **Provenance.** Built on November 15, 2026 by an independent coding session given only this repository and a one-sentence assignment, as a test of whether the method transfers. Jeff has not reviewed it. The assumptions in `DESIGN_NOTE.md` need his answers before class use.
+
 # The Shortfall — MGT 340, college athletics week
 
 A simkit simulation. Method: `simkit/AUTHORING_GUIDE.md`. Design and the assumptions that still
