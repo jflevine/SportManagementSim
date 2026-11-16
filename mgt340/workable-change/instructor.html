@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instructor room · Negotiate a Workable Change</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app"><p style="padding:2rem">Loading…</p></div>
+<script type="module">
+import { mount } from './instructor.mjs';
+import { endpoint } from './config.mjs';
+mount(document.getElementById('app'), { endpoint }).catch(e => { document.getElementById('app').innerHTML = '<p style="padding:2rem">This page could not start. Reload, or tell your instructor.</p>'; console.error(e); });
+</script>
+</body>
+</html>
