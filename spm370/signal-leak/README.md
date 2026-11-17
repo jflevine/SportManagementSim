@@ -7,6 +7,9 @@ NOT deployed, NOT class-ready signoff. Preserves PR50 and its original risk brid
 
 The case unfolds through a Twitch overlay leak, reposted clips on X/TikTok, then a residence-desk report of a visitor asking for a gamer tag. The visitor was not admitted; motive and connection are unknown. Fans are not collectively characterized as hostile. Protective action does not require declaring guilt.
 
+## Independent remote orientation
+The student page now includes an always-available, initially expanded orientation for anyone who missed the live launch: plain-language esports/doxxing/overlay/clip definitions; starting facts; scope of authority; step-by-step use of records, questions, actions and fictional clock; one handoff standard; storage versus submission; and accessibility/technical fallback. No outside research, social-media login or live briefing is required to understand the case. A real submission route and deadline still require instructor approval before assignment.
+
 ## One assessable artifact
 Three paragraphs, approximately 200–300 words total, plus the attached decision log:
 1. Verified facts and unknowns.
@@ -30,6 +33,6 @@ Paper-specific governance debrief remains pending Jeff’s review and is not inc
 Prepared responses, not live AI. Questions use limited authored patterns; formal choices drive effects. Free-text reasons and disclosures need instructor review; the engine does not evaluate their truth, adequacy or legality. The explicit location-disclosure selector drives that consequence, not semantic analysis of the written update. No actual messages, takedowns or safety responses occur.
 
 ## Verification on Nov 17, 2026
-All 91 repository Node checks passed before added case-specific checks. Syntax checked. Browser launch attempted with Playwright/system Chromium but environment denied socket creation; no successful visual, keyboard or browser submission verification is claimed. Instructor retrieval is covered at handler level, not live hosting. Do not give classroom-ready signoff yet.
+All 92 full-snapshot repository Node checks passed, including case-specific instructor retrieval. The isolated portable version passed its 9 simulation checks. These are not browser or classroom results. Syntax checked. Browser launch attempted with Playwright/system Chromium but environment denied socket creation; no successful visual, keyboard or browser submission verification is claimed. Instructor retrieval is covered at handler level, not live hosting. Do not give classroom-ready signoff yet.
 
 Before use: complete browser student→refresh→handoff→export→instructor retrieval test, mobile/desktop and keyboard checks; confirm deadline/submission route and accessibility alternative. Ask Jeff to approve story and assessment, then test delivery from a separate device. Never use live student names for testing.
