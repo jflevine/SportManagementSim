@@ -30,8 +30,13 @@ export function remoteDriver(endpoint, { fetcher = (...a) => fetch(...a), anonKe
     kind: 'remote',
     async call(op, body) {
       const headers = { 'Content-Type': 'application/json', ...(anonKey ? { apikey: anonKey, Authorization: `Bearer ${anonKey}` } : {}) };
-      const r = await fetcher(endpoint, { method: 'POST', headers, body: JSON.stringify({ op, ...body }) });
-      const data = await r.json().catch(() => ({}));
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      let r, data;
+      try {
+        r = await fetcher(endpoint, { method: 'POST', headers, signal: controller.signal, body: JSON.stringify({ op, ...body }) });
+        data = await r.json().catch(() => ({}));
+      } finally { clearTimeout(timeout); }
       if (!r.ok) { const e = new Error(data.error || 'The server could not be reached.'); e.status = r.status; e.public = !!data.error; throw e; }
       return data;
     },
