@@ -33,6 +33,7 @@ const mime = {'.html':'text/html','.mjs':'text/javascript','.js':'text/javascrip
    for(let i=0;i<2;i++){await page.locator('#advance').click();await page.locator('#advance').waitFor({state:'visible'});await page.waitForFunction(()=>!document.querySelector('#advance').disabled);}
    await page.locator('#memoForm button').click();await page.locator('#receipt').waitFor({state:'visible'});assert.match(await page.locator('#receiptText').textContent(),/browser only/);
    const pending=page.waitForEvent('download');await page.locator('#download').click();const download=await pending;await download.saveAs(path.join(out,`handoff-${width}.json`));const payload=JSON.parse(await fs.readFile(path.join(out,`handoff-${width}.json`),'utf8'));assert.equal(payload.practiceOnly,true);assert.deepEqual(payload.handoff,paragraphs);assert.ok(payload.decisionLog.length>0);
+   const textPending=page.waitForEvent('download');await page.locator('#downloadText').click();const textDownload=await textPending;await textDownload.saveAs(path.join(out,`handoff-${width}.txt`));const text=await fs.readFile(path.join(out,`handoff-${width}.txt`),'utf8');assert.ok(text.includes(paragraphs.known));assert.ok(text.includes('NOT A SUBMISSION RECEIPT'));
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,'No horizontal overflow');
    await page.screenshot({path:path.join(out,`student-${width}.png`),fullPage:true});
    await page.reload();await page.locator('#receipt').waitFor({state:'visible'});
