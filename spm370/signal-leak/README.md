@@ -1,19 +1,13 @@
-# Signal Leak — SPM370
+# Signal Leak — playable local-only preview
 
-Isolated release: existing simulations and shared simkit function unchanged. Fictional adult-only collegiate esports safeguarding scenario. The paper-specific governance debrief is not included pending Jeff’s approval.
+The activity is implemented and browser QA is being run. It is NOT yet an assigned course submission route. The default page is local-only, with a downloadable handoff/decision log. Professor Levine must confirm where students upload it and the due date before assigning it. No grade or identity is verified by this page. Use a fictional alias, not personal data.
 
-## Access and collection
-Student page: `https://jflevine.github.io/SportManagementSim/spm370/signal-leak/`
-Local-only practice: append `?practice=1`. Synthetic shared-backend QA: append `?qa=1`.
-Instructor: `instructor.html`, using the existing private simkit instructor key. Never put that key in a URL or student materials. Course aliases are self-reported, not verified identities. Jeff must tell students an alias convention he can match; do not enter real residence information or sensitive details.
+The private `signal-leak` backend was tested with ONE clearly marked synthetic run, then closed to new runs, joining and actions. Existing synthetic work remains private and readable. Other functions and records were unchanged. Do not enable collection until instructor access, student identification, abuse controls and the actual submission route are settled.
 
-Server saves decisions and final handoff in the existing protected simkit tables through the separate `signal-leak` Edge Function. Prepared responses only, no AI API calls. Final submit produces a run-ID receipt. Download is a backup, not submission. No auto-grade, LMS sync, invented deadline or points. Instructor review filters SPM370-THURSDAY; QA filters SIGNAL-QA. The existing instructor key has not been changed.
+The isolated case preserves PR50/51 and other applications. Paper-specific debrief remains unapproved and excluded. See `browser-qa.cjs` and the GitHub Actions workflow for browser coverage. 93 source snapshot tests passed; live synthetic backend token/retry/persistence tests passed. Actual instructor key login is unverified. No new database permissions, tables, credentials or AI charges were introduced.
 
-## Classroom plan
-30-minute live orientation then roughly 20–25 minutes individual response; estimates, not student timing. Remote students have the same complete orientation. Read the records, distinguish questions from actions, review both later updates, and write one 200–300-word three-part handoff. Check uncertainty, proportionate protection, authority, selective disclosure and follow-up. Provide equivalent alternative if technical or accessibility barriers arise.
+## Teaching
+30-minute live orientation followed by 20–25 minutes individual work (estimates). Remote students have the same complete on-page orientation. One 200–300-word three-paragraph handoff plus decision log. Assess uncertainty, authority, proportionate protection, selective disclosure and follow-up, not a hidden score. No esports expertise needed. Provide an equivalent alternative if the topic or technology creates a barrier.
 
-## Verification limits
-93 source snapshot tests passed before release adaptation. Live endpoint verification is recorded separately. Real browser/mobile/keyboard verification remains blocked by execution environment socket restrictions. Actual instructor login remains unverified because its existing key is not available to this task. Do not describe this as fully classroom-tested.
-
-## Maintenance
-All activity files are isolated under this path. `engine/` is a preserved copy of the authored simkit runtime, not a change to other applications. `backend/index.ts` and its imports are deployed as a bundled Edge Function using existing tables and unchanged row-level security. No browser database grants or secret keys are exposed.
+## Preview locally
+Serve the repository with a static HTTP server and open `/spm370/signal-leak/`. Browser storage may be cleared, so keep the export. Instructor review here shows only this browser’s practice records, not class submissions. Do not treat it as a gradebook.

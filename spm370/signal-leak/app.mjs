@@ -2,7 +2,7 @@ import cf from './casefile.mjs';
 import {connect,localDriver} from './engine/client.mjs';
 import {formatClock} from './engine/kernel.mjs';
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const q=new URLSearchParams(location.search), dev=q.has('dev'), practice=q.has('practice');
+const q=new URLSearchParams(location.search), dev=q.has('dev'), practice=!dev;
 const endpoint='https://havsvkhddvdbzbsmhqbr.supabase.co/functions/v1/signal-leak';
 const sim=await connect({caseId:cf.id,casefile:cf,...(dev?{endpoint:'/simkit-api'}:practice?{driver:localDriver(cf,{storeKey:'signal-leak.local.v1'})}:{endpoint})});
 $('mode').textContent=dev?'TEST SERVER · Authored voices · In-memory records; server restart erases them':practice?'LOCAL PRACTICE · This browser only; nothing submitted':'COURSE WORKSPACE · Prepared characters · Private saved handoff, not an automatic grade';
