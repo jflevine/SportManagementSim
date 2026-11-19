@@ -19,9 +19,9 @@ const storage = {
   del(k) { try { localStorage.removeItem(k); } catch { delete mem[k]; } },
 };
 
-export function localDriver(casefile, { storeKey = 'simkit.local.v1', persistence = storage } = {}) {
+export function localDriver(casefile, { storeKey = 'simkit.local.v1', persistence = storage, limits } = {}) {
   const store = createMemoryStore({ load: () => JSON.parse(persistence.get(storeKey) || 'null'), save: db => persistence.set(storeKey, JSON.stringify(db)) });
-  const handle = createHandler({ store, cases: { [casefile.id]: casefile }, voice: authoredVoice(), openInstructor: true });
+  const handle = createHandler({ store, cases: { [casefile.id]: casefile }, voice: authoredVoice(), openInstructor: true, limits });
   return { kind: 'local', call: (op, body) => handle(op, body), store };
 }
 

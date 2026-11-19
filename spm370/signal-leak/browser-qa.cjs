@@ -115,6 +115,47 @@ async function journey(browser,url,route,width) {
   await context.close();
 }
 
+async function recoveryChecks(browser,url) {
+  const context=await browser.newContext();
+  const p=await context.newPage();
+  await p.goto(url);
+  await field(p,'startForm','alias').fill('Fictional legacy rehearsal');
+  await field(p,'startForm','alias').press('Enter');
+  await p.locator('#desk').waitFor();
+  const oldDraft='Earlier draft from a fictional director retained across recovery.';
+  // Seed the merged release's exact storage shape, including an unrelated run.
+  await p.evaluate(text=>{
+    const ck='simkit.cred.spm370-signal-leak.local';
+    const c=sessionStorage.getItem(ck), id=JSON.parse(c).runId;
+    const db=JSON.parse(sessionStorage.getItem('signal-leak.tab.v2'));
+    db.runs[id].caseVersion=1;
+    db.runs.other={...db.runs[id],id:'other',team:'Fictional other director'};
+    db.events.other=[];
+    localStorage.setItem(ck,c);
+    localStorage.setItem('signal-leak.local.v1',JSON.stringify(db));
+    localStorage.setItem('signal-leak.draft.'+id,JSON.stringify({known:text}));
+    sessionStorage.clear();
+  },oldDraft);
+  await p.reload();await p.locator('#recover').waitFor();assert.equal(await p.locator('#desk').isVisible(),false);
+  await p.locator('#recover').click();await p.locator('#desk').waitFor();
+  assert.equal(await field(p,'memoForm','known').inputValue(),oldDraft);
+  assert.deepEqual(await p.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('signal-leak.local.v1')).runs)),['other']);
+  await p.reload();await p.locator('#desk').waitFor();
+  assert.equal(await field(p,'memoForm','known').inputValue(),oldDraft);
+  await context.close();
+  const blocked=await browser.newContext();await blocked.addInitScript(()=>{
+    Object.defineProperty(window,'sessionStorage',{get(){throw new DOMException('Disabled for this test','SecurityError');}});
+  });
+  const b=await blocked.newPage();await b.goto(url);
+  await field(b,'startForm','alias').fill('Fictional temporary director');
+  await field(b,'startForm','alias').press('Enter');await b.locator('#desk').waitFor();
+  await waitForText(b.locator('#storageStatus'),'Browser saving is unavailable');
+  await act(b,'pause',{reason:'Recheck with the player before restarting.'});
+  assert.equal(await b.locator('#advance').isEnabled(),true);
+  await blocked.close();
+  console.log('PASS legacy opt-in, draft and unrelated record preservation, and storage-denied warning with in-memory play');
+}
+
 (async()=>{
   await fs.mkdir(out,{recursive:true});
   const { buildPortable }=await import('./make-portable.mjs');
@@ -134,5 +175,6 @@ async function journey(browser,url,route,width) {
     browser=await chromium.launch();
     await journey(browser,'http://127.0.0.1:'+server.address().port+'/spm370/signal-leak/','hold',1280);
     await journey(browser,pathToFileURL(portable).href,'overlay',390);
+    await recoveryChecks(browser,'http://127.0.0.1:'+server.address().port+'/spm370/signal-leak/');
   } finally {if (browser) await browser.close();await new Promise(r=>server.close(r));}
 })().catch(e=>{console.error(e);process.exitCode=1;});

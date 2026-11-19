@@ -27,7 +27,9 @@ function reportEntry(e) {
   const act = cf.acts[e.act];
   const body = act.fields.map(f => {
     const v = e.params[f.id] || '';
-    const label = f.options?.find(([key])=>key===v)?.[1] || v;
+    const originalLabels = {overlay:'Disable chat overlay; hold gameplay feed',hold:'Neutral holding screen and disable overlay',delete:'Delete message only; keep overlay live',location:'Location included',none:'No location detail'};
+    const legacy = e.caseVersion===1 && ['control','detail'].includes(f.id);
+    const label = (legacy && originalLabels[v]) || f.options?.find(([key])=>key===v)?.[1] || v;
     return f.label+' — '+label;
   }).join('\n');
   return {when,who:'Director · '+act.label,body};
@@ -123,7 +125,7 @@ $('startForm').onsubmit=e=>{
   e.preventDefault();
   perform(()=>sim.start({team:values(e.target).alias,classCode:'SIGNAL-QA',mode:'test'}),'clock',true);
 };
-$('recover').onclick=()=>perform(async()=>{ moveEarlierRun();if (!await sim.resume()) throw Error('Earlier run could not be opened.'); },'clock',true);
+$('recover').onclick=()=>perform(()=>moveEarlierRun(()=>sim.resume()),'clock',true);
 $('advance').onclick=()=>perform(()=>sim.send({type:'wait'}),'incoming');
 $('docs').onclick=e=>{
   const id=e.target.closest('button')?.dataset.doc;
