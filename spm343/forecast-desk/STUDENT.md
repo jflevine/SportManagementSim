@@ -1,6 +1,6 @@
 # Forecast Desk: student instructions and text alternative
 
-You advise Harbor Circuit, a fictional esports organization. Use the assigned Finch chapter and class concepts. Treat forecasts as possibilities to investigate, not current facts. No outside research, gaming expertise, personal data or account is required for this companion. Use any format your instructor approves if the interactive view is inaccessible.
+Work individually. You are an adviser to Harbor Circuit, a fictional esports organization. Make your own decisions in each round and write your own planning memo. Use the assigned Finch chapter and class concepts. Treat forecasts as possibilities to investigate, not current facts. No outside research, gaming expertise, personal data or account is required for this companion. Use any format your instructor approves if the interactive view is inaccessible.
 
 This is ungraded planning. Complete the actual Knowledge Check in Canvas when your instructor posts it. Downloading notes is not submitting them. Your instructor supplies the deadline and submission route separately.
 
