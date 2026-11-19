@@ -1,0 +1,14 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');const path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const ctx=vm.createContext({});vm.runInContext(script.slice(0,script.indexOf('// MODEL_END')),ctx);
+const call=x=>JSON.parse(JSON.stringify(vm.runInContext(x,ctx)));
+test('three rounds with three explicit choices each',()=>assert.deepEqual(call('rounds.map(x=>x.choices.length)'),[3,3,3]));
+test('fresh draft isolated responses',()=>assert.equal(call("(()=>{let s=freshDraft();s.answers[0].reason='a';return s.answers[1].reason})()"),''));
+test('corrupt shapes recover',()=>{for(const val of ['null','{}','{answers:[]}','{answers:[null,null,null],at:99}'])assert.equal(call(`restoreDraft(${val}).at`),0)});
+test('restore ignores invalid choices and nontext answers',()=>assert.equal(call("restoreDraft({answers:[{choice:'injected',reason:55},null,null]}).answers[0].reason"),''));
+test('restore caps imported text',()=>assert.equal(call("restoreDraft({answers:[{reason:'x'.repeat(5000)},null,null]}).answers[0].reason.length"),3000));
+test('final restores independently',()=>assert.equal(call("restoreDraft({at:3,final:'draft',answers:[{},{},{}]}).final"),'draft'));
+test('offline assets and no network submission APIs',()=>{assert.ok(!/\b(fetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon)/.test(script));assert.ok(!/(?:src|href)=["']https?:/.test(html))});
+test('separate course storage namespace',()=>assert.ok(html.includes("const key='spm343-forecast-desk-v1'")));
+test('script compiles',()=>assert.doesNotThrow(()=>new vm.Script(script)));
