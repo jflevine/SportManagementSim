@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A short SPM 370 safeguarding decision lab">
+<title>Signal Leak | SPM 370</title>
+<style>
+:root{color-scheme:light;--ink:#163546;--teal:#12646c;--light:#f8f5ed;--panel:#e8f0ee;--line:#b6cbc9;--gold:#f0bd53}*{box-sizing:border-box}body{margin:0;background:var(--light);color:var(--ink);font:1.13rem/1.5 Georgia,serif}header{background:var(--ink);color:white;border-top:5px solid var(--gold)}.wrap{width:min(100% - 2rem,48rem);margin:auto}.hero{padding:1.3rem 0 1.5rem}header h1{font-size:clamp(2.5rem,8vw,4.1rem);margin:0;line-height:1.05}header p{margin:.55rem 0 0}.tag,.step,label,.brand,button{font-family:system-ui,sans-serif}.brand,.step{font-size:.82rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase}.brand{color:var(--gold)}main{padding:1.25rem 0 2.5rem}h2{margin:.3rem 0 .5rem;line-height:1.15}h3{margin:.15rem 0}p{margin:.45rem 0 .9rem}.step{color:var(--teal)}.callout{background:var(--panel);border-left:4px solid var(--teal);padding:.65rem .9rem;margin:.8rem 0}.card{background:#fff;border:1px solid var(--line);border-radius:.5rem;padding:1.15rem;margin:.85rem 0}.choices{display:grid;gap:.65rem;margin:1rem 0}.choices button{text-align:left;background:white;color:var(--ink);border:1px solid var(--teal)}.choices button:hover{background:var(--panel)}button{cursor:pointer;padding:.62rem .9rem;border:1px solid transparent;background:var(--teal);color:white;font-size:1rem;font-weight:650;border-radius:.35rem;min-height:44px}button.secondary{color:var(--teal);background:transparent;border-color:var(--line)}button:focus-visible,textarea:focus-visible,a:focus-visible,[tabindex="-1"]:focus-visible{outline:3px solid #855301;outline-offset:3px}textarea{display:block;width:100%;border:1px solid #668385;border-radius:.3rem;min-height:4.7rem;padding:.6rem;font:inherit;color:var(--ink);background:white;margin:.25rem 0 .8rem}label{font-size:.98rem;font-weight:700}.small{font-size:.94rem}.actions{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.7rem}footer{font-size:.9rem;border-top:1px solid var(--line);padding:1rem 0 2rem}.skip{position:absolute;left:.6rem;top:-4rem;background:white;color:var(--ink);padding:.5rem}.skip:focus{top:.65rem}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:1rem/1.45 Georgia,serif;background:var(--panel);padding:.8rem;border:1px solid var(--line)}[hidden]{display:none!important}
+</style></head>
+<body><a class="skip" href="#main">Skip to decision lab</a>
+<header><div class="wrap hero"><div class="brand">SPM 370 · Safeguarding decision lab</div><h1>Signal Leak</h1><p>Protect a player. Coordinate the response. Leave a clear handoff.</p></div></header>
+<main id="main" class="wrap" tabindex="-1"><div id="screen"></div><p id="status" role="status" class="small" aria-live="polite"></p></main>
+<footer class="wrap">Fictional case. Do not enter a real name, address or account handle. This version sends nothing automatically.</footer>
+<noscript>Enable JavaScript or ask for the paper version.</noscript>
+<script>
+'use strict';
+const screen=document.querySelector('#screen'), status=document.querySelector('#status');
+const choices=[
+ {q:'What do you do first?', items:[
+ ['Pause the match and switch the broadcast to a break screen','The broadcast stops showing the player or chat. Production needs an update before going live again.'],
+ ['Remove the chat overlay and keep the match on hold while you check on Ari','New chat messages no longer appear on the feed. You can check in privately without promising that the saved clip is gone.']]},
+ {q:'Who should help now?',items:[
+ ['Ask campus safety to assess the report privately','Campus safety can check the report and advise on immediate protection. Share only information they need to act.'],
+ ['Arrange a private check-in and set a clear trigger to contact campus safety','Ari has a point of contact now. Tell that person exactly what new information would trigger a safety referral.']]}
+];
+const blank=()=>({stage:0,a:[],answers:['','','']});
+let state=blank(); const key='spm370-signal-leak-quick-v1';
+try{const raw=JSON.parse(localStorage.getItem(key)||'null');if(raw&&Number.isInteger(raw.stage)&&raw.stage>=0&&raw.stage<=4&&Array.isArray(raw.a)&&raw.a.every(n=>n===0||n===1)&&Array.isArray(raw.answers)&&raw.answers.length===3&&raw.answers.every(a=>typeof a==='string'))state=raw;}catch{}
+function save(){try{localStorage.setItem(key,JSON.stringify(state));}catch{}}
+function go(n){state.stage=n;save();status.textContent='';render();screen.querySelector('h2').focus();}
+function node(tag,text,cls){const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;}
+function panel(step,title){screen.replaceChildren(node('p',step,'step'));const h=node('h2',title);h.tabIndex=-1;screen.append(h);}
+function p(text,cls){screen.append(node('p',text,cls));}
+function btn(parent,text,fn,cls){const b=node('button',text,cls);b.type='button';b.addEventListener('click',fn);parent.append(b);return b;}
+function actions(){const e=node('div',null,'actions');screen.append(e);return e;}
+function render(){
+ if(state.stage===0){panel('Start · About 10–15 minutes','You’re the tournament director');p('Ari, a player in a collegiate esports final, reports that a saved stream clip shows their home address. You never need to see or repeat it.');p('You can pause play and direct the broadcast team. You cannot remove someone else’s repost or investigate a possible offline threat yourself.','callout');p('Select Start the incident. Choose one response on each of the two decision screens and read what happens next. Then answer three short questions and select Download handoff (.txt).');btn(actions(),'Start the incident',()=>go(1));return;}
+ if(state.stage===1||state.stage===2){const i=state.stage-1, part=choices[i];panel('Decision '+(i+1)+' of 2',part.q);
+  if(i===0){p('Ari wants help privately. The broadcast lead is waiting for your instruction. A saved clip may continue circulating even after the live feed changes.');}
+  else{p(choices[0].items[state.a[0]][1],'callout');p('New update: The clip has been reposted outside the event server. A residence desk reports that a visitor asked for Ari by player name. No link between the visit and the repost has been verified. Ari asks what happens next.');}
+  const list=node('div',null,'choices');screen.append(list);part.items.forEach(([name],n)=>btn(list,name,()=>{state.a[i]=n;if(i===0)state.a.length=1;go(i+2);}));if(i===1)btn(actions(),'Back to first decision',()=>go(1),'secondary');return;}
+ if(state.stage===3){panel('Your handoff','What should the next person know?');p(choices[1].items[state.a[1]][1],'callout');p('Write one or two sentences per question. Keep private details out of the handoff.');const f=node('form');screen.append(f);const qs=['What would you do first to protect Ari, and why?','Who can help, and what should they do?','What should the next person know, including what is still uncertain?'];qs.forEach((q,i)=>{const l=node('label',q),a=node('textarea');a.id='answer-'+i;l.htmlFor=a.id;a.value=state.answers[i];a.required=true;a.maxLength=1200;a.addEventListener('input',()=>{state.answers[i]=a.value;a.setCustomValidity('');save();});f.append(l,a);});const b=node('button','Review my handoff');b.type='submit';f.append(b);f.addEventListener('submit',e=>{e.preventDefault();const j=state.answers.findIndex(x=>!x.trim());if(j>=0){const x=document.querySelector('#answer-'+j);x.setCustomValidity('Write a short answer before continuing.');x.reportValidity();return;}go(4);});btn(actions(),'Back to second decision',()=>go(2),'secondary');return;}
+ panel('Finish','Review and download your handoff');p('Use your instructor’s submission instructions. Downloading saves a copy to your device; it does not submit it.');screen.append(node('pre',report()));const row=actions();btn(row,'Download handoff (.txt)',()=>{const u=URL.createObjectURL(new Blob([report()],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='Signal-Leak-Handoff.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);status.textContent='Download requested. Check your downloads before closing this tab.';});btn(row,'Edit my answers',()=>go(3),'secondary');btn(row,'Clear this device’s draft',()=>{if(window.confirm('Clear your answers on this device? Keep your downloaded copy first.')){state=blank();try{localStorage.removeItem(key);}catch{}go(0);}},'secondary');
+}
+function report(){return 'Signal Leak | SPM 370\n\nFIRST ACTION\n'+state.answers[0].trim()+'\n\nWHO CAN HELP\n'+state.answers[1].trim()+'\n\nFOR THE NEXT PERSON\n'+state.answers[2].trim()+'\n\nDECISION LOG\n1. '+choices[0].items[state.a[0]][0]+'\n2. '+choices[1].items[state.a[1]][0]+'\n';}
+render();
+</script></body></html>
