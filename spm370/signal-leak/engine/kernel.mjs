@@ -73,6 +73,8 @@ export function plan(cf, events, action, acts = []) {
   if (action.type === 'start' && events.length) throw problem('This run has already started.');
   if (s.submitted) throw problem('This file has already been submitted.');
   if (s.ended && action.type !== 'submit') throw problem('Time has run out. Write and submit your memo.');
+  const refusal = cf.checkAction?.(s, action);
+  if (refusal) throw problem(refusal);
   const out = [];
   const emit = (e, at = s.t) => { const ev = { ...e, seq: s.seq + 1, t: at }; out.push(ev); applyEvent(s, ev); return ev; };
 
@@ -120,7 +122,7 @@ export function plan(cf, events, action, acts = []) {
       settle();
     }
     if (target > s.t) emit({ type: 'clock', because: [] }, target);
-    if (s.t >= cf.clock.end && !s.ended) { emit({ type: 'run.ended', reason: 'deadline', because: [] }); settle(); }
+    if (Number.isFinite(cf.clock.end) && s.t >= cf.clock.end && !s.ended) { emit({ type: 'run.ended', reason: 'deadline', because: [] }); settle(); }
   };
 
   const cost = cf.costs || {};
@@ -157,7 +159,8 @@ export function plan(cf, events, action, acts = []) {
     settle(); advanceTo(s.t + (act.cost ?? cost.act ?? 10));
   } else if (action.type === 'wait') {
     const next = Object.values(s.timers).map(v => v.at).sort((a, b) => a - b)[0];
-    advanceTo(Math.min(cf.clock.end, next ?? cf.clock.end));
+    if (next == null && !Number.isFinite(cf.clock.end)) throw problem('All updates have arrived. Set the next match decision.');
+    advanceTo(Math.min(cf.clock.end ?? Infinity, next ?? cf.clock.end));
   } else if (action.type === 'submit') {
     const memo = cf.cleanMemo ? cf.cleanMemo(action.memo || {}) : action.memo;
     // Optional: a casefile may refuse a malformed submission (throw kernel-style: return a string).

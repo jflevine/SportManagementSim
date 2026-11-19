@@ -19,8 +19,8 @@ const storage = {
   del(k) { try { localStorage.removeItem(k); } catch { delete mem[k]; } },
 };
 
-export function localDriver(casefile, { storeKey = 'simkit.local.v1' } = {}) {
-  const store = createMemoryStore({ load: () => JSON.parse(storage.get(storeKey) || 'null'), save: db => storage.set(storeKey, JSON.stringify(db)) });
+export function localDriver(casefile, { storeKey = 'simkit.local.v1', persistence = storage } = {}) {
+  const store = createMemoryStore({ load: () => JSON.parse(persistence.get(storeKey) || 'null'), save: db => persistence.set(storeKey, JSON.stringify(db)) });
   const handle = createHandler({ store, cases: { [casefile.id]: casefile }, voice: authoredVoice(), openInstructor: true });
   return { kind: 'local', call: (op, body) => handle(op, body), store };
 }
@@ -43,19 +43,19 @@ export function remoteDriver(endpoint, { fetcher = (...a) => fetch(...a), anonKe
   };
 }
 
-export async function connect({ caseId, casefile, endpoint, driver }) {
+export async function connect({ caseId, casefile, endpoint, driver, credentials = storage }) {
   driver ||= endpoint ? remoteDriver(endpoint) : localDriver(casefile);
   const credKey = `simkit.cred.${caseId}.${driver.kind}`;
   const sim = {
     driver, view: null, run: null, online: true,
-    creds() { try { return JSON.parse(storage.get(credKey) || 'null'); } catch { return null; } },
-    _adopt(res) { if (res.token) storage.set(credKey, JSON.stringify({ runId: res.runId, token: res.token })); sim.run = { runId: res.runId, team: res.team, members: res.members, classCode: res.classCode, joinCode: res.joinCode, mode: res.mode }; sim.view = res.view; return res; },
+    creds() { try { return JSON.parse(credentials.get(credKey) || 'null'); } catch { return null; } },
+    _adopt(res) { if (res.token) credentials.set(credKey, JSON.stringify({ runId: res.runId, token: res.token })); sim.run = { runId: res.runId, team: res.team, members: res.members, classCode: res.classCode, joinCode: res.joinCode, mode: res.mode }; sim.view = res.view; return res; },
     async start(info) { return sim._adopt(await driver.call('start', { caseId, ...info })); },
     async join(code) { return sim._adopt(await driver.call('join', { joinCode: code })); },
     async resume() {
       const c = sim.creds(); if (!c) return null;
       try { return sim._adopt(await driver.call('view', c)); }
-      catch (e) { if (e.status === 401 || e.status === 404) { storage.del(credKey); return null; } throw e; }
+      catch (e) { if (e.status === 401 || e.status === 404) { credentials.del(credKey); return null; } throw e; }
     },
     async refresh() { const c = sim.creds(); return c ? sim._adopt(await driver.call('view', c)) : null; },
     // One student action. The requestId is fixed before the first attempt, so a retry after a
@@ -69,7 +69,7 @@ export async function connect({ caseId, casefile, endpoint, driver }) {
       }
       throw lastError;
     },
-    leave() { storage.del(credKey); sim.view = null; sim.run = null; },
+    leave() { credentials.del(credKey); sim.view = null; sim.run = null; },
     instructor: (key, classCode) => driver.call('instructor.runs', { caseId, key, classCode }),
   };
   return sim;
