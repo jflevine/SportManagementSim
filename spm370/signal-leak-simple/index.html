@@ -53,8 +53,25 @@ function render(){
   else{p(choices[1].items[state.a[1]][1],'callout');p('Ten minutes later: Production confirms the address is no longer visible on the event feed. Copies are still circulating on social media. There is no new information about the visitor. Ari wants to keep playing if it can be done safely, and the other team wants to know whether the match will go ahead.');p('You can keep the match on hold or propose an off-stream restart. A safer broadcast does not settle the safety concern.','small');}
   const list=node('div',null,'choices');screen.append(list);part.items.forEach(([name],n)=>btn(list,name,()=>{if(state.a[i]!==n)state.a.length=i;state.a[i]=n;go([2,5,3][i]);}));if(i>0)btn(actions(),i===1?'Back to first decision':'Back to second decision',()=>go(i),'secondary');return;}
  if(state.stage===3){panel('Your handoff','What should the next person know?');p(choices[2].items[state.a[2]][1],'callout');p('Write one or two sentences per question. Keep private details out of the handoff.');const f=node('form');screen.append(f);const qs=['What would you do first to protect Ari, and why?','Who can help, and what should they do?','What needs to happen before play resumes, and what is still uncertain?'];qs.forEach((q,i)=>{const l=node('label',q),a=node('textarea');a.id='answer-'+i;l.htmlFor=a.id;a.value=state.answers[i];a.required=true;a.maxLength=1200;a.addEventListener('input',()=>{state.answers[i]=a.value;a.setCustomValidity('');save();});f.append(l,a);});const b=node('button','Review my handoff');b.type='submit';f.append(b);f.addEventListener('submit',e=>{e.preventDefault();const j=state.answers.findIndex(x=>!x.trim());if(j>=0){const x=document.querySelector('#answer-'+j);x.setCustomValidity('Write a short answer before continuing.');x.reportValidity();return;}go(4);});btn(actions(),'Back to third decision',()=>go(5),'secondary');return;}
- panel('Finish','Review and download your handoff');p('Use your instructor’s submission instructions. Downloading saves a copy to your device; it does not submit it.');screen.append(node('pre',report()));const row=actions();btn(row,'Download handoff (.txt)',()=>{const u=URL.createObjectURL(new Blob([report()],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='Signal-Leak-Handoff.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);status.textContent='Download requested. Check your downloads before closing this tab.';});btn(row,'Edit my answers',()=>go(3),'secondary');btn(row,'Clear this device’s draft',()=>{if(window.confirm('Clear your answers on this device? Keep your downloaded copy first.')){state=blank();try{localStorage.removeItem(key);localStorage.removeItem(oldKey);}catch{}go(0);}},'secondary');
+ panel('Finish','Review and download your handoff');p('Download handoff (.txt), open the file and copy its full contents. In Canvas, open Signal Leak Check, choose Text Entry, paste the full handoff, and click Submit Assignment. Downloading alone does not submit your work.');screen.append(node('pre',report()));const row=actions();btn(row,'Download handoff (.txt)',()=>{const u=URL.createObjectURL(new Blob([report()],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='Signal-Leak-Handoff.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);status.textContent='Download requested. Check your downloads before closing this tab.';});btn(row,'Edit my answers',()=>go(3),'secondary');btn(row,'Clear this device’s draft',()=>{if(window.confirm('Clear your answers on this device? Keep your downloaded copy first.')){state=blank();try{localStorage.removeItem(key);localStorage.removeItem(oldKey);}catch{}go(0);}},'secondary');
 }
 function report(){return 'Signal Leak | SPM 370\n\nFIRST ACTION\n'+state.answers[0].trim()+'\n\nWHO CAN HELP\n'+state.answers[1].trim()+'\n\nBEFORE PLAY RESUMES\n'+state.answers[2].trim()+'\n\nDECISION LOG\n1. '+choices[0].items[state.a[0]][0]+'\n2. '+choices[1].items[state.a[1]][0]+'\n3. '+choices[2].items[state.a[2]][0]+'\n';}
 render();
+</script>
+<script type="module">
+import { pilot } from './pilot/config.mjs';
+import { bindPilot } from './pilot/client.mjs';
+if (pilot.enabled) {
+ const display=()=>{
+   if (state.stage===4 && !screen.querySelector('[data-pilot]')) {
+     const target=node('div');target.dataset.pilot='';screen.append(target);
+     bindPilot(target,{choices:[...state.a],answers:state.answers.map(x=>x.trim())},{
+       config:pilot,storage:{getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v)},
+       fetcher:(...args)=>fetch(...args),uuid:()=>crypto.randomUUID()
+     });
+   }
+ };
+ new MutationObserver(display).observe(screen,{childList:true});display();
+}
 </script></body></html>
+
